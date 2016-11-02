@@ -1,0 +1,1 @@
+Containes client side javascript.

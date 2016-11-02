@@ -1,0 +1,1 @@
+Containes all static content.
