@@ -1,0 +1,22 @@
+{
+  "name": "egtb",
+  "version": "1.0.0",
+  "description": "Evolutionary game theory in biology group project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kisnandor2/egtib-ubbse2016.git"
+  },
+  "author": "EvolutionAndStuff",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kisnandor2/egtib-ubbse2016/issues"
+  },
+  "homepage": "https://github.com/kisnandor2/egtib-ubbse2016#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
