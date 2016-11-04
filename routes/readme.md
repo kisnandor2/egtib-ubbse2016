@@ -1,1 +1,1 @@
-Templates go in this folder!
+Controllers go in this folder!
