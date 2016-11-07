@@ -1,4 +1,33 @@
-div
-    p.
-        Index page will be this one
-        Nothing is working right now, please edit it to your needs
+doctype html
+html
+	head
+		title= 'EGTB - EvolutionAndStuff'
+		script(src='/javascripts/jquery.min.js')
+		link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+	body
+		//- Example taken from W3School - Probably will change over time
+		nav.navbar.navbar-default
+			.container-fluid
+				.navbar-header
+					a.navbar-brand(href='#') EvolutionAndStuff
+				ul.nav.navbar-nav
+					li.active
+						a(href='#') Home
+					li
+						a(href='#') Page 1
+					li
+						a(href='#') Page 2
+					li
+						a(href='#') Page 3
+
+		include example.pug
+
+	//- Please fix the footers CSS! ty :)
+	footer#footer(class='footer navbar-fixed-bottom')
+		.container
+			.row
+				div(class='col-md-6 col-md-pull-1').
+					This webpage was created on 2016.11.07.
+				div(class='col-md-6 col-md-push-5').
+					© EvolutionAndStuff
+

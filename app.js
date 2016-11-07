@@ -25,5 +25,5 @@ app.use('/index', require('./routes/index'));
 //app.use('/', require('./routes/greet'));
 
 
-app.listen(3000);
+app.listen(3001);
 console.log("Server started");
