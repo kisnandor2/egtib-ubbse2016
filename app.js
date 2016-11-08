@@ -15,10 +15,16 @@
  */
 
 var express = require('express');
+var nunjucks = require('nunjucks');
 var app = express();
 
 app.use(express.static(__dirname + '/public'));
-app.set('view engine', 'pug');
+nunjucks.configure('views', {
+	autoescape: true,
+	express: app
+})
+app.engine('html', nunjucks.render);
+app.set('view engine', 'html');
 
 
 app.use('/index', require('./routes/index'));

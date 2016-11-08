@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Evolution and stuff.</title>
+{% block head %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -34,12 +31,11 @@
       filter: blur(5px);
     }
   </style>
-</head>
-<body>
+{% endblock %}
 
+
+{% block body %}
 <div class="background-image"></div>
-
-
   
 <div class="container" style = "align-items: center; ">
   <div class="jumbotron text-center"> 
@@ -55,6 +51,4 @@
 
 </div>
 
-</body>
-</html>
-
+{% endblock %}
