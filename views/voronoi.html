@@ -85,7 +85,7 @@
         function createPath(points, center) {
             var path = new Path();
             if (!selected) {
-                path.fillColor = spotColor;
+               path.fillColor = new Color((Math.random()),(Math.random()),(Math.random()));
             } else {
                 path.fullySelected = selected;
             }
