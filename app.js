@@ -14,6 +14,7 @@
  Done
  */
 
+var portno = 3001;
 var express = require('express');
 var nunjucks = require('nunjucks');
 var app = express();
@@ -33,5 +34,5 @@ app.use('/voronoi', require('./routes/voronoi'));
 app.use(require('./routes/404'));
 
 
-app.listen(3001);
-console.log("Server started");
+app.listen(portno);
+console.log("Server started, listening on: "+ portno);
