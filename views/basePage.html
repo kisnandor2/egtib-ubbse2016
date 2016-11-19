@@ -24,34 +24,32 @@
 				        <span class="icon-bar"></span>
 				        <span class="icon-bar"></span>
 			      	</button>
-					<a class='navbar-brand' href="#">EvolutionAndStuff</a>
+					<a class='navbar-brand' href="/index">EvolutionAndStuff</a>
 				</div>
 				<div class='collapse navbar-collapse' id="myNavbar">
 					<ul class='nav navbar-nav'>
-						<li class='active'>
-							<a href='#'>Home</a>
-						</li>
-						<li>
-							<a href='#'>Page1</a>
+						<li {% if active=='index' %} class='active' {% endif %}>
+							<a href='/index'>Home</a>
 						</li>
 						<li>
 							<a href='/voronoi'>Voronoi</a>
 						</li>
-						<li>
+						<li {% if active=='par_stat' %} class='active' {% endif %}>
+
 							<a href='/parameter_statistics'>Parameter Setup, Visualisation and Statistics</a>
 						</li>
 					</ul>
 				</div>
 		</nav>
 
-		<div class = "container">
+		<div class = "container-full">
 		{% block body %}
 		{% endblock %}
 		</div>
-		<div class="navbar navbar-fixed-bottom">
+		<footer>
 			<p class="pull-left">This webpage was created on 2016.11.07.</p>
   			<p class="pull-right">©EvolutionAndStuff</p>
-		</div>
+		</footer>
 
 	</body>
 </html>
