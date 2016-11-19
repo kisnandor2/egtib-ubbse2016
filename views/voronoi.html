@@ -8,8 +8,10 @@
     <script type="text/javascript" src="/javascripts/paper-full.js"></script>
     <script type="text/javascript" src="http://paperjs.org/assets/js/rhill-voronoi-core.js"></script>
     <script type="text/paperscript" canvas="canvas">
-        var voronoi = new Voronoi();
-        var sites = generateBeeHivePoints(view.size / 50, true);
+        var voronoi = new Voronoi();   
+        var sites = [new Point(300,300),new Point(300,450), new Point(200,500)];
+        //var sites = [new Point(300,300), new Point(300,450), new Point(200,500), new Point(250,450), new Point(400,500)];
+        //var sites = generateBeeHivePoints(view.size / 50, true);
         var bbox, diagram;
         var oldSize = view.size;
         var spotColor = new Color('green');
@@ -18,18 +20,53 @@
 
         onResize();
 
-        function onMouseDown(event) {
-            sites.push(event.point);
-            renderDiagram();
+        function showNeighbors(p,diagram){
+            //find neighbors of cell which has site at p point
+            console.log('\n',p,'\nneighbors:');
+            halfedges=getCellBySite(p,diagram.cells).halfedges;
+
+            for(var i in halfedges){
+                var lsite=halfedges[i].edge.lSite
+                if(lsite != null && !compareSites(lsite,p))
+                    console.log(lsite);
+                var rsite=halfedges[i].edge.rSite
+                if(rsite != null && !compareSites(rsite,p))
+                    console.log(rsite)
+
+            }
+            
+            }
+
+        function getCellBySite(point,cells){
+
+            //returns the cell which site is equal to point
+            for (var i in cells){
+             if(compareSites(cells[i].site,point))
+                    return cells[i];
+                
+            }
         }
 
-        function onMouseMove(event) {
+        function compareSites(s1,s2){
+            if(s1.x==s2.x && s1.y==s2.y)
+                return true;
+            return false;
+        }
+
+        function onMouseDown(event) {
+            sites.push(event.point);
+            var diagram=renderDiagram();
+            showNeighbors(event.point,diagram);
+        }
+
+        
+        /*function onMouseMove(event) {
             mousePos = event.point;
             if (event.count == 0)
                 sites.push(event.point);
             sites[sites.length - 1] = event.point;
             renderDiagram();
-        }
+        }*/
 
         function renderDiagram() {
             project.activeLayer.removeChildren();
@@ -51,6 +88,7 @@
                     }
                 }
             }
+            return diagram;
         }
 
         function removeSmallBits(path) {
@@ -85,7 +123,7 @@
         function createPath(points, center) {
             var path = new Path();
             if (!selected) {
-               path.fillColor = new Color((Math.random()),(Math.random()),(Math.random()));
+                path.fillColor = new Color((Math.random()),(Math.random()),(Math.random()));
             } else {
                 path.fullySelected = selected;
             }
@@ -127,6 +165,8 @@
                 renderDiagram();
             }
         }
+
+
     </script>
 </head>
 <body>
