@@ -31,6 +31,7 @@ app.set('view engine', 'html');
 app.use('/index', require('./routes/index'));
 app.use('/', require('./routes/greet'));
 app.use('/voronoi', require('./routes/voronoi'));
+app.use('/parameter_statistics', require('./routes/par_stat'));
 app.use(require('./routes/404'));
 
 
