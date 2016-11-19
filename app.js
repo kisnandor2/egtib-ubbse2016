@@ -14,7 +14,7 @@
  Done
  */
 
-var portno = 3001;
+var portno = 3001; // use this for entering a different port number
 var express = require('express');
 var nunjucks = require('nunjucks');
 var app = express();
