@@ -181,12 +181,12 @@
 			    }]
 		    });
 		
-		    var n = Math.ceil(Math.random()*1000);
+		    var n = Math.ceil(Math.random()*1000); //ezt kell megkapjam
 		    var categories = [];
 		    var numberProductive = [];
 		    var numberNonProductive = [];
 		    for (i = 0; i<50; i++) {
-		    	var p = Math.ceil(Math.random()*n);
+		    	var p = Math.ceil(Math.random()*n); //ezt kell megkapjam
 		    	numberProductive.push(p);
 		    	numberNonProductive.push(n-p);
 		    	categories.push(i+1);
@@ -198,6 +198,18 @@
 		    chart.xAxis[0].setCategories(categories); 
 
 		});
+    	var number, number_non;
+		function submit1() {
+			number = Number(document.getElementById('number').value);
+			console.log(number);
+			number_non = Number(document.getElementById('number_non').value);
+			console.log(number_non);
+		}
+
+		function submit2() {
+			presets = document.getElementById('presets').value;
+			console.log(presets);
+		}
 
     </script>
 {% endblock %}
@@ -216,19 +228,24 @@
 							      <input type="number" class="form-control" id="number">
 							    </div>
 							    <div class="form-group">
-							      <label for="number">Number of non-productive cells:</label>
-							      <input type="number" class="form-control" id="number">
+							      <label for="number_non">Number of non-productive cells:</label>
+							      <input type="number" class="form-control" id="number_non">
 							    </div>
+							    <input type="button" class="btn btn-default" onclick="submit1();" value="Submit"/>
 						 	</form><br>
 
 						 	<label> --------------- OR ---------------</label><br><br>
 
 						 	<label>Select a preset:</label><br><br>
 			      			<form style="text-align: left">
-								<label for="presets">Choose your preset:</label>
-								<select class="form-control" id="presets">
-									<option>Default cancer</option>
-								</select>
+			      				<div class="form-group">
+									<label for="presets">Choose your preset:</label>
+									<select class="form-control" id="presets">
+										<option>Default cancer</option>
+									</select>
+								</div>
+
+								<input type="button" class="btn btn-default" onclick="submit2();" value="Submit"/>
 						 	</form>
 			      		</div>
 			    	</div>
