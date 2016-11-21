@@ -1,6 +1,8 @@
 <html>
 	<head>
 		<title>EGTB - EvolutionAndStuff</title>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
 		<script src='/javascripts/jquery.min.js'></script>
 		<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -8,6 +10,11 @@
 		{% block head %}
 		{% endblock %}
 		<style>
+			.tab-pane{
+			  height:95%;
+			  overflow-y:scroll;
+			  width:100%;
+			}
 			body {
 				padding-top: 70px;
 			}
@@ -42,10 +49,14 @@
 				</div>
 		</nav>
 
-		<div class = "container-full">
-		{% block body %}
-		{% endblock %}
-		</div>
+
+			<div class = "panel tab-pane">
+				<div class="panel-body">
+					{% block body %}
+					{% endblock %}
+				</div>
+			</div>
+
 		<footer>
 			<p class="pull-left">This webpage was created on 2016.11.07.</p>
   			<p class="pull-right">©EvolutionAndStuff</p>
