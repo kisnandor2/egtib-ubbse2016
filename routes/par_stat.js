@@ -3,8 +3,10 @@
  */
 var router = require('express').Router();
 
-router.get('/', function(req, res){
-    res.render('par_stat',{ active: 'par_stat'});
+router.get('/', function(req, res) {
+  res.render('par_stat', {
+    active: 'par_stat'
+  });
 });
 
 module.exports = router;
