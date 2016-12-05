@@ -2,126 +2,125 @@
 
 {% block head %}
 	<title> Simulation </title>
-    <link rel="stylesheet" href="/stylesheets/voronoi_style.css">
-    <script type="text/javascript" src="/javascripts/paper-full.js"></script>
-    <script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
-    <script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
+	<link rel="stylesheet" href="/stylesheets/voronoi_style.css">
+	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
+	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
+	<script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
 
-    <script>
-        var voronoi;
-        window.onload = function() {
-	        	$.ajaxSetup({
-						  xhrFields: {
-						    withCredentials: true
-						  }
-						});
-            let canvas = document.getElementById('canvas');
-            paper.install(window);
-            paper.setup(canvas);
-            voronoi = new AnimatableVoronoi(view);
+	<script type="text/javascript">
+		var voronoi;
+		window.onload = function() {
+			let canvas = document.getElementById('canvas');
+			paper.install(window);
+			paper.setup(canvas);
+			voronoi = new AnimatableVoronoi(view);
 
-            //-----------------------------------------------------------------
-            //-----------------------------------------------------------------
-            // pass nunjucks variable with: {{sites|dump|safe}} 
-            //-----------------------------------------------------------------
-            //-----------------------------------------------------------------
-            let sites = voronoi.generateBeeHivePoints(view.size.divide(50), true);
-            voronoi.setSites(sites);
-            voronoi.renderDiagram();
+			//-----------------------------------------------------------------
+			//-----------------------------------------------------------------
+			// pass nunjucks variable with: {{sites|dump|safe}} 
+			//-----------------------------------------------------------------
+			//-----------------------------------------------------------------
+			let sites = voronoi.generateBeeHivePoints(view.size.divide(50), true);
+			voronoi.setSites(sites);
+			voronoi.renderDiagram();
 
-			console.log(sites);
-            $.post("voronoi/init", {
-                bbox: voronoi.getBbox(),
-                sites: sites
-            });
-        }
+			$.post("voronoi/init", {
+				bbox: voronoi.getBbox(),
+				sites: sites
+			}, function(data) {
+				if (data != 0) {
+					alert('baj volt');
+				}
+			});
+		}
 
-        function render(i, n, sitesList){
-            if (i >= n){
-                alert('kesz');
-                return;
-            }
-            setTimeout(function(){
-                    voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
-                    voronoi.renderDiagram();
-                    render(i+1, n, sitesList);
-                    return;
-            }, 0)
-        }
-    </script>
+		function render(i, n, sitesList) {
+			if (i >= n) {
+				alert('kesz');
+				return;
+			}
+			setTimeout(function() {
+				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
+				voronoi.renderDiagram();
+				render(i + 1, n, sitesList);
+				return;
+			}, 0)
+		}
+		</script>
 
-    <script type="text/javascript">
-    	$( document ).ready(function() {
-    		var chart = Highcharts.chart('container', {
+		<script type="text/javascript">
+		$(document).ready(function() {
+			var chart = Highcharts.chart('container', {
 
-		        chart: {
-		            type: 'column'
-		        },
+				chart: {
+					type: 'column'
+				},
 
-		        title: {
-		            text: 'Number of cells, over time'
-		        },
+				title: {
+					text: 'Number of cells, over time'
+				},
 
-		        xAxis: {
-		            categories: []
-		        },
+				xAxis: {
+					categories: []
+				},
 
-		        yAxis: {
-		            allowDecimals: false,
-		            min: 0,
-		            title: {
-		                text: 'Number of cells'
-		            }
-		        },
+				yAxis: {
+					allowDecimals: false,
+					min: 0,
+					title: {
+						text: 'Number of cells'
+					}
+				},
 
-		        tooltip: {
-		            formatter: function () {
-		                return '<b>' + this.x + '</b><br/>' +
-		                    this.series.name + ': ' + this.y + '<br/>' +
-		                    'Total: ' + this.point.stackTotal;
-		            }
-		        },
+				tooltip: {
+					formatter: function() {
+						return '<b>' + this.x + '</b><br/>' +
+							this.series.name + ': ' + this.y + '<br/>' +
+							'Total: ' + this.point.stackTotal;
+					}
+				},
 
-		        plotOptions: {
-		            column: {
-		                stacking: 'normal'
-		            }
-		        },
+				plotOptions: {
+					column: {
+						stacking: 'normal'
+					}
+				},
 
-		        series: [{
-		            name: 'Productive',
-		            color: '#f36205',
-		            data: [],
-		        }, {
-		            name: 'Non-productive',
-		            color: '#2f98da',
-		            data: [],
-		        }, {
-			        name: 'NS',
-			        type: 'spline',
-			        color: '#000000',
-			        data: [],
-			    }]
-		    });
-		
-		    var n = Math.ceil(Math.random()*1000); //ezt kell megkapjam
-		    var categories = [];
-		    var numberProductive = [];
-		    var numberNonProductive = [];
-		    for (i = 0; i<50; i++) {
-		    	var p = Math.ceil(Math.random()*n); //ezt kell megkapjam
-		    	numberProductive.push(p);
-		    	numberNonProductive.push(n-p);
-		    	categories.push(i+1);
-		    }
-		    chart.series[0].setData(numberProductive);
-		    chart.series[1].setData(numberNonProductive);
-		    chart.series[2].setData(numberNonProductive);
-		    
-		    chart.xAxis[0].setCategories(categories); 
+				series: [{
+					name: 'Productive',
+					color: '#f36205',
+					data: [],
+				}, {
+					name: 'Non-productive',
+					color: '#2f98da',
+					data: [],
+				}, {
+					name: 'NS',
+					type: 'spline',
+					color: '#000000',
+					data: [],
+				}]
+			});
+
+			var n = Math.ceil(Math.random() * 1000); //ezt kell megkapjam
+			var categories = [];
+			var numberProductive = [];
+			var numberNonProductive = [];
+			for (i = 0; i < 50; i++) {
+				var p = Math.ceil(Math.random() * n); //ezt kell megkapjam
+				numberProductive.push(p);
+				numberNonProductive.push(n - p);
+				categories.push(i + 1);
+			}
+			chart.series[0].setData(numberProductive);
+			chart.series[1].setData(numberNonProductive);
+			chart.series[2].setData(numberNonProductive);
+
+			chart.xAxis[0].setCategories(categories);
 
 		});
-    	var number, number_non;
+		var number, number_non;
+
 		function submit1() {
 			number = Number(document.getElementById('number').value);
 			console.log(number);
@@ -132,66 +131,65 @@
 		function submit2() {
 			presets = document.getElementById('presets').value;
 			console.log(presets);
-			
-      $.get("voronoi/data", function(data) {
-        let sitesList = JSON.parse(data);
-        render(0, sitesList.length, sitesList);
-      });
-		}
 
-    </script>
+			//TODO: Temporary!!
+			$.get("voronoi/data", function(data) {
+				let sitesList = JSON.parse(data);
+				render(0, sitesList.length, sitesList);
+			});
+		}
+	</script>
+
 {% endblock %}
 
 {% block body %}
+	<div class="row" >
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+					<div class="panel-heading" style="background-color: rgb(40,40,40); color: rgb(255,255,255);">Set the parameters for the next run here:</div>
+						<div class="panel-body" style="text-align: center">
+							<label>Enter your own parameters:</label><br><br>
+							<form style="text-align: left">
+							<div class="form-group">
+								<label for="number">Total number of particles:</label>
+								<input type="number" class="form-control" id="number">
+							</div>
+							<div class="form-group">
+								<label for="number_non">Number of non-productive cells:</label>
+								<input type="number" class="form-control" id="number_non">
+							</div>
+							<input type="button" class="btn btn-default" onclick="submit1();" value="Submit"/>
+					</form><br>
 
-			<div class="row" >
-				<div class="col-sm-4">
-				 	<div class="panel panel-default">
-			     		<div class="panel-heading" style="background-color: rgb(40,40,40); color: rgb(255,255,255);">Set the parameters for the next run here:</div>
-			      		<div class="panel-body" style="text-align: center">
-			      			<label>Enter your own parameters:</label><br><br>
-			      			<form style="text-align: left">
-							    <div class="form-group">
-							      <label for="number">Total number of particles:</label>
-							      <input type="number" class="form-control" id="number">
-							    </div>
-							    <div class="form-group">
-							      <label for="number_non">Number of non-productive cells:</label>
-							      <input type="number" class="form-control" id="number_non">
-							    </div>
-							    <input type="button" class="btn btn-default" onclick="submit1();" value="Submit"/>
-						 	</form><br>
+					<label> --------------- OR ---------------</label><br><br>
 
-						 	<label> --------------- OR ---------------</label><br><br>
-
-						 	<label>Select a preset:</label><br><br>
-			      			<form style="text-align: left">
-			      				<div class="form-group">
-									<label for="presets">Choose your preset:</label>
-									<select class="form-control" id="presets">
-										<option>Default cancer</option>
-									</select>
-								</div>
-
-								<input type="button" class="btn btn-default" onclick="submit2();" value="Submit"/>
-						 	</form>
-			      		</div>
-			    	</div>
-				</div>
-				<div class="col-sm-8" style = "height: 50%">
-				 	<div class="panel panel-default">
-			      		<canvas id="canvas" resize></canvas>
-			    	</div>
-				</div>	 
-			</div>
-			<div class="row">
-				<div class="panel panel-default">
-					<div class="panel-heading" style="background-color: rgb(40,40,40); color: rgb(255,255,255); text-align: center;">Statistics</div>
-					<div class="panel-body" style="text-align: center">
-						<div id = "container">
+					<label>Select a preset:</label><br><br>
+							<form style="text-align: left">
+								<div class="form-group">
+							<label for="presets">Choose your preset:</label>
+							<select class="form-control" id="presets">
+								<option>Default cancer</option>
+							</select>
 						</div>
-					</div>
+
+						<input type="button" class="btn btn-default" onclick="submit2();" value="Submit"/>
+					</form>
+						</div>
+				</div>
+		</div>
+		<div class="col-sm-8" style = "height: 90%">
+			<div class="panel panel-default">
+						<canvas id="canvas" resize></canvas>
+				</div>
+		</div>	 
+	</div>
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading" style="background-color: rgb(40,40,40); color: rgb(255,255,255); text-align: center;">Statistics</div>
+			<div class="panel-body" style="text-align: center">
+				<div id = "container">
 				</div>
 			</div>
-
+		</div>
+	</div>
 {% endblock %}

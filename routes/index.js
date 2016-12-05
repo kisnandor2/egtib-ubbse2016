@@ -4,7 +4,7 @@
 var router = require('express').Router();
 
 router.get('/', function(req, res){
-    res.render('example',{ active: 'index'});
+	res.render('example',{ active: 'index'});
 });
 
 module.exports = router;

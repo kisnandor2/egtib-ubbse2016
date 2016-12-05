@@ -6,7 +6,7 @@
  var router = require('express').Router();
 
  router.get('/', function(req, res){
-    //..code
+		//..code
  });
 
  module.exports = router;
@@ -22,20 +22,23 @@ const session = require('express-session');
 const bodyParser = require('body-parser')
 let app = express();
 
+app.use(session({
+	secret: 'secretEGTIB',
+	resave: false,
+	saveUninitialized: true,
+	cookie: {
+		expires: false,
+	}
+}));
+
 app.use(express.static(__dirname + '/public'));
 nunjucks.configure('views', {
 	express: app
 });
 
-app.use(session({
-	secret: 'secretEGTIB',
-  resave: false,
-  saveUninitialized: true
-}));
-
 app.use(bodyParser.json());			// to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
-  extended: true
+	extended: true
 })); 
 
 app.engine('html', nunjucks.render);

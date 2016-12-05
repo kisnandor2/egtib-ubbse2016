@@ -1,48 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Voronoi</title>
+	<meta charset="UTF-8">
+	<title>Voronoi</title>
 
-    <link rel="stylesheet" href="/stylesheets/voronoi_style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/javascripts/paper-full.js"></script>
-    <script type="text/javascript" src="http://paperjs.org/assets/js/rhill-voronoi-core.js"></script>
-    <script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
-    <script>
-        var voronoi;
-        window.onload = function() {
-            var canvas = document.getElementById('canvas');
-            paper.install(window)
-            paper.setup(canvas);
-            voronoi = new AnimatableVoronoi(view);
-            //This comes from nunjucks but in bad format
-            //TODO: check if normal variable pass why can't be used?
-            //sites will be changed by the renderDiagram, so a backup is needed
-            voronoi.setSites(voronoi.sitesBadFormatToPointFormat({{sites|dump|safe}}));
-            // voronoi.setSites(voronoi.generateBeeHivePoints(view.size.divide(50), true));
-            voronoi.renderDiagram();
-            $.get("voronoi/data", function(data) {
-                let sitesList = JSON.parse(data);
-                render(0, sitesList.length, sitesList);
-            });
-        }
+	<link rel="stylesheet" href="/stylesheets/voronoi_style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
+	<script type="text/javascript" src="http://paperjs.org/assets/js/rhill-voronoi-core.js"></script>
+	<script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
+	<script>
+		var voronoi;
+		window.onload = function() {
+			var canvas = document.getElementById('canvas');
+			paper.install(window)
+			paper.setup(canvas);
+			voronoi = new AnimatableVoronoi(view);
 
-        function render(i, n, sitesList){
-            if (i >= n){
-                alert('kesz');
-                return;
-            }
-            setTimeout(function(){
-                    voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
-                    voronoi.renderDiagram();
-                    render(i+1, n, sitesList);
-                    return;
-            }, 0)
-        }
-    </script>
+			voronoi.setSites(voronoi.sitesBadFormatToPointFormat({
+				{
+					sites | dump | safe
+				}
+			}));
+			// voronoi.setSites(voronoi.generateBeeHivePoints(view.size.divide(50), true));
+			voronoi.renderDiagram();
+			$.get("voronoi/data", function(data) {
+				let sitesList = JSON.parse(data);
+				render(0, sitesList.length, sitesList);
+			});
+		}
+
+		function render(i, n, sitesList) {
+			if (i >= n) {
+				alert('kesz');
+				return;
+			}
+			setTimeout(function() {
+				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
+				voronoi.renderDiagram();
+				render(i + 1, n, sitesList);
+				return;
+			}, 0)
+		}
+	</script>
+
 </head>
 <body>
-    <canvas id="canvas" resize></canvas>
+	<canvas id="canvas" resize></canvas>
 </body>
 </html>

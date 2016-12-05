@@ -1,19 +1,22 @@
 <html>
 	<head>
 		<title>EGTB - EvolutionAndStuff</title>
+
 		<script src="https://code.highcharts.com/highcharts.js"></script>
 		<script src="https://code.highcharts.com/modules/exporting.js"></script>
 		<script src='/javascripts/jquery.min.js'></script>
 		<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 		{% block head %}
 		{% endblock %}
+
 		<style>
 			.tab-pane{
-			  height:95%;
-			  overflow-y:scroll;
-			  width:100%;
+				height:95%;
+				overflow-y:scroll;
+				width:100%;
 			}
 			body {
 				padding-top: 70px;
@@ -21,45 +24,41 @@
 		</style>
 	</head>
 
-
-
 	<body>
 		<nav class='nav navbar navbar-inverse navbar-fixed-top'>
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-				        <span class="icon-bar"></span>
-				        <span class="icon-bar"></span>
-				        <span class="icon-bar"></span>
-			      	</button>
-					<a class='navbar-brand' href="/index">EvolutionAndStuff</a>
-				</div>
-				<div class='collapse navbar-collapse' id="myNavbar">
-					<ul class='nav navbar-nav'>
-						<li {% if active=='index' %} class='active' {% endif %}>
-							<a href='/index'>Home</a>
-						</li>
-						<li>
-							<a href='/voronoi'>Voronoi</a>
-						</li>
-						<li {% if active=='par_stat' %} class='active' {% endif %}>
-
-							<a href='/parameter_statistics'>Parameter Setup, Visualisation and Statistics</a>
-						</li>
-					</ul>
-				</div>
-		</nav>
-
-
-			<div class = "panel tab-pane">
-				<div class="panel-body">
-					{% block body %}
-					{% endblock %}
-				</div>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+				</button>
+				<a class='navbar-brand' href="/index">EvolutionAndStuff</a>
 			</div>
+			<div class='collapse navbar-collapse' id="myNavbar">
+				<ul class='nav navbar-nav'>
+					<li {% if active=='index' %} class='active' {% endif %}>
+						<a href='/index'>Home</a>
+					</li>
+					<li>
+						<a href='/voronoi'>Voronoi</a>
+					</li>
+					<li {% if active=='par_stat' %} class='active' {% endif %}>
+						<a href='/parameter_statistics'>Parameter Setup, Visualisation and Statistics</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		
+		<div class = "panel tab-pane">
+			<div class="panel-body">
+				{% block body %}
+				{% endblock %}
+			</div>
+		</div>
 
 		<footer>
 			<p class="pull-left">This webpage was created on 2016.11.07.</p>
-  			<p class="pull-right">©EvolutionAndStuff</p>
+			<p class="pull-right">©EvolutionAndStuff</p>
 		</footer>
 
 	</body>
