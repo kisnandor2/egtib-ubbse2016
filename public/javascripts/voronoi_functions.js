@@ -7,12 +7,14 @@ function AnimatableVoronoi(view) {
 	this.sites = [];
 	this.sitesWithColor = [];
 	this.view = view;
-	this.margin = 10;
+	this.margin = 0;
 
 	this.oldSize = view.size;
 	this.mousePos = view.center;
 
 	this.diagram = undefined;
+
+	this.cooperatingChance = 0.5;
 
 	this.onResize();
 }
@@ -94,16 +96,16 @@ AnimatableVoronoi.prototype.generateBeeHivePoints = function(size, loose) {
 	//used to generate the sites[] for a window
 	let points = [];
 	let col = view.size.divide(size);
-	// console.log(col + " " + size.width + " " + size.height);
-	for (let i = -1; i < size.width + 1; i++) {
-		for (let j = -1; j < size.height + 1; j++) {
+	console.log(col + " " + size.width + " " + size.height);
+	for (let i = 0; i < size.width; i++) {
+		for (let j = 0; j < size.height; j++) {
 			let point = new paper.Point(i, j).divide(new paper.Point(size)).multiply(view.size).add(col.divide(2));
 			if (j % 2)
 				point = point.add(new paper.Point(col.width / 2, 0));
 			if (loose)
 				point = point.add((col.divide(4)).multiply(paper.Point.random()).subtract(col.divide(4)));
 			let attrib = undefined;
-			if (Math.random() <= 0.95)
+			if (Math.random() <= this.cooperatingChance)
 				attrib = 'c';
 			else
 				attrib = 'd';

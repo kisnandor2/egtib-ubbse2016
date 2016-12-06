@@ -20,7 +20,8 @@
 			// pass nunjucks variable with: {{sites|dump|safe}} 
 			//-----------------------------------------------------------------
 			//-----------------------------------------------------------------
-			let sites = voronoi.generateBeeHivePoints(view.size.divide(50), true);
+			console.log(view.size.divide(100));
+			let sites = voronoi.generateBeeHivePoints(view.size.divide(75), true);
 			voronoi.setSites(sites);
 			voronoi.renderDiagram();
 

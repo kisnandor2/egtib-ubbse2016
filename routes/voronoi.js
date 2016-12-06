@@ -92,10 +92,11 @@ router.post('/init', function(req, res){
 	}
 
 	cellakSzama = v.cellakSzama = sites.length;
+	v.Vn = Vn = V(sites.length);
+	v.V0 = V0 = V(0);
 	diagram = voronoi.compute(sites, bbox);
 	setPayoffs();
 	res.status(200).json(0);
-	console.log(req.session.v.sites[0]);
 });
 
 function initVoronoi(){
@@ -126,25 +127,30 @@ function initVoronoi(){
 function simulate() {
 	var ret = [];
 	for (var j = 0; j < sites.length; ++j) {
-		// var i = Math.floor(Math.random() * sites.length);
-		// //Get 'c' neighbors
-		// var neighbors = getNeighbors(sites[i], diagram);
-		// var cooperatingNeighbors = 0;
-		// for (var k = 0; k < neighbors.length; ++k) {
-		//   if (neighbors[k].attrib == 'c')
-		//     ++cooperatingNeighbors;
+		var i = Math.floor(Math.random() * sites.length);
+		//Get 'c' neighbors
+		var neighbors = getNeighbors(sites[i], diagram);
+		var cooperatingNeighbors = 0;
+		for (var k = 0; k < neighbors.length; ++k) {
+		  if (neighbors[k].attrib == 'c')
+		    ++cooperatingNeighbors;
+		}
+		//Calculate the payoff if not defined yet
+		neighbors = getNeighbors(sites[i], diagram);
+		var k = Math.floor(Math.random() * neighbors.length);
+		console.log(neighbors[k], sites[i]);
+		if (neighbors[k].payoff > sites[i].payoff) {
+		  sites[i].attrib = neighbors[k].attrib;
+		  sites[i].cost = neighbors[k].cost;
+		  setPayoffs();
+		}
+		// if (getNeighbors(sites[j], diagram) == 0){
+		// 	console.log(sites[j]);
 		// }
-		// //Calculate the payoff if not defined yet
-		// neighbors = getNeighbors(sites[i], diagram);
-		// var k = Math.floor(Math.random() * neighbors.length);
-		// if (k == 0) //why can this happen? NO NEIGHBORS
-		//   continue;
-		// if (neighbors[k].payoff > sites[i].payoff) {
-		//   sites[i].attrib = neighbors[k].attrib;
-		//   sites[i].cost = neighbors[k].cost;
-		//   setPayoffs();
-		// }
-		sites[j].attrib = 'd';
+		// if (sites[j].attrib == 'd')
+		// 	sites[j].attrib = 'c';
+		// else
+		// 	sites[j].attrib = 'd'
 		ret.push(JSON.parse(JSON.stringify(sites)));
 	}
 	return ret;
