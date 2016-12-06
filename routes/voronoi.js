@@ -75,27 +75,30 @@ router.post('/init', function(req, res){
 	sites = v.sites = [];
 
 	let badlyFormattedSites = req.body.sites;
-	for (let i = 0; i < badlyFormattedSites.length; ++i){
-		site = badlyFormattedSites[i];
-		let cost = undefined;
-		if (site.attrib == 'c')
-			cost = cooperatingCost;
-		else
-			cost = defectingCost;
-		sites.push({
-			x: parseFloat(site.x),
-			y: parseFloat(site.y),
-			attrib: site.attrib,
-			cost: cost,
-			payoff: undefined
-		})
+	if (badlyFormattedSites != undefined) {
+		for (let i = 0; i < badlyFormattedSites.length; ++i){
+			site = badlyFormattedSites[i];
+			let cost = undefined;
+			if (site.attrib == 'c')
+				cost = cooperatingCost;
+			else
+				cost = defectingCost;
+			sites.push({
+				x: parseFloat(site.x),
+				y: parseFloat(site.y),
+				attrib: site.attrib,
+				cost: cost,
+				payoff: undefined
+			})
+		}
+
+		cellakSzama = v.cellakSzama = sites.length;
+		v.Vn = Vn = V(sites.length);
+		v.V0 = V0 = V(0);
+		diagram = voronoi.compute(sites, bbox);
+		setPayoffs();		
 	}
 
-	cellakSzama = v.cellakSzama = sites.length;
-	v.Vn = Vn = V(sites.length);
-	v.V0 = V0 = V(0);
-	diagram = voronoi.compute(sites, bbox);
-	setPayoffs();
 	res.status(200).json(0);
 });
 
@@ -139,11 +142,14 @@ function simulate() {
 		neighbors = getNeighbors(sites[i], diagram);
 		var k = Math.floor(Math.random() * neighbors.length);
 		console.log(neighbors[k], sites[i]);
-		if (neighbors[k].payoff > sites[i].payoff) {
-		  sites[i].attrib = neighbors[k].attrib;
-		  sites[i].cost = neighbors[k].cost;
-		  setPayoffs();
+		if (neighbors[k] != undefined) {
+			if (neighbors[k].payoff > sites[i].payoff) {
+			  sites[i].attrib = neighbors[k].attrib;
+			  sites[i].cost = neighbors[k].cost;
+			  setPayoffs();
+			}	
 		}
+		
 		// if (getNeighbors(sites[j], diagram) == 0){
 		// 	console.log(sites[j]);
 		// }
