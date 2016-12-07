@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/kisnandor2/egtib-ubbse2016#readme",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "express-session": "^1.14.2",
     "nunjucks": "^3.0.0"
   }
 }

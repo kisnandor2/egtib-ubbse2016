@@ -1177,46 +1177,65 @@ var Point = Base.extend({
 	_class: 'Point',
 	_readIndex: true,
 
-	initialize: function Point(arg0, arg1) {
+	initialize: function Point(arg0, arg1, attrib) {
 		var type = typeof arg0;
 		if (type === 'number') {
 			var hasY = typeof arg1 === 'number';
 			this.x = arg0;
 			this.y = hasY ? arg1 : arg0;
-			if (this.__read)
+			this.attrib = attrib;
+			if (this.__read){
 				this.__read = hasY ? 2 : 1;
+				this.attrib = attrib;
+			}
 		} else if (type === 'undefined' || arg0 === null) {
 			this.x = this.y = 0;
-			if (this.__read)
+			this.attrib = attrib;
+			if (this.__read){
 				this.__read = arg0 === null ? 1 : 0;
+				this.attrib = attrib;
+			}
 		} else {
 			var obj = type === 'string' ? arg0.split(/[\s,]+/) || [] : arg0;
 			if (Array.isArray(obj)) {
 				this.x = obj[0];
 				this.y = obj.length > 1 ? obj[1] : obj[0];
+				this.attrib = attrib;
 			} else if ('x' in obj) {
 				this.x = obj.x;
 				this.y = obj.y;
+				this.attrib = obj.attrib;
 			} else if ('width' in obj) {
 				this.x = obj.width;
 				this.y = obj.height;
+				this.attrib = attrib;
 			} else if ('angle' in obj) {
 				this.x = obj.length;
 				this.y = 0;
 				this.setAngle(obj.angle);
+				this.attrib = attrib;
 			} else {
 				this.x = this.y = 0;
-				if (this.__read)
+				this.attrib = attrib;
+				if (this.__read){
 					this.__read = 0;
+					this.attrib = attrib;
+				}
 			}
-			if (this.__read)
+			if (this.__read){
 				this.__read = 1;
+				this.attrib = attrib;
+			}
 		}
 	},
 
-	set: function(x, y) {
+	set: function(x, y, attrib) {
+		// console.log(this);
+		// console.log(attrib);
 		this.x = x;
 		this.y = y;
+		this.attrib = attrib;
+		// console.log(this);
 		return this;
 	},
 
@@ -1229,7 +1248,7 @@ var Point = Base.extend({
 	},
 
 	clone: function() {
-		return new Point(this.x, this.y);
+		return new Point(this.x, this.y, this.attrib);
 	},
 
 	toString: function() {
