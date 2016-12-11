@@ -3,9 +3,14 @@
  */
 const router = require('express').Router();
 const Voronoi = require('./module.voronoi');
+const logger = require('./logger');
 
 const voronoi = new Voronoi();
 const e = Math.exp(1);
+
+//TODO: check for better values
+const s = 2;
+const defaultInflexiosPont = 2.5;
 const cooperatingCost = 0.5;
 const defectingCost = 0;
 
@@ -39,7 +44,7 @@ router.use(function(req, res, next) {
 		Vn = v.Vn = 0;
 		V0 = v.V0 = 0;
 		cellakSzama = v.cellakSzama = 0;
-		inflexiosPontHelye = v.inflexiosPontHelye = 2.5;
+		inflexiosPontHelye = v.inflexiosPontHelye = defaultInflexiosPont;
 		initVoronoi();
 		diagram = voronoi.compute(sites, bbox);
 		setPayoffs();
@@ -75,7 +80,8 @@ router.post('/init', function(req, res){
 	sites = v.sites = [];
 
 	let badlyFormattedSites = req.body.sites;
-	if (badlyFormattedSites != undefined) {
+	logger.debug('Lenght of sites from client when init:', badlyFormattedSites.length);
+	try {
 		for (let i = 0; i < badlyFormattedSites.length; ++i){
 			site = badlyFormattedSites[i];
 			let cost = undefined;
@@ -98,12 +104,17 @@ router.post('/init', function(req, res){
 		diagram = voronoi.compute(sites, bbox);
 		setPayoffs();		
 	}
+	catch (error){
+		logger.error('Invalid request JSON', badlyFormattedSites);
+		res.status(500).json(1);
+	}
 
 	res.status(200).json(0);
 });
 
 function initVoronoi(){
-	//Can be used only when everything is set beforehand
+	logger.trace('Building up a voronoi on the server side!');
+	//Can be used only when no information is available from the client
 	for (var i = 0; i < initialSize.x; i += 100) {
 		for (var j = 0; j < initialSize.y; j += 100) {
 			if (Math.random() <= 0.95) {
@@ -141,15 +152,17 @@ function simulate() {
 		//Calculate the payoff if not defined yet
 		neighbors = getNeighbors(sites[i], diagram);
 		var k = Math.floor(Math.random() * neighbors.length);
-		console.log(neighbors[k], sites[i]);
-		if (neighbors[k] != undefined) {
+		try {
 			if (neighbors[k].payoff > sites[i].payoff) {
 			  sites[i].attrib = neighbors[k].attrib;
 			  sites[i].cost = neighbors[k].cost;
 			  setPayoffs();
 			}	
 		}
-		
+		catch (error){
+			logger.error('No neighbors found!', error);
+		}
+
 		// if (getNeighbors(sites[j], diagram) == 0){
 		// 	console.log(sites[j]);
 		// }
@@ -159,6 +172,7 @@ function simulate() {
 		// 	sites[j].attrib = 'd'
 		ret.push(JSON.parse(JSON.stringify(sites)));
 	}
+	logger.debug('Simulation length(Generations):', ret.length);
 	return ret;
 }
 
@@ -181,8 +195,7 @@ function payoff(cooperatingNeighborsCount, cost) {
 }
 
 function V(i) {
-	//s = 2 ---> ?
-	return 1 / (1 + Math.pow(e, (-2 * (i - inflexiosPontHelye)) / cellakSzama));
+	return 1 / (1 + Math.pow(e, (-s * (i - inflexiosPontHelye)) / cellakSzama));
 }
 
 function getNeighbors(p, diagram) {

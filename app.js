@@ -19,8 +19,14 @@ let portno = 3001; // use this for entering a different port number
 const express = require('express');
 const nunjucks = require('nunjucks');
 const session = require('express-session');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const requestLogger = require('express-logger');
+const logger = require('routes/logger');
 let app = express();
+
+app.use(requestLogger({ //Logs only the http requests
+	path: "logs/reguestLog.log"
+}));
 
 app.use(session({
 	secret: 'secretEGTIB',
@@ -51,4 +57,4 @@ app.use('/parameter_statistics', require('./routes/par_stat'));
 app.use(require('./routes/404'));
 
 app.listen(portno);
-console.log("Server started, listening on: "+ portno);
+logger.info("Server listening on:", portno);
