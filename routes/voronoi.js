@@ -9,7 +9,7 @@ const voronoi = new Voronoi();
 const e = Math.exp(1);
 
 //TODO: check for better values
-const s = 2;
+const s = 20;
 const defaultInflexiosPont = 2.5;
 const cooperatingCost = 0.5;
 const defectingCost = 0;
@@ -186,16 +186,16 @@ function setPayoffs() {
 				++cooperatingNeighbors;
 		}
 		//Calculate the payoff
-		sites[i].payoff = payoff(cooperatingNeighbors, sites[i].cost);
+		sites[i].payoff = payoff(cooperatingNeighbors, sites[i].cost, neighbors.length);
 	}
 }
 
-function payoff(cooperatingNeighborsCount, cost) {
-	return (V(cooperatingNeighborsCount) - V0) / (Vn - V0) - cost;
+function payoff(cooperatingNeighborsCount, cost, neighborsCount) {
+	return (V(cooperatingNeighborsCount, neighborsCount) - V(0,neighborsCount)) / (V(neighborsCount,neighborsCount) - V(0,neighborsCount)) - cost;
 }
 
-function V(i) {
-	return 1 / (1 + Math.pow(e, (-s * (i - inflexiosPontHelye)) / cellakSzama));
+function V(i, neighborsCount) {
+	return 1 / (1 + Math.pow(e, (-s * (i - inflexiosPontHelye)) / neighborsCount));
 }
 
 function getNeighbors(p, diagram) {
