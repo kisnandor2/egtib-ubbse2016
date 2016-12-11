@@ -10,6 +10,8 @@
 	<script type="text/javascript">
 
 		var voronoi;
+		var dcolor=128;
+		var ccolor=255;
 		window.onload = function() {
 		 	let canvas = document.getElementById('canvas');
 			var context = canvas.getContext('2d');
@@ -38,9 +40,9 @@
 
 			canvas.onclick= function(event){
 				color = context.getImageData(event.layerX, event.layerY, 1, 1).data[1];
-				if(color==128)
+				if(color==dcolor)
 					voronoi.onMouseDown(event.layerX,event.layerY,'d');
-				if(color==255)
+				if(color==ccolor)
 						voronoi.onMouseDown(event.layerX,event.layerY,'c');
 			}
 
