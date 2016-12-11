@@ -13,7 +13,6 @@
 
  Done
  */
-
 let portno = 3001; // use this for entering a different port number
 
 const express = require('express');
@@ -45,7 +44,7 @@ nunjucks.configure('views', {
 app.use(bodyParser.json());			// to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 	extended: true
-})); 
+}));
 
 app.engine('html', nunjucks.render);
 app.set('view engine', 'html');

@@ -30,16 +30,18 @@ AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadForma
 }
 
 
-AnimatableVoronoi.prototype.onMouseDown = function(event) {
-	this.sites.push(event.point);
+AnimatableVoronoi.prototype.onMouseDown = function(x,y,attrib) {
+	this.sites.push(new paper.Point(x,y,attrib));
+	this.setSites(this.sites);
 	this.renderDiagram();
 }
 
-AnimatableVoronoi.prototype.onMouseMove = function(event) {
-	this.mousePos = event.point;
-	if (event.count == 0)
-		sites.push(event.point);
-	this.sites[this.sites.length - 1] = event.point;
+AnimatableVoronoi.prototype.onMouseMove = function(x,y,attrib,count) {
+	this.mousePos = new paper.Point(x,y,attrib);;
+	if(count == 0)
+		this.sites.push(new paper.Point(x,y,attrib));
+	this.sites[this.sites.length - 1] = new paper.Point(x,y,attrib);
+	this.setSites(this.sites);
 	this.renderDiagram();
 }
 

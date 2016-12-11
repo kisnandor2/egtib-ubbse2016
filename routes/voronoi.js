@@ -75,7 +75,7 @@ router.get('/data', function(req, res) {
 });
 
 router.post('/init', function(req, res){
-	v = req.session.v;
+	let v = req.session.v;
 	bbox = v.bbox = req.body.bbox;
 	sites = v.sites = [];
 
@@ -83,7 +83,7 @@ router.post('/init', function(req, res){
 	logger.debug('Lenght of sites from client when init:', badlyFormattedSites.length);
 	try {
 		for (let i = 0; i < badlyFormattedSites.length; ++i){
-			site = badlyFormattedSites[i];
+			let site = badlyFormattedSites[i];
 			let cost = undefined;
 			if (site.attrib == 'c')
 				cost = cooperatingCost;
@@ -102,7 +102,7 @@ router.post('/init', function(req, res){
 		v.Vn = Vn = V(sites.length);
 		v.V0 = V0 = V(0);
 		diagram = voronoi.compute(sites, bbox);
-		setPayoffs();		
+		setPayoffs();
 	}
 	catch (error){
 		logger.error('Invalid request JSON', badlyFormattedSites);
@@ -157,7 +157,7 @@ function simulate() {
 			  sites[i].attrib = neighbors[k].attrib;
 			  sites[i].cost = neighbors[k].cost;
 			  setPayoffs();
-			}	
+			}
 		}
 		catch (error){
 			logger.error('No neighbors found!', error);
@@ -201,7 +201,7 @@ function V(i) {
 function getNeighbors(p, diagram) {
 	//find neighbors of cell which has site at p point
 	var neighbors = [];
-	halfedges = getCellBySite(p, diagram.cells).halfedges;
+	var halfedges = getCellBySite(p, diagram.cells).halfedges;
 	for (var i in halfedges) {
 		var lsite = halfedges[i].edge.lSite
 		if (lsite != null && !compareSites(lsite, p)) neighbors.push(lsite);
