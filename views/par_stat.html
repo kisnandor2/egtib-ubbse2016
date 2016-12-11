@@ -8,16 +8,18 @@
 	<script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
 
 	<script type="text/javascript">
+
 		var voronoi;
 		window.onload = function() {
-			let canvas = document.getElementById('canvas');
+		 	let canvas = document.getElementById('canvas');
+			var context = canvas.getContext('2d');
 			paper.install(window);
 			paper.setup(canvas);
 			voronoi = new AnimatableVoronoi(view);
-
+			let count=0;
 			//-----------------------------------------------------------------
 			//-----------------------------------------------------------------
-			// pass nunjucks variable with: {{sites|dump|safe}} 
+			// pass nunjucks variable with: {{sites|dump|safe}}
 			//-----------------------------------------------------------------
 			//-----------------------------------------------------------------
 			console.log(view.size.divide(100));
@@ -33,6 +35,27 @@
 					alert('baj volt');
 				}
 			});
+
+			canvas.onclick= function(event){
+				color = context.getImageData(event.layerX, event.layerY, 1, 1).data[1];
+				if(color==128)
+					voronoi.onMouseDown(event.layerX,event.layerY,'d');
+				if(color==255)
+						voronoi.onMouseDown(event.layerX,event.layerY,'c');
+			}
+
+			//slow motion
+			/*
+			canvas.onmousemove = function(event){
+				color = context.getImageData(event.layerX, event.layerY, 1, 1).data[1];
+				if(color==128)
+					voronoi.onMouseMove(event.layerX,event.layerY,'d',count);
+				if(color==255)
+						voronoi.onMouseMove(event.layerX,event.layerY,'c',count);
+				++count;
+			}*/
+
+
 		}
 
 		function render(i, n, sitesList) {
@@ -48,6 +71,7 @@
 			}, 0)
 		}
 		</script>
+
 
 		<script type="text/javascript">
 		$(document).ready(function() {
@@ -182,7 +206,7 @@
 			<div class="panel panel-default">
 						<canvas id="canvas" resize></canvas>
 				</div>
-		</div>	 
+		</div>
 	</div>
 	<div class="row">
 		<div class="panel panel-default">

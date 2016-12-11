@@ -1,6 +1,7 @@
 	/**
  * Created by rekaszilagyi on 2016-11-13.
  */
+ "use strict";
 const router = require('express').Router();
 const Voronoi = require('./module.voronoi');
 
@@ -70,14 +71,14 @@ router.get('/data', function(req, res) {
 });
 
 router.post('/init', function(req, res){
-	v = req.session.v;
+	let v = req.session.v;
 	bbox = v.bbox = req.body.bbox;
 	sites = v.sites = [];
 
 	let badlyFormattedSites = req.body.sites;
 	if (badlyFormattedSites != undefined) {
 		for (let i = 0; i < badlyFormattedSites.length; ++i){
-			site = badlyFormattedSites[i];
+			let site = badlyFormattedSites[i];
 			let cost = undefined;
 			if (site.attrib == 'c')
 				cost = cooperatingCost;
@@ -96,7 +97,7 @@ router.post('/init', function(req, res){
 		v.Vn = Vn = V(sites.length);
 		v.V0 = V0 = V(0);
 		diagram = voronoi.compute(sites, bbox);
-		setPayoffs();		
+		setPayoffs();
 	}
 
 	res.status(200).json(0);
@@ -104,9 +105,10 @@ router.post('/init', function(req, res){
 
 function initVoronoi(){
 	//Can be used only when everything is set beforehand
-	for (var i = 0; i < initialSize.x; i += 100) {
-		for (var j = 0; j < initialSize.y; j += 100) {
-			if (Math.random() <= 0.95) {
+  for (var i = 0; i < initialSize.x; i += 100) {
+    for (var j = 0; j < initialSize.y; j += 100) {
+      var attrib,cost;
+      if (Math.random() <= 0.95) {
 				attrib = 'c';
 				cost = cooperatingCost;
 			} else {
@@ -147,9 +149,9 @@ function simulate() {
 			  sites[i].attrib = neighbors[k].attrib;
 			  sites[i].cost = neighbors[k].cost;
 			  setPayoffs();
-			}	
+			}
 		}
-		
+
 		// if (getNeighbors(sites[j], diagram) == 0){
 		// 	console.log(sites[j]);
 		// }
@@ -188,7 +190,7 @@ function V(i) {
 function getNeighbors(p, diagram) {
 	//find neighbors of cell which has site at p point
 	var neighbors = [];
-	halfedges = getCellBySite(p, diagram.cells).halfedges;
+	var halfedges = getCellBySite(p, diagram.cells).halfedges;
 	for (var i in halfedges) {
 		var lsite = halfedges[i].edge.lSite
 		if (lsite != null && !compareSites(lsite, p)) neighbors.push(lsite);
