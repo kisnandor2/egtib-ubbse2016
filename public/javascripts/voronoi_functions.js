@@ -174,3 +174,17 @@ AnimatableVoronoi.prototype.setSites = function(sites) {
 AnimatableVoronoi.prototype.getBbox = function() {
 	return this.bbox;
 }
+
+AnimatableVoronoi.prototype.getSites = function(){
+	return this.sites;
+}
+
+AnimatableVoronoi.prototype.setNonCooperatingChance = function(chance){
+	if (chance == undefined || isNaN(chance)){
+		throw "Invalid chance value";
+	}
+	if (chance < 0 || chance > 1)
+		this.cooperatingChance = 0.5;
+	else
+		this.cooperatingChance = 1-chance;
+}
