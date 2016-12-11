@@ -21,7 +21,7 @@ const nunjucks = require('nunjucks');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const requestLogger = require('express-logger');
-const logger = require('routes/logger');
+const logger = require('./routes/logger');
 let app = express();
 
 app.use(requestLogger({ //Logs only the http requests
