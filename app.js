@@ -13,27 +13,48 @@
 
  Done
  */
-let portno = 3001; // use this for entering a different port number
+let portno = 80; // use this for entering a different port number
 
 const express = require('express');
 const nunjucks = require('nunjucks');
-const session = require('express-session');
 const bodyParser = require('body-parser');
 const requestLogger = require('express-logger');
 const logger = require('./routes/logger');
 let app = express();
+const session = require('express-session')
+
+
+if (process.env.NODE && ~process.env.NODE.indexOf("heroku")){ //check if running in Heroku
+	const MongoStore = require('connect-mongo')(session);
+	app.use(session({
+			secret: 'secretEGTIB',
+			store: new MongoStore({ //TODO: this has to be set correctly
+				host: '127.0.0.1',
+				port: '27017',
+				db : 'session',
+				url: 'mongodb://localhost:27017/demo'
+			}),
+			resave: false,
+			saveUninitialized: true,
+			cookie: {
+				maxAge: 1000 * 60 *60 * 24 //1day
+			}
+	}));
+}
+else { //develpoment, don't use Database for session
+	const session = require('express-session');
+	app.use(session({
+		secret: 'secretEGTIB',
+		resave: false,
+		saveUninitialized: true,
+		cookie: {
+			maxAge: 1000 * 60 * 60 * 24 // 1 day
+		}
+	}));
+}
 
 app.use(requestLogger({ //Logs only the http requests
 	path: "logs/reguestLog.log"
-}));
-
-app.use(session({
-	secret: 'secretEGTIB',
-	resave: false,
-	saveUninitialized: true,
-	cookie: {
-		expires: false,
-	}
 }));
 
 app.use(express.static(__dirname + '/public'));

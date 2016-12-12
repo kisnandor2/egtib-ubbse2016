@@ -68,7 +68,7 @@
 <XPD:OBJ name="OwnedViews[1]" type="UMLClassView" guid="XC0/T+01kUKrXEwYJF0+0wAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Left" type="integer">636</XPD:ATTR>
+<XPD:ATTR name="Left" type="integer">660</XPD:ATTR>
 <XPD:ATTR name="Top" type="integer">416</XPD:ATTR>
 <XPD:ATTR name="Width" type="integer">249</XPD:ATTR>
 <XPD:ATTR name="Height" type="integer">82</XPD:ATTR>
@@ -368,7 +368,7 @@
 <XPD:OBJ name="OwnedViews[11]" type="UMLAssociationView" guid="53Kk+X+HiEaVAQRk9GsKfgAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">699,416;421,235</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">719,416;421,232</XPD:ATTR>
 <XPD:REF name="Model">y5/ykEvyr0iy/BFdqTsMfgAA</XPD:REF>
 <XPD:REF name="Head">tx+sZ3wfuUOC4i7hHNloMwAA</XPD:REF>
 <XPD:REF name="Tail">XC0/T+01kUKrXEwYJF0+0wAA</XPD:REF>
@@ -452,7 +452,7 @@
 <XPD:OBJ name="OwnedViews[12]" type="UMLAssociationView" guid="eJ4eaBO8kUODEDntH7d07QAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">884,433;944,422</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">908,431;944,424</XPD:ATTR>
 <XPD:REF name="Model">GrCacOGqiUuVm4MzXfD0UwAA</XPD:REF>
 <XPD:REF name="Head">62fRdJITmkWenyA3wrVK4QAA</XPD:REF>
 <XPD:REF name="Tail">XC0/T+01kUKrXEwYJF0+0wAA</XPD:REF>
@@ -757,8 +757,8 @@
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
 <XPD:ATTR name="Left" type="integer">1240</XPD:ATTR>
 <XPD:ATTR name="Top" type="integer">124</XPD:ATTR>
-<XPD:ATTR name="Width" type="integer">86</XPD:ATTR>
-<XPD:ATTR name="Height" type="integer">82</XPD:ATTR>
+<XPD:ATTR name="Width" type="integer">104</XPD:ATTR>
+<XPD:ATTR name="Height" type="integer">95</XPD:ATTR>
 <XPD:REF name="Model">DJcRYvyzPk6RsMs/rVRd4wAA</XPD:REF>
 <XPD:OBJ name="NameCompartment" type="UMLNameCompartmentView" guid="UL26rVZ7fEe3QoQHoSLm+gAA">
 <XPD:OBJ name="NameLabel" type="LabelView" guid="1EhJ7OoP0EqnJDo9CojyKQAA">
@@ -786,7 +786,7 @@
 <XPD:OBJ name="OwnedViews[20]" type="UMLAssociationView" guid="rmhkwzOADEKeAhweb8pN0AAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">1240,158;1123,141</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">1240,163;1123,143</XPD:ATTR>
 <XPD:REF name="Model">vEJtaMSqiU+hT5WjoUg6SwAA</XPD:REF>
 <XPD:REF name="Head">tLi0FU7rpkqr8EWQUnRJDwAA</XPD:REF>
 <XPD:REF name="Tail">UcToPIeS8UumHiClPwEs9QAA</XPD:REF>
@@ -1435,19 +1435,33 @@
 <XPD:REF name="Views[3]">DOt8RSOxX0S0uruacFmy9wAA</XPD:REF>
 <XPD:ATTR name="#SupplierDependencies" type="integer">1</XPD:ATTR>
 <XPD:REF name="SupplierDependencies[0]">6N26vaVvlEiuHCaHB8b5tAAA</XPD:REF>
+<XPD:ATTR name="#Operations" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="Operations[0]" type="UMLOperation" guid="dikkaF/ZoES8Mbg3rM9EzAAA">
+<XPD:ATTR name="Name" type="string">getSites</XPD:ATTR>
+<XPD:REF name="Owner">DJcRYvyzPk6RsMs/rVRd4wAA</XPD:REF>
+<XPD:ATTR name="#Parameters" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="xhvZ/9NCHEyIWlTiLGI9JQAA">
+<XPD:ATTR name="DirectionKind" type="UMLParameterDirectionKind">pdkReturn</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">Point[]</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">dikkaF/ZoES8Mbg3rM9EzAAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
 <XPD:ATTR name="#Associations" type="integer">1</XPD:ATTR>
 <XPD:REF name="Associations[0]">EIOxawNcBkqxAE7L7wvkOQAA</XPD:REF>
 <XPD:ATTR name="#Attributes" type="integer">3</XPD:ATTR>
 <XPD:OBJ name="Attributes[0]" type="UMLAttribute" guid="W11hSTygfkW+gC16hYHNDAAA">
 <XPD:ATTR name="Name" type="string">sites</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">Point[]</XPD:ATTR>
 <XPD:REF name="Owner">DJcRYvyzPk6RsMs/rVRd4wAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="Attributes[1]" type="UMLAttribute" guid="0AP4OGHKpkmF2uxQ1rlGXQAA">
 <XPD:ATTR name="Name" type="string">bbox</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">Point[2]</XPD:ATTR>
 <XPD:REF name="Owner">DJcRYvyzPk6RsMs/rVRd4wAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="Attributes[2]" type="UMLAttribute" guid="1SSfa3Ig+0S3QmgQ88FviwAA">
 <XPD:ATTR name="Name" type="string">port</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">int</XPD:ATTR>
 <XPD:REF name="Owner">DJcRYvyzPk6RsMs/rVRd4wAA</XPD:REF>
 </XPD:OBJ>
 </XPD:OBJ>
