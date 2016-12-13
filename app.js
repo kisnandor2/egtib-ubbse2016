@@ -23,7 +23,7 @@ const logger = require('./routes/logger');
 let app = express();
 const session = require('express-session')
 
-//testing 
+//testing codeship
 
 if (process.env.NODE && ~process.env.NODE.indexOf("heroku")){ //check if running in Heroku
 	portno = process.env.PORT || 8080;
