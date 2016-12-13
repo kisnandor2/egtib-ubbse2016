@@ -31,7 +31,7 @@ if (process.env.NODE && ~process.env.NODE.indexOf("heroku")){ //check if running
 			secret: 'secretEGTIB',
 			store: new MongoStore({ //TODO: this has to be set correctly
 				db : 'session',
-				url: 'mongodb://heroku_p2xs9z92:tns4l39seclvhb9miol3kltio0@ds019996.mlab.com:19996/heroku_p2xs9z92'
+				url: process.env.MONGODB_URI
 			}),
 			resave: false,
 			saveUninitialized: true,
