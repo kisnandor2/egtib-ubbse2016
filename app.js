@@ -13,7 +13,7 @@
 
  Done
  */
-let portno = 80; // use this for entering a different port number
+let portno = 0;
 
 const express = require('express');
 const nunjucks = require('nunjucks');
@@ -25,6 +25,7 @@ const session = require('express-session')
 
 
 if (process.env.NODE && ~process.env.NODE.indexOf("heroku")){ //check if running in Heroku
+	portno = process.env.PORT || 8080;
 	const MongoStore = require('connect-mongo')(session);
 	app.use(session({
 			secret: 'secretEGTIB',
@@ -40,6 +41,7 @@ if (process.env.NODE && ~process.env.NODE.indexOf("heroku")){ //check if running
 	}));
 }
 else { //develpoment, don't use Database for session
+	portno = 3001;
 	const session = require('express-session');
 	app.use(session({
 		secret: 'secretEGTIB',
