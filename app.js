@@ -29,10 +29,8 @@ if (process.env.NODE && ~process.env.NODE.indexOf("heroku")){ //check if running
 	app.use(session({
 			secret: 'secretEGTIB',
 			store: new MongoStore({ //TODO: this has to be set correctly
-				host: '127.0.0.1',
-				port: '27017',
 				db : 'session',
-				url: 'mongodb://localhost:27017/demo'
+				url: 'mongodb://heroku_p2xs9z92:tns4l39seclvhb9miol3kltio0@ds019996.mlab.com:19996/heroku_p2xs9z92'
 			}),
 			resave: false,
 			saveUninitialized: true,
