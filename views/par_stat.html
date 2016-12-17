@@ -139,10 +139,16 @@
 		var number, number_non;
 
 		function submit1() {
-			number = Number(document.getElementById('number').value);
+			number = Math.max(Number(document.getElementById('number').value),0);
 			console.log(number);
 			number_non = Number(document.getElementById('number_non').value);
 			console.log(number_non);
+			gen_count = Math.max(Number(document.getElementById('gen_count').value),0);
+			console.log(gen_count);
+			coop_cost = Number(document.getElementById('coop_cost').value);
+			console.log(coop_cost);
+			dist = Math.max(Number(document.getElementById('dist').value),0);
+			console.log(dist);
 
 			try {
 				voronoi.setNonCooperatingChance(number_non/number);
@@ -192,12 +198,24 @@
 							<form id="form1" style="text-align: left">
 							<div class="form-group">
 								<label for="number">Total number of cells:</label>
-								<input type="number" class="form-control" id="number">
+								<input type="number" class="form-control" id="number" min="0" value="100">
 							</div>
 							<div class="form-group">
-								<label for="number_non">Percentage of non-productive cells:</label>
-								<input type="number" class="form-control" id="number_non">
+								<label for="number_non">Approximate number of non-productive cells:</label>
+								<input type="number" class="form-control" id="number_non" min="0" max="100" value="50">
 							</div>
+							<div class="form-group">
+								<label for="gen_count">Number of generations:</label>
+								<input type="number" class="form-control" id="gen_count" min="0" value="100">
+							</div>	
+							<div class="form-group">
+								<label for="coop_cost">Cost of cooperative cells:</label>
+								<input type="number" class="form-control" id="coop_cost" value="1">
+							</div>	
+							<div class="form-group">
+								<label for="dist">Distance of interaction:</label>
+								<input type="number" class="form-control" id="dist" min="0" value="1">
+							</div>						
 							<input type="button" class="btn btn-default" onclick="submit1();" value="Submit"/>
 					</form><br>
 
