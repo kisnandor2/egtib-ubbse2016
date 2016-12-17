@@ -4,6 +4,7 @@
 const router = require('express').Router();
 const Voronoi = require('./module.voronoi');
 const logger = require('./logger');
+const SimulateVoronoi = require('./simulatevoronoi');
 
 const voronoi = new Voronoi();
 const e = Math.exp(1);
@@ -23,44 +24,49 @@ let cellakSzama;
 let inflexiosPontHelye;
 let Vn;
 let V0;
+var v;
+var id = 0;
 
 router.use(function(req, res, next) {
 	//Always runs before any code
-	let v = req.session.v;
-	if (!v) {
-		//Init the voronoi for every call from unknown source
-		v = req.session.v = {};
-		initialSize = v.initialSize = {
-			x: 1360,
-			y: 680
-		};
-		bbox = v.bbox = {
-			xl: 0,
-			xr: 800,
-			yt: 0,
-			yb: 600
-		};
-		sites = v.sites = [];
-		Vn = v.Vn = 0;
-		V0 = v.V0 = 0;
-		cellakSzama = v.cellakSzama = 0;
-		inflexiosPontHelye = v.inflexiosPontHelye = defaultInflexiosPont;
-		initVoronoi();
-		diagram = voronoi.compute(sites, bbox);
-		setPayoffs();
+	if (!req.session.v) {
+		v = req.session.v = new SimulateVoronoi(id++);
+		// //Init the voronoi for every call from unknown source
+		// v = req.session.v = {};
+		// initialSize = v.initialSize = {
+		// 	x: 1360,
+		// 	y: 680
+		// };
+		// bbox = v.bbox = {
+		// 	xl: 0,
+		// 	xr: 800,
+		// 	yt: 0,
+		// 	yb: 600
+		// };
+		// sites = v.sites = [];
+		// Vn = v.Vn = 0;
+		// V0 = v.V0 = 0;
+		// cellakSzama = v.cellakSzama = 0;
+		// inflexiosPontHelye = v.inflexiosPontHelye = defaultInflexiosPont;
+		// initVoronoi();
+		// diagram = voronoi.compute(sites, bbox);
+		// setPayoffs();
 	}
 	else {
-		v = req.session.v;
-		initialSize = v.initialSize;
-		bbox = v.bbox;
-		sites = v.sites;
-		Vn = v.Vn;
-		V0 = v.V0;
-		cellakSzama = v.cellakSzama;
-		inflexiosPontHelye = v.inflexiosPontHelye;
-		diagram = voronoi.compute(sites, bbox);
-		setPayoffs();
+		v = new SimulateVoronoi(id++);
+		v.copy(req.session.v);
+		// v = req.session.v;
+		// initialSize = v.initialSize;
+		// bbox = v.bbox;
+		// sites = v.sites;
+		// Vn = v.Vn;
+		// V0 = v.V0;
+		// cellakSzama = v.cellakSzama;
+		// inflexiosPontHelye = v.inflexiosPontHelye;
+		// diagram = voronoi.compute(sites, bbox);
+		// setPayoffs();
 	}
+	logger.trace(v.id);
 	next(); //pass control to next handler
 });
 
@@ -71,45 +77,54 @@ router.get('/', function(req, res) {
 });
 
 router.get('/data', function(req, res) {
-	res.send(JSON.stringify(simulate()));
+	//logger.trace(req.session.v.diagram);
+	res.send(JSON.stringify(v.simulate()));
 });
 
 router.post('/init', function(req, res){
-	let v = req.session.v;
-	bbox = v.bbox = req.body.bbox;
-	sites = v.sites = [];
-
-	let badlyFormattedSites = req.body.sites;
-	logger.debug('Lenght of sites from client when init:', badlyFormattedSites.length);
-	try {
-		for (let i = 0; i < badlyFormattedSites.length; ++i){
-			let site = badlyFormattedSites[i];
-			let cost = undefined;
-			if (site.attrib == 'c')
-				cost = cooperatingCost;
-			else
-				cost = defectingCost;
-			sites.push({
-				x: parseFloat(site.x),
-				y: parseFloat(site.y),
-				attrib: site.attrib,
-				cost: cost,
-				payoff: undefined
-			})
-		}
-
-		cellakSzama = v.cellakSzama = sites.length;
-		v.Vn = Vn = V(sites.length);
-		v.V0 = V0 = V(0);
-		diagram = voronoi.compute(sites, bbox);
-		setPayoffs();
-	}
-	catch (error){
-		logger.error('Invalid request JSON', badlyFormattedSites);
+	//logger.trace(req.session.v.diagram);
+	if (v.init(req.body.sites)){
+		res.status(200).json(0);
+		logger.trace(req.session.v.cellakSzama);
+	} else {
 		res.status(500).json(1);
 	}
+	
+	// let v = req.session.v;
+	// bbox = v.bbox = req.body.bbox;
+	// sites = v.sites = [];
 
-	res.status(200).json(0);
+	// let badlyFormattedSites = req.body.sites;
+	// logger.debug('Lenght of sites from client when init:', badlyFormattedSites.length);
+	// try {
+	// 	for (let i = 0; i < badlyFormattedSites.length; ++i){
+	// 		let site = badlyFormattedSites[i];
+	// 		let cost = undefined;
+	// 		if (site.attrib == 'c')
+	// 			cost = cooperatingCost;
+	// 		else
+	// 			cost = defectingCost;
+	// 		sites.push({
+	// 			x: parseFloat(site.x),
+	// 			y: parseFloat(site.y),
+	// 			attrib: site.attrib,
+	// 			cost: cost,
+	// 			payoff: undefined
+	// 		})
+	// 	}
+
+	// 	cellakSzama = v.cellakSzama = sites.length;
+	// 	v.Vn = Vn = V(sites.length);
+	// 	v.V0 = V0 = V(0);
+	// 	diagram = voronoi.compute(sites, bbox);
+	// 	setPayoffs();
+	// }
+	// catch (error){
+	// 	logger.error('Invalid request JSON', badlyFormattedSites);
+	// 	res.status(500).json(1);
+	// }
+
+	// res.status(200).json(0);
 });
 
 function initVoronoi(){
