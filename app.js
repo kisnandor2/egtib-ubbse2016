@@ -23,9 +23,7 @@ const logger = require('./routes/logger');
 let app = express();
 const session = require('express-session')
 
-//testing codeship
-
-if (process.env.NODE && ~process.env.NODE.indexOf("heroku")){ //check if running in Heroku
+if (process.env.MONGODB_URI){ //check if running in Heroku
 	portno = process.env.PORT || 8080;
 	const MongoStore = require('connect-mongo')(session);
 	app.use(session({
