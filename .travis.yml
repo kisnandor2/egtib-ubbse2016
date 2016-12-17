@@ -20,11 +20,8 @@ env:
 # pushes to Heroku registry, app goes live from there
 script:
   # Put testing here
-  #- npm install
-
   # login to Heroku registry
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" registry.heroku.com
-  # build Docker image
-  - docker build -t registry.heroku.com/egtib/web .
-  # push Docker image to Heroku registry
-  - docker push registry.heroku.com/egtib/web
+  - echo $DOCKER_EMAIL
+  - echo $DOCKER_USERNAME
+  - echo $DOCKER_PASSWORD
+  
