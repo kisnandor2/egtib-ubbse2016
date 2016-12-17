@@ -5,3 +5,4 @@ logs/*
 *.jpg
 .project
 .ssh/*
+logs/serverLog.log

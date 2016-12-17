@@ -1,7 +1,7 @@
 function AnimatableVoronoi(view) {
 	this.voronoi = new Voronoi();
-	this.cooperatorColor = new paper.Color('yellow');
-	this.defectorColor = new paper.Color('green');
+	this.cooperatorColor = new paper.Color(0.95,0.38,0.02); //#f36205
+	this.defectorColor = new paper.Color(0.18,0.59,0.85); //#2f98da
 	this.spotColor = new paper.Color('red');
 	this.selected = false;
 	this.sites = [];
