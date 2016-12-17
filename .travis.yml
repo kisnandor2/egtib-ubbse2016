@@ -1,0 +1,28 @@
+# sudo is required for Docker calls
+sudo: required
+
+# mark our language as Python
+language: node_js
+
+# add dependent services
+services:
+  - docker
+
+env:
+  - DOCKER_EMAIL=kisnandor2@yahoo.com
+  - DOCKER_USERNAME=kisnandor2
+  - DOCKER_PASSWORD=Jozsi19542@
+
+# main script
+# for the push to work, the variables below must be set
+# pushes to Heroku registry, app goes live from there
+script:
+  # build web files
+  - cd /egtib
+  - npm install
+  # login to Heroku registry
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" registry.heroku.com
+  # build Docker image
+  - docker build -t registry.heroku.com/egtib/web .
+  # push Docker image to Heroku registry
+  - docker push registry.heroku.com/egtib/web
