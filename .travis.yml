@@ -21,7 +21,10 @@ env:
 script:
   # Put testing here
   # login to Heroku registry
-  - echo $DOCKER_EMAIL
   - echo $DOCKER_USERNAME
   - echo $DOCKER_PASSWORD
-  
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" registry.heroku.com
+  # build Docker image
+  - docker build -t registry.heroku.com/egtib/web .
+  # push Docker image to Heroku registry
+  - docker push registry.heroku.com/egtib/web
