@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
 	res.render('par_stat', {
 		active: 'par_stat',
 		webSocketUri: webSocketUri,
-		webSocketPort: 9030
+		webSocketPort: 9030,
 	});
 });
 
