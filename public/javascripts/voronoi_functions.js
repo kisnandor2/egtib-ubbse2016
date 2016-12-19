@@ -98,7 +98,6 @@ AnimatableVoronoi.prototype.generateBeeHivePoints = function(size, loose) {
 	//used to generate the sites[] for a window
 	let points = [];
 	let col = view.size.divide(size);
-	console.log(col + " " + size.width + " " + size.height);
 	for (let i = 0; i < size.width; i++) {
 		for (let j = 0; j < size.height; j++) {
 			let point = new paper.Point(i, j).divide(new paper.Point(size)).multiply(view.size).add(col.divide(2));

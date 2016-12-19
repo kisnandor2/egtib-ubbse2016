@@ -6,27 +6,28 @@
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
-
 	<script type="text/javascript">
-
+		const connection = new WebSocket('ws://{{webSocketUri|safe}}:{{webSocketPort|safe}}');
 		var voronoi;
 		var dcolor=128;
 		var ccolor=255;
+
 		window.onload = function() {
 		 	let canvas = document.getElementById('canvas');
 			var context = canvas.getContext('2d');
 			paper.install(window);
 			paper.setup(canvas);
 			voronoi = new AnimatableVoronoi(view);
+			voronoi.setSites(voronoi.generateBeeHivePoints(new Size(10,10), true));
+			voronoi.renderDiagram()
+
 			let count=0;
+
 			//-----------------------------------------------------------------
 			//-----------------------------------------------------------------
 			// pass nunjucks variable with: {{sites|dump|safe}}
 			//-----------------------------------------------------------------
 			//-----------------------------------------------------------------
-			let sites = voronoi.generateBeeHivePoints(new paper.Size(10,10), false);
-			voronoi.setSites(sites);
-			voronoi.renderDiagram();
 
 			canvas.onclick= function(event){
 				color = context.getImageData(event.layerX, event.layerY, 1, 1).data[1];
@@ -169,20 +170,18 @@
 			presets = document.getElementById('presets').value;
 			console.log(presets);
 
-			$.post("voronoi/init", {
-				bbox: voronoi.getBbox(),
-				sites: voronoi.getSites()
-			}, function(data) {
-				if (data != 0) {
-					alert('baj volt');
-				}
-				else{
-					$.get("voronoi/data", function(data) {
-						let sitesList = JSON.parse(data);
-						render(0, sitesList.length, sitesList);
-					});
-				}
-			});
+			json = JSON.stringify({bbox: voronoi.getBbox(), sites:  voronoi.getSites() });
+			connection.send(json);
+
+			connection.onmessage = function(e) {
+				$.get("voronoi/data");
+				connection.onmessage = function (e) {
+					console.log(e.data)
+					let sitesList = JSON.parse(e.data);
+					render(0, sitesList.length, sitesList);
+				};
+			}
+
 		}
 	</script>
 

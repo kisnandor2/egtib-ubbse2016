@@ -1258,7 +1258,7 @@ var Point = Base.extend({
 
 	_serialize: function(options) {
 		var f = options.formatter;
-		return [f.number(this.x), f.number(this.y)];
+		return [f.number(this.x), f.number(this.y), this.attrib];
 	},
 
 	getLength: function() {

@@ -13,7 +13,7 @@
 
  Done
  */
-let portno = 0;
+let portno = process.env.PORT || 3001;
 
 const express = require('express');
 const nunjucks = require('nunjucks');
@@ -21,36 +21,10 @@ const bodyParser = require('body-parser');
 const requestLogger = require('express-logger');
 const logger = require('./routes/logger');
 let app = express();
-const session = require('express-session')
+const sesssionParser = require('./routes/sessionParser');
 
-if (process.env.MONGODB_URI){ //check if running in Heroku
-	portno = process.env.PORT || 8080;
-	const MongoStore = require('connect-mongo')(session);
-	app.use(session({
-			secret: 'secretEGTIB',
-			store: new MongoStore({ //TODO: this has to be set correctly
-				db : 'session',
-				url: process.env.MONGODB_URI
-			}),
-			resave: false,
-			saveUninitialized: true,
-			cookie: {
-				maxAge: 1000 * 60 *60 * 24 //1day
-			}
-	}));
-}
-else { //develpoment, don't use Database for session
-	portno = 3001;
-	const session = require('express-session');
-	app.use(session({
-		secret: 'secretEGTIB',
-		resave: false,
-		saveUninitialized: true,
-		cookie: {
-			maxAge: 1000 * 60 * 60 * 24 // 1 day
-		}
-	}));
-}
+app.use(sesssionParser.sessionStorage);
+app.use(sesssionParser.cookieParser);
 
 app.use(requestLogger({ //Logs only the http requests
 	path: "logs/reguestLog.log"
