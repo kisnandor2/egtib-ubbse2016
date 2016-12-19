@@ -113,35 +113,35 @@ SimulateVoronoi.prototype.initVoronoi = function() {
 SimulateVoronoi.prototype.simulate = function() {
 	var ret = [];
 	for (var j = 0; j < this.sites.length; ++j) {
-		// var i = Math.floor(Math.random() * this.sites.length);
-		// //Get 'c' neighbors
-		// var neighbors = this.getNeighbors(this.sites[i], this.diagram);
-		// var cooperatingNeighbors = 0;
-		// for (var k = 0; k < neighbors.length; ++k) {
-		//   if (neighbors[k].attrib == 'c')
-		//     ++cooperatingNeighbors;
-		// }
-		// //Calculate the payoff if not defined yet
-		// neighbors = this.getNeighbors(this.sites[i],this.diagram);
-		// var k = Math.floor(Math.random() * neighbors.length);
-		// try {
-		// 	if (neighbors[k].payoff > this.sites[i].payoff) {
-		// 	  this.sites[i].attrib = neighbors[k].attrib;
-		// 	  this.sites[i].cost = neighbors[k].cost;
-		// 	  this.setPayoffs();
-		// 	}
-		// }
-		// catch (error){
-		// 	logger.error('No neighbors found!', error);
-		// } 
-
-		if (this.getNeighbors(this.sites[j], this.diagram) == 0){
-			// console.log(this.sites[j]);
+		var i = Math.floor(Math.random() * this.sites.length);
+		//Get 'c' neighbors
+		var neighbors = this.getNeighbors(this.sites[i], this.diagram);
+		var cooperatingNeighbors = 0;
+		for (var k = 0; k < neighbors.length; ++k) {
+		  if (neighbors[k].attrib == 'c')
+		    ++cooperatingNeighbors;
 		}
-		if (this.sites[j].attrib == 'd')
-			this.sites[j].attrib = 'c';
-		else
-			this.sites[j].attrib = 'd'
+		//Calculate the payoff if not defined yet
+		neighbors = this.getNeighbors(this.sites[i],this.diagram);
+		var k = Math.floor(Math.random() * neighbors.length);
+		try {
+			if (neighbors[k].payoff > this.sites[i].payoff) {
+			  this.sites[i].attrib = neighbors[k].attrib;
+			  this.sites[i].cost = neighbors[k].cost;
+			  this.setPayoffs();
+			}
+		}
+		catch (error){
+			logger.error('No neighbors found!', error);
+		} 
+
+		// if (this.getNeighbors(this.sites[j], this.diagram) == 0){
+		// 	// console.log(this.sites[j]);
+		// }
+		// if (this.sites[j].attrib == 'd')
+		// 	this.sites[j].attrib = 'c';
+		// else
+		// 	this.sites[j].attrib = 'd'
 		ret.push(JSON.parse(JSON.stringify(this.sites)));
 	}
 	logger.debug('Simulation length(Generations):', ret.length);
