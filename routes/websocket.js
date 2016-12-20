@@ -1,11 +1,12 @@
 const logger = require('./logger');
 const sessionParser = require('./sessionParser');
 
-function Socket(port) {
+function Socket(server) {
 	this.ws = new require('ws').Server({
-		port: port
+		server: server
 	});
 }
+
 Socket.prototype.listen = function() {
 	let server = this;
 

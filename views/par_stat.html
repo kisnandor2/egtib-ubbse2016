@@ -7,8 +7,8 @@
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
 	<script type="text/javascript">
-		const hostType = location.origin.replace(/^http/, 'ws').split(':')[0];
-		const connection = new WebSocket(hostType + '://{{webSocketUri|safe}}:{{webSocketPort|safe}}');
+		const HOST = location.origin.replace(/^http/, 'ws');
+		const connection = new WebSocket(HOST);
 		var voronoi;
 		var dcolor=128;
 		var ccolor=255;

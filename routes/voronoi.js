@@ -8,11 +8,11 @@ const SimulateVoronoi = require('./simulatevoronoi');
 var v;
 var id = 0;
 
-const Socket = require('./websocket');
+var server = undefined;
 
-const server = new Socket(9030);
-
-server.listen();
+var setWebSocket = function(webSocketServer){
+	server = webSocketServer;
+}
 
 router.use(function(req, res, next) {
 	//Always runs before any code
@@ -33,4 +33,7 @@ router.get('/data', function(req, res) {
 	server.sendData(JSON.stringify(v.simulate()));
 });
 
-module.exports = router;
+module.exports = {
+	router: router,
+	set: setWebSocket
+}

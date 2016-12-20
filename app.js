@@ -45,9 +45,15 @@ app.set('view engine', 'html');
 
 app.use('/index', require('./routes/index'));
 app.use('/', require('./routes/greet'));
-app.use('/voronoi', require('./routes/voronoi'));
+const voronoi = require('./routes/voronoi');
+app.use('/voronoi', voronoi.router);
 app.use('/parameter_statistics', require('./routes/par_stat'));
 app.use(require('./routes/404'));
 
-app.listen(portno);
+var server = app.listen(portno);
 logger.info("Server listening on:", portno);
+
+const webSocket = require('./routes/websocket');
+const webSocketServer = new webSocket(server);
+voronoi.set(webSocketServer);
+webSocketServer.listen();
