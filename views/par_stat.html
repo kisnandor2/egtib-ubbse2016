@@ -3,6 +3,7 @@
 {% block head %}
 	<title> Simulation </title>
 	<link rel="stylesheet" href="/stylesheets/voronoi_style.css">
+	<link rel="stylesheet" href="/stylesheets/loading_clock.css">
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
@@ -176,9 +177,11 @@
 
 			connection.onmessage = function(e) {
 				$.get("voronoi/data");
+				$("body").addClass("loading");
 				connection.onmessage = function (e) {
 					console.log(e.data)
 					let sitesList = JSON.parse(e.data);
+					$("body").removeClass("loading")
 					render(0, sitesList.length, sitesList);
 				};
 			}
@@ -250,4 +253,6 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal"></div>
 {% endblock %}
