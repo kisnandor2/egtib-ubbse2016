@@ -55,5 +55,7 @@ logger.info("Server listening on:", portno);
 
 const webSocket = require('./routes/websocket');
 const webSocketServer = new webSocket(server);
-voronoi.set(webSocketServer);
+voronoi.setWebSocket(webSocketServer);
+
 webSocketServer.listen();
+logger.info('Websocket listening')

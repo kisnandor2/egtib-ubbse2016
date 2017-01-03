@@ -29,6 +29,7 @@ Socket.prototype.listen = function() {
 			sessionParser.store.get(socket.sessionID, function(err, session) {
 				session.sites = data.sites;
 				session.bbox = data.bbox;
+				session.gen_count = data.gen_count;
 				//Set that variable
 				sessionParser.store.set(socket.sessionID, session, function(){
 					socket.send('ready');

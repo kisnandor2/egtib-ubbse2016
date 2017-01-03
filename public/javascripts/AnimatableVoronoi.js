@@ -16,6 +16,8 @@ function AnimatableVoronoi(view) {
 
 	this.cooperatingChance = 0.5;
 
+	this.gen_count = 0;
+
 	this.onResize();
 }
 
@@ -47,7 +49,8 @@ AnimatableVoronoi.prototype.onMouseMove = function(x,y,attrib,count) {
 
 AnimatableVoronoi.prototype.renderDiagram = function() {
 	project.activeLayer.removeChildren();
-	let diagram = this.voronoi.compute(this.sites, this.bbox);
+	this.diagram = this.voronoi.compute(this.sites, this.bbox);
+	let diagram = this.diagram;
 	if (diagram) {
 		for (let i = 0, l = this.sites.length; i < l; i++) {
 			let cell = diagram.cells[this.sites[i].voronoiId];
@@ -186,4 +189,47 @@ AnimatableVoronoi.prototype.setNonCooperatingChance = function(chance){
 		this.cooperatingChance = 0.5;
 	else
 		this.cooperatingChance = 1-chance;
+}
+
+AnimatableVoronoi.prototype.getGen_Count = function(){
+	return this.gen_count;
+}
+
+AnimatableVoronoi.prototype.setGen_Count = function(gen_count){
+	this.gen_count = gen_count;
+}
+
+AnimatableVoronoi.prototype.testNeighborCount = function(){
+	console.log('testing ' + this.sites.length);
+	for (var i = 0; i < this.sites.length; ++i){
+		let neighbors =  this.getNeighbors(this.sites[i], this.diagram);
+		console.log(neighbors.length);
+		if (neighbors.length == 0)
+			console.log(i);
+	}
+}
+
+AnimatableVoronoi.prototype.getNeighbors = function(p, diagram) {
+	//find neighbors of cell which has site at p point
+	var neighbors = [];
+	var halfedges = this.getCellBySite(p, diagram.cells).halfedges;
+	for (var i in halfedges) {
+		var lsite = halfedges[i].edge.lSite
+		if (lsite != null && !this.compareSites(lsite, p)) neighbors.push(lsite);
+		var rsite = halfedges[i].edge.rSite
+		if (rsite != null && !this.compareSites(rsite, p)) neighbors.push(rsite);
+	}
+	return neighbors;
+}
+
+AnimatableVoronoi.prototype.getCellBySite = function(point, cells) {
+	//returns the cell which site is equal to point
+	for (var i in cells) {
+		if (this.compareSites(cells[i].site, point)) return cells[i];
+	}
+}
+
+AnimatableVoronoi.prototype.compareSites = function(s1, s2) {
+	if (s1.x == s2.x && s1.y == s2.y) return true;
+	return false;
 }

@@ -6,22 +6,35 @@
 	<link rel="stylesheet" href="/stylesheets/loading_clock.css">
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
-	<script type="text/javascript" src="/javascripts/voronoi_functions.js"></script>
+	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
 	<script type="text/javascript">
 		const HOST = location.origin.replace(/^http/, 'ws');
 		const connection = new WebSocket(HOST);
 		var voronoi;
 		var dcolor=128;
 		var ccolor=255;
+		var progressBar;
 
 		window.onload = function() {
-		 	let canvas = document.getElementById('canvas');
-			var context = canvas.getContext('2d');
+			progressBar = $("#simulation_progress")[0];
+
+		 	let canvas = $('#canvas')[0];
+			let context = canvas.getContext('2d');
 			paper.install(window);
 			paper.setup(canvas);
 			voronoi = new AnimatableVoronoi(view);
-			voronoi.setSites(voronoi.generateBeeHivePoints(new Size(10,10), true));
-			voronoi.renderDiagram()
+
+			//GenerationCount
+			let defaultGenerationCount = 1;
+			voronoi.setGen_Count(defaultGenerationCount);
+			$('#gen_count')[0].value = defaultGenerationCount;
+
+			//CellCount
+			let defaultCellCount = 16;
+			voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(defaultCellCount)), Math.ceil(Math.sqrt(defaultCellCount))), true));
+			$('#number')[0].value = defaultCellCount;
+
+			voronoi.renderDiagram();
 
 			let count=0;
 
@@ -54,12 +67,14 @@
 
 		function render(i, n, sitesList) {
 			if (i >= n) {
-				alert('kesz');
+				$(".submit")[0].disabled = false;
+				$(".submit")[1].disabled = false;
 				return;
 			}
 			setTimeout(function() {
 				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
 				voronoi.renderDiagram();
+				progressBar.value++;
 				render(i + 1, n, sitesList);
 				return;
 			}, 0)
@@ -142,25 +157,30 @@
 		var number, number_non;
 
 		function submit1() {
-			number = Math.max(Number(document.getElementById('number').value),0);
+			number = Math.max(Number($('#number')[0].value),0);
 			console.log(number);
-			number_non = Number(document.getElementById('number_non').value);
+			number_non = Number($('#number_non')[0].value);
 			console.log(number_non);
-			gen_count = Math.max(Number(document.getElementById('gen_count').value),0);
+			gen_count = Math.max(Number($('#gen_count')[0].value),0);
 			console.log(gen_count);
-			coop_cost = Number(document.getElementById('coop_cost').value);
+			coop_cost = Number($('#coop_cost')[0].value);
 			console.log(coop_cost);
-			dist = Math.max(Number(document.getElementById('dist').value),0);
+			dist = Math.max(Number($('#dist')[0].value),0);
 			console.log(dist);
+
+			//Reset the progressBar
+			progressBar.max = gen_count;
+			progressBar.value = 0;
 
 			try {
 				voronoi.setNonCooperatingChance(number_non/number);
-				let sites = voronoi.generateBeeHivePoints(new Size(Math.sqrt(number), Math.sqrt(number)), true);
+				let sites = voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(number)), Math.ceil(Math.sqrt(number))), true);
 				voronoi.setSites(sites);
+				voronoi.setGen_Count(gen_count);
 				voronoi.renderDiagram();
 			}
 			catch (error){
-				voronoi.setCooperatingChance(0.5);
+				voronoi.setNonCooperatingChance(0.5);
 				let sites = voronoi.generateBeeHivePoints(new Size(10, 10), true);
 				voronoi.setSites(sites);
 				voronoi.renderDiagram();
@@ -169,19 +189,28 @@
 		}
 
 		function submit2() {
-			presets = document.getElementById('presets').value;
+			presets = $('#presets')[0].value;
 			console.log(presets);
 
-			json = JSON.stringify({bbox: voronoi.getBbox(), sites:  voronoi.getSites() });
+			//Send data to server via websocket
+			json = JSON.stringify({
+				bbox: voronoi.getBbox(), 
+				sites:  voronoi.getSites(),
+				gen_count: voronoi.getGen_Count(),
+				//send more data here
+			});
 			connection.send(json);
 
 			connection.onmessage = function(e) {
+				//If the websocket processed the information simulate on the server side
 				$.get("voronoi/data");
 				$("body").addClass("loading");
 				connection.onmessage = function (e) {
-					console.log(e.data)
+					//Get results via the websocket
 					let sitesList = JSON.parse(e.data);
 					$("body").removeClass("loading")
+					$(".submit")[0].disabled = true;
+					$(".submit")[1].disabled = true;
 					render(0, sitesList.length, sitesList);
 				};
 			}
@@ -219,7 +248,7 @@
 								<label for="dist">Distance of interaction:</label>
 								<input type="number" class="form-control" id="dist" min="0" value="1">
 							</div>						
-							<input type="button" class="btn btn-default" onclick="submit1();" value="Submit"/>
+							<input type="button" class="btn btn-default submit" onclick="submit1();" value="Submit"/>
 					</form><br>
 
 					<label> --------------- OR ---------------</label><br><br>
@@ -233,7 +262,7 @@
 							</select>
 						</div>
 
-						<input type="button" class="btn btn-default" onclick="submit2();" value="Submit"/>
+						<input type="button" class="btn btn-default submit" onclick="submit2();" value="Submit"/>
 					</form>
 						</div>
 				</div>
@@ -241,7 +270,8 @@
 		<div class="col-sm-8" style = "height: 90%">
 			<div class="panel panel-default">
 						<canvas id="canvas" resize></canvas>
-				</div>
+			</div>
+			<progress value="0" max="100" id="simulation_progress"></progress>
 		</div>
 	</div>
 	<div class="row">

@@ -28,12 +28,12 @@ router.use(function(req, res, next) {
 });
 
 router.get('/data', function(req, res) {
-	logger.info('Init voronoi from the client data');
-	v.init(req.session.sites);
+	v.init(req.session.sites, req.session.gen_count);
 	server.sendData(JSON.stringify(v.simulate()));
+	res.status(200).send('ok');
 });
 
 module.exports = {
 	router: router,
-	set: setWebSocket
+	setWebSocket: setWebSocket
 }

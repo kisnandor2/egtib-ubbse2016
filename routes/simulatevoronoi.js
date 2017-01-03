@@ -51,7 +51,8 @@ SimulateVoronoi.prototype.copy = function(v){
 SimulateVoronoi.prototype.write = function(){
 	console.log("alive");
 }
-SimulateVoronoi.prototype.init = function(sites){
+SimulateVoronoi.prototype.init = function(sites, gen_count){
+	logger.info('Init voronoi from the client data');
 	this.sites = [];
 	try {
 		for (let i = 0; i < sites.length; ++i){
@@ -75,17 +76,18 @@ SimulateVoronoi.prototype.init = function(sites){
 		this.V0 = this.V(0);
 		this.diagram = voronoi.compute(this.sites, this.bbox);
 		this.setPayoffs();
+		this.gen_count = gen_count;
 		return true;
 	}
 	catch (error){
-		logger.error('Invalid request JSON', sites);
+		logger.error('Invalid request JSON', error);
 		return false;
 	}
 
 }
 SimulateVoronoi.prototype.initVoronoi = function() {
 	this.sites = [];
-	logger.trace('Building up a voronoi on the server side!');
+	logger.info('Building up a voronoi on the server side!');
 	//Can be used only when no information is available from the client
 	for (var i = 0; i < this.initialSize.x; i += 100) {
 		for (var j = 0; j < this.initialSize.y; j += 100) {
@@ -110,38 +112,43 @@ SimulateVoronoi.prototype.initVoronoi = function() {
 	this.V0 = this.V(0);
 };
 
-SimulateVoronoi.prototype.simulate = function() {
-	var ret = [];
-	for (var j = 0; j < this.sites.length; ++j) {
-		// var i = Math.floor(Math.random() * this.sites.length);
-		// //Get 'c' neighbors
-		// var neighbors = this.getNeighbors(this.sites[i], this.diagram);
-		// var cooperatingNeighbors = 0;
-		// for (var k = 0; k < neighbors.length; ++k) {
-		//   if (neighbors[k].attrib == 'c')
-		//     ++cooperatingNeighbors;
-		// }
-		// //Calculate the payoff if not defined yet
-		// neighbors = this.getNeighbors(this.sites[i],this.diagram);
-		// var k = Math.floor(Math.random() * neighbors.length);
-		// try {
-		// 	if (neighbors[k].payoff > this.sites[i].payoff) {
-		// 	  this.sites[i].attrib = neighbors[k].attrib;
-		// 	  this.sites[i].cost = neighbors[k].cost;
-		// 	  this.setPayoffs();
-		// 	}
-		// }
-		// catch (error){
-		// 	// logger.error('No neighbors found!', error);
-		// } 
+SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
+	let cooperatingNeighbors = 0;
+	for (var k = 0; k < neighbors.length; ++k) {
+	  if (neighbors[k].attrib == 'c')
+	    ++cooperatingNeighbors;
+	}
+	return cooperatingNeighbors;
+}
 
-		// if (this.getNeighbors(this.sites[j], this.diagram) == 0){
-		// 	// console.log(this.sites[j]);
-		// }
-		if (this.sites[j].attrib == 'd')
-			this.sites[j].attrib = 'c';
-		else
-			this.sites[j].attrib = 'd'
+SimulateVoronoi.prototype.simulate = function() {
+	this.testNeighborCount();
+	var ret = [];
+	for (var j = 0; j < this.gen_count; ++j) {
+		// var i = Math.floor(Math.random() * this.sites.length);
+		for (var i = 0; i < this.sites.length; ++i) {
+			//Get 'c' neighbors
+			var neighbors = this.getNeighbors(this.sites[i], this.diagram);
+			var cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
+
+			//Select a random neighbor and change payoffs if needed
+			var k = Math.floor(Math.random() * neighbors.length);
+			try {
+				if (neighbors[k].payoff > this.sites[i].payoff) {
+				  this.sites[i].attrib = neighbors[k].attrib;
+				  this.sites[i].cost = neighbors[k].cost;
+				  this.setPayoffs();
+				}
+			}
+			catch (error){
+				logger.error('No neighbors found!', i);
+			}
+
+			// if (this.sites[j].attrib == 'd')
+			// 	this.sites[j].attrib = 'c';
+			// else
+			// 	this.sites[j].attrib = 'd'
+		}
 		ret.push(JSON.parse(JSON.stringify(this.sites)));
 	}
 	logger.debug('Simulation length(Generations):', ret.length);
@@ -193,6 +200,15 @@ SimulateVoronoi.prototype.getCellBySite = function(point, cells) {
 SimulateVoronoi.prototype.compareSites = function(s1, s2) {
 	if (s1.x == s2.x && s1.y == s2.y) return true;
 	return false;
+}
+
+SimulateVoronoi.prototype.testNeighborCount = function(){
+	console.log('testing ' + this.sites.length);
+	for (var i = 0; i < this.sites.length; ++i){
+		let neighbors =  this.getNeighbors(this.sites[i], this.diagram);
+		if (neighbors.length == 0)
+			console.log('ERROR ' + i);
+	}
 }
 
 module.exports = SimulateVoronoi;
