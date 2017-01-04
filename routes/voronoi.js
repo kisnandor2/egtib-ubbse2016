@@ -28,7 +28,11 @@ router.use(function(req, res, next) {
 });
 
 router.get('/data', function(req, res) {
-	v.init(req.session.sites, req.session.gen_count);
+	let sites 		= req.session.sites,
+			bbox 			= req.session.bbox,
+			gen_count = req.session.gen_count;
+
+	v.init(sites, bbox, gen_count);
 	server.sendData(JSON.stringify(v.simulate()));
 	res.status(200).send('ok');
 });

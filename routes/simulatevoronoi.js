@@ -51,9 +51,10 @@ SimulateVoronoi.prototype.copy = function(v){
 SimulateVoronoi.prototype.write = function(){
 	console.log("alive");
 }
-SimulateVoronoi.prototype.init = function(sites, gen_count){
+SimulateVoronoi.prototype.init = function(sites, bbox, gen_count){
 	logger.info('Init voronoi from the client data');
 	this.sites = [];
+	this.bbox = bbox;
 	try {
 		for (let i = 0; i < sites.length; ++i){
 			let site = sites[i];
@@ -122,7 +123,6 @@ SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
 }
 
 SimulateVoronoi.prototype.simulate = function() {
-	this.testNeighborCount();
 	var ret = [];
 	for (var j = 0; j < this.gen_count; ++j) {
 		// var i = Math.floor(Math.random() * this.sites.length);
@@ -141,14 +141,10 @@ SimulateVoronoi.prototype.simulate = function() {
 				}
 			}
 			catch (error){
-				logger.error('No neighbors found!', i);
+				logger.error('No neighbors found at: ', i);
 			}
-
-			// if (this.sites[j].attrib == 'd')
-			// 	this.sites[j].attrib = 'c';
-			// else
-			// 	this.sites[j].attrib = 'd'
 		}
+		//Create a copy of this generation and push it to results
 		ret.push(JSON.parse(JSON.stringify(this.sites)));
 	}
 	logger.debug('Simulation length(Generations):', ret.length);

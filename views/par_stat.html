@@ -69,11 +69,13 @@
 			if (i >= n) {
 				$(".submit")[0].disabled = false;
 				$(".submit")[1].disabled = false;
+				voronoi.displayChartData(chart);
 				return;
 			}
 			setTimeout(function() {
 				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
 				voronoi.renderDiagram();
+				voronoi.addDataToChart();
 				progressBar.value++;
 				render(i + 1, n, sitesList);
 				return;
@@ -83,9 +85,9 @@
 
 
 		<script type="text/javascript">
-
+		var chart;
 		$(document).ready(function() {
-			var chart = Highcharts.chart('container', {
+			chart = Highcharts.chart('container', {
 
 				chart: {
 					type: 'column'
@@ -137,11 +139,11 @@
 				}]
 			});
 
-			var n = Math.ceil(Math.random() * 1000); //ezt kell megkapjam
+			var n = Math.ceil(Math.random() * 100); //ezt kell megkapjam
 			var categories = [];
 			var numberProductive = [];
 			var numberNonProductive = [];
-			for (i = 0; i < 50; i++) {
+			for (i = 0; i < 10; i++) {
 				var p = Math.ceil(Math.random() * n); //ezt kell megkapjam
 				numberProductive.push(p);
 				numberNonProductive.push(n - p);
@@ -154,7 +156,6 @@
 			chart.xAxis[0].setCategories(categories);
 
 		});
-		var number, number_non;
 
 		function submit1() {
 			number = Math.max(Number($('#number')[0].value),0);
@@ -178,6 +179,7 @@
 				voronoi.setSites(sites);
 				voronoi.setGen_Count(gen_count);
 				voronoi.renderDiagram();
+				voronoi.resetChart();
 			}
 			catch (error){
 				voronoi.setNonCooperatingChance(0.5);
@@ -191,6 +193,7 @@
 		function submit2() {
 			presets = $('#presets')[0].value;
 			console.log(presets);
+			progressBar.value = 0;
 
 			//Send data to server via websocket
 			json = JSON.stringify({

@@ -19,6 +19,42 @@ function AnimatableVoronoi(view) {
 	this.gen_count = 0;
 
 	this.onResize();
+
+	this.chart = {};
+	this.chart.productive = [];
+	this.chart.nonProductive = [];
+}
+
+AnimatableVoronoi.prototype.displayChartData =  function(chart){
+	let categories = [];
+	for (i = 0; i < voronoi.gen_count; i++) {
+		categories.push(i + 1);
+	}
+	chart.series[0].setData(this.chart.productive);
+	chart.series[1].setData(this.chart.nonProductive);
+	chart.series[2].setData(this.chart.nonProductive);
+	chart.xAxis[0].setCategories(categories);
+}
+
+AnimatableVoronoi.prototype.addDataToChart = function(){
+	let p = this.getProductiveCount();
+	this.chart.productive.push(p);
+	let n = this.sites.length;
+	this.chart.nonProductive.push(n-p);
+}
+
+AnimatableVoronoi.prototype.getProductiveCount = function() {
+	let k = 0;
+	for (let i = 0; i < this.sites.length; ++i){
+		if (this.sites[i].attrib == 'c')
+			++k;
+	}
+	return k;
+}
+
+AnimatableVoronoi.prototype.resetChart = function() {
+	this.chart.productive = [];
+	this.chart.nonProductive = [];
 }
 
 AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadFormat) {
