@@ -17,6 +17,8 @@ function AnimatableVoronoi(view) {
 	this.cooperatingChance = 0.5;
 
 	this.gen_count = 0;
+	this.coop_cost = 0;
+	this.dist = 0;
 
 	this.onResize();
 
@@ -32,6 +34,7 @@ AnimatableVoronoi.prototype.displayChartData =  function(chart){
 	}
 	chart.series[0].setData(this.chart.productive);
 	chart.series[1].setData(this.chart.nonProductive);
+	chart.series[2].setData([]);	//not sure why but sometimes the chart needs this to work correctly
 	chart.series[2].setData(this.chart.nonProductive);
 	chart.xAxis[0].setCategories(categories);
 }
@@ -268,4 +271,20 @@ AnimatableVoronoi.prototype.getCellBySite = function(point, cells) {
 AnimatableVoronoi.prototype.compareSites = function(s1, s2) {
 	if (s1.x == s2.x && s1.y == s2.y) return true;
 	return false;
+}
+
+AnimatableVoronoi.prototype.setDist = function(dist){
+	this.dist = dist;
+}
+
+AnimatableVoronoi.prototype.getDist = function() {
+	return this.dist;
+}
+
+AnimatableVoronoi.prototype.setCoop_Cost = function(coop_cost){
+	this.coop_cost = coop_cost;
+}
+
+AnimatableVoronoi.prototype.getCoop_Cost = function(){
+	return this.coop_cost;
 }

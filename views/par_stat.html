@@ -77,6 +77,8 @@
 				voronoi.renderDiagram();
 				voronoi.addDataToChart();
 				progressBar.value++;
+				if (voronoi.getProductiveCount() == 0)
+					i = n;
 				render(i + 1, n, sitesList);
 				return;
 			}, 0)
@@ -158,16 +160,11 @@
 		});
 
 		function submit1() {
-			number = Math.max(Number($('#number')[0].value),0);
-			console.log(number);
-			number_non = Number($('#number_non')[0].value);
-			console.log(number_non);
-			gen_count = Math.max(Number($('#gen_count')[0].value),0);
-			console.log(gen_count);
-			coop_cost = Number($('#coop_cost')[0].value);
-			console.log(coop_cost);
-			dist = Math.max(Number($('#dist')[0].value),0);
-			console.log(dist);
+			let number 			= Math.max(Number($('#number')[0].value),0),
+				  number_non 	= Number($('#number_non')[0].value),
+			 	  gen_count 	= Math.max(Number($('#gen_count')[0].value),0),
+				  coop_cost 	= Number($('#coop_cost')[0].value),
+				  dist 				= Math.max(Number($('#dist')[0].value),0);
 
 			//Reset the progressBar
 			progressBar.max = gen_count;
@@ -176,8 +173,12 @@
 			try {
 				voronoi.setNonCooperatingChance(number_non/number);
 				let sites = voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(number)), Math.ceil(Math.sqrt(number))), true);
+
 				voronoi.setSites(sites);
 				voronoi.setGen_Count(gen_count);
+				voronoi.setCoop_Cost(coop_cost);
+				voronoi.setDist(dist);
+
 				voronoi.renderDiagram();
 				voronoi.resetChart();
 			}
@@ -197,9 +198,11 @@
 
 			//Send data to server via websocket
 			json = JSON.stringify({
-				bbox: voronoi.getBbox(), 
-				sites:  voronoi.getSites(),
+				bbox: 		 voronoi.getBbox(), 
+				sites:  	 voronoi.getSites(),
 				gen_count: voronoi.getGen_Count(),
+				coop_cost: voronoi.getCoop_Cost(),
+				dist: 		 voronoi.getDist(),
 				//send more data here
 			});
 			connection.send(json);
@@ -245,7 +248,7 @@
 							</div>	
 							<div class="form-group">
 								<label for="coop_cost">Cost of cooperative cells:</label>
-								<input type="number" class="form-control" id="coop_cost" value="1">
+								<input type="number" class="form-control" id="coop_cost" value="0.5" step="0.01" min="0" max="1">
 							</div>	
 							<div class="form-group">
 								<label for="dist">Distance of interaction:</label>

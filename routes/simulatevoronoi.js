@@ -8,8 +8,9 @@ const e = Math.exp(1);
 //TODO: check for better values
 const s = 20;
 const defaultInflexiosPont = 2.5;
-const cooperatingCost = 0.5;
 const defectingCost = 0;
+
+var cooperatingCost = 0.5;
 
 function SimulateVoronoi(id) {
 
@@ -51,10 +52,14 @@ SimulateVoronoi.prototype.copy = function(v){
 SimulateVoronoi.prototype.write = function(){
 	console.log("alive");
 }
-SimulateVoronoi.prototype.init = function(sites, bbox, gen_count){
+SimulateVoronoi.prototype.init = function(sites, bbox, gen_count, coop_cost){
 	logger.info('Init voronoi from the client data');
+
 	this.sites = [];
 	this.bbox = bbox;
+	this.gen_count = gen_count;
+	this.cooperatingCost = coop_cost;
+
 	try {
 		for (let i = 0; i < sites.length; ++i){
 			let site = sites[i];
@@ -77,7 +82,6 @@ SimulateVoronoi.prototype.init = function(sites, bbox, gen_count){
 		this.V0 = this.V(0);
 		this.diagram = voronoi.compute(this.sites, this.bbox);
 		this.setPayoffs();
-		this.gen_count = gen_count;
 		return true;
 	}
 	catch (error){
@@ -123,7 +127,7 @@ SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
 }
 
 SimulateVoronoi.prototype.simulate = function() {
-	var ret = [];
+	var ret = [JSON.parse(JSON.stringify(this.sites))];
 	for (var j = 0; j < this.gen_count; ++j) {
 		// var i = Math.floor(Math.random() * this.sites.length);
 		for (var i = 0; i < this.sites.length; ++i) {

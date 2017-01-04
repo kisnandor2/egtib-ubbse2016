@@ -27,9 +27,11 @@ Socket.prototype.listen = function() {
 			data = JSON.parse(msg)
 			//Get session variable
 			sessionParser.store.get(socket.sessionID, function(err, session) {
-				session.sites = data.sites;
-				session.bbox = data.bbox;
+				session.sites 		= data.sites;
+				session.bbox 			= data.bbox;
 				session.gen_count = data.gen_count;
+				session.coop_cost = data.coop_cost;
+				session.dist 			= data.dist;
 				//Set that variable
 				sessionParser.store.set(socket.sessionID, session, function(){
 					socket.send('ready');
