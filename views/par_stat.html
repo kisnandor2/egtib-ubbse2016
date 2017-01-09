@@ -18,7 +18,7 @@
 		window.onload = function() {
 			progressBar = $("#simulation_progress")[0];
 
-		 	let canvas = $('#canvas')[0];
+			let canvas = $('#canvas')[0];
 			let context = canvas.getContext('2d');
 			paper.install(window);
 			paper.setup(canvas);
@@ -161,10 +161,10 @@
 
 		function submit1() {
 			let number 			= Math.max(Number($('#number')[0].value),0),
-				  number_non 	= Number($('#number_non')[0].value),
-			 	  gen_count 	= Math.max(Number($('#gen_count')[0].value),0),
-				  coop_cost 	= Number($('#coop_cost')[0].value),
-				  dist 				= Math.max(Number($('#dist')[0].value),0);
+					number_non 	= Number($('#number_non')[0].value),
+					gen_count 	= Math.max(Number($('#gen_count')[0].value),0),
+					coop_cost 	= Number($('#coop_cost')[0].value),
+					dist 				= Math.max(Number($('#dist')[0].value),0);
 
 			//Reset the progressBar
 			progressBar.max = gen_count;

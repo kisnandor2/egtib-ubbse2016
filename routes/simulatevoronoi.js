@@ -6,11 +6,12 @@ const logger = require('./logger');
 const e = Math.exp(1);
 
 //TODO: check for better values
-const s = 20;
-const defaultInflexiosPont = 2.5;
-const defectingCost = 0;
+const defaultSteepness = 2,
+			defaultInflexiosPont = 1,
+			defectingCost = 0;
 
-var cooperatingCost = 0.5;
+const defaultCooperatingCost = 0.5,
+			defaultDefectingCost = 0;
 
 function SimulateVoronoi(id) {
 
@@ -29,6 +30,9 @@ function SimulateVoronoi(id) {
 	};
 	this.cellakSzama = 0;
 	this.inflexiosPontHelye = defaultInflexiosPont;
+	this.steepness = defaultSteepness;
+	this.cooperatingCost = defaultCooperatingCost;
+	this.defectingCost = defaultDefectingCost;
 	this.Vn = 0;
 	this.V0 = 0;
 	this.id = id;
@@ -52,8 +56,9 @@ SimulateVoronoi.prototype.copy = function(v){
 SimulateVoronoi.prototype.write = function(){
 	console.log("alive");
 }
-SimulateVoronoi.prototype.init = function(sites, bbox, gen_count, coop_cost){
+SimulateVoronoi.prototype.init = function({sites, bbox, gen_count, coop_cost}){
 	logger.info('Init voronoi from the client data');
+	logger.debug('Coop cost: ', coop_cost);
 
 	this.sites = [];
 	this.bbox = bbox;
@@ -65,9 +70,9 @@ SimulateVoronoi.prototype.init = function(sites, bbox, gen_count, coop_cost){
 			let site = sites[i];
 			let cost = undefined;
 			if (site[3] == 'c')
-				cost = cooperatingCost;
+				cost = this.cooperatingCost;
 			else
-				cost = defectingCost;
+				cost = this.defectingCost;
 			this.sites.push({
 				x: site[1],
 				y: site[2],
@@ -98,10 +103,10 @@ SimulateVoronoi.prototype.initVoronoi = function() {
 		for (var j = 0; j < this.initialSize.y; j += 100) {
 			if (Math.random() <= 0.95) {
 				attrib = 'c';
-				cost = cooperatingCost;
+				cost = this.cooperatingCost;
 			} else {
 				attrib = 'd';
-				cost = defectingCost;
+				cost = this.defectingCost;
 			}
 			this.sites.push({
 				x: i,
@@ -120,8 +125,8 @@ SimulateVoronoi.prototype.initVoronoi = function() {
 SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
 	let cooperatingNeighbors = 0;
 	for (var k = 0; k < neighbors.length; ++k) {
-	  if (neighbors[k].attrib == 'c')
-	    ++cooperatingNeighbors;
+		if (neighbors[k].attrib == 'c')
+			++cooperatingNeighbors;
 	}
 	return cooperatingNeighbors;
 }
@@ -139,9 +144,9 @@ SimulateVoronoi.prototype.simulate = function() {
 			var k = Math.floor(Math.random() * neighbors.length);
 			try {
 				if (neighbors[k].payoff > this.sites[i].payoff) {
-				  this.sites[i].attrib = neighbors[k].attrib;
-				  this.sites[i].cost = neighbors[k].cost;
-				  this.setPayoffs();
+					this.sites[i].attrib = neighbors[k].attrib;
+					this.sites[i].cost = neighbors[k].cost;
+					this.setPayoffs();
 				}
 			}
 			catch (error){
@@ -158,12 +163,8 @@ SimulateVoronoi.prototype.simulate = function() {
 SimulateVoronoi.prototype.setPayoffs = function() {
 	for (var i = 0; i < this.sites.length; ++i) {
 		//Get 'c' neighbors
-		var neighbors = this.getNeighbors(this.sites[i], this.diagram);
-		var cooperatingNeighbors = 0;
-		for (var j = 0; j < neighbors.length; ++j) {
-			if (neighbors[j].attrib == 'c')
-				++cooperatingNeighbors;
-		}
+		let neighbors = this.getNeighbors(this.sites[i], this.diagram);
+		let cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
 		//Calculate the payoff
 		this.sites[i].payoff = this.payoff(cooperatingNeighbors, this.sites[i].cost, neighbors.length);
 	}
@@ -174,7 +175,7 @@ SimulateVoronoi.prototype.payoff = function(cooperatingNeighborsCount, cost, nei
 }
 
 SimulateVoronoi.prototype.V = function(i, neighborsCount) {
-	return 1 / (1 + Math.pow(e, (-s * (i - this.inflexiosPontHelye)) / neighborsCount));
+	return 1 / (1 + Math.pow(e, (-this.steepness * (i - this.inflexiosPontHelye)) / neighborsCount));
 }
 
 SimulateVoronoi.prototype.getNeighbors = function(p, diagram) {

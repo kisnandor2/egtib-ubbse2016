@@ -18,7 +18,7 @@ router.use(function(req, res, next) {
 	//Always runs before any code
 	if (!req.session.v) {
 		v = req.session.v = new SimulateVoronoi(id++);
-		logger.debug('new voronoi created');
+		logger.debug('New voronoi created');
 	} else {
 		v = new SimulateVoronoi(id++);
 		v.copy(req.session.v);
@@ -28,11 +28,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/data', function(req, res) {
-	let sites 		= req.session.sites,
-			bbox 			= req.session.bbox,
-			gen_count = req.session.gen_count;
-
-	v.init(sites, bbox, gen_count);
+	v.init(req.session);	//ES6 parameter destructuring
 	server.sendData(JSON.stringify(v.simulate()));
 	res.status(200).send('ok');
 });

@@ -32,6 +32,7 @@ Socket.prototype.listen = function() {
 				session.gen_count = data.gen_count;
 				session.coop_cost = data.coop_cost;
 				session.dist 			= data.dist;
+				logger.debug("Websocket coop cost recieved: ", data.coop_cost);
 				//Set that variable
 				sessionParser.store.set(socket.sessionID, session, function(){
 					socket.send('ready');
