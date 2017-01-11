@@ -11,8 +11,8 @@
 		const HOST = location.origin.replace(/^http/, 'ws');
 		const connection = new WebSocket(HOST);
 		var voronoi;
-		var dcolor=128;
-		var ccolor=255;
+		var dcolor=150;
+		var ccolor=97;
 		var progressBar;
 
 		window.onload = function() {
@@ -34,6 +34,11 @@
 			voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(defaultCellCount)), Math.ceil(Math.sqrt(defaultCellCount))), true));
 			$('#number')[0].value = defaultCellCount;
 
+			//CoopCost
+			let defaultCoopCost = 0.5;
+			voronoi.setCoop_Cost(defaultCoopCost);
+			$('#coop_cost')[0].value = defaultCoopCost;
+
 			voronoi.renderDiagram();
 
 			let count=0;
@@ -45,21 +50,21 @@
 			//-----------------------------------------------------------------
 
 			canvas.onclick= function(event){
-				color = context.getImageData(event.layerX, event.layerY, 1, 1).data[1];
+				color = context.getImageData(event.offsetX, event.offsetY, 1, 1).data[1];
 				if(color==dcolor)
-					voronoi.onMouseDown(event.layerX,event.layerY,'d');
+					voronoi.onMouseDown(event.offsetX,event.offsetY,'d');
 				if(color==ccolor)
-						voronoi.onMouseDown(event.layerX,event.layerY,'c');
+						voronoi.onMouseDown(event.offsetX,event.offsetY,'c');
 			}
 
 			//slow motion
 			/*
 			canvas.onmousemove = function(event){
-				color = context.getImageData(event.layerX, event.layerY, 1, 1).data[1];
+				color = context.getImageData(event.offsetX, event.offsetY, 1, 1).data[1];
 				if(color==dcolor)
-					voronoi.onMouseMove(event.layerX,event.layerY,'d',count);
+					voronoi.onMouseMove(event.offsetX,event.offsetY,'d',count);
 				if(color==ccolor)
-						voronoi.onMouseMove(event.layerX,event.layerY,'c',count);
+						voronoi.onMouseMove(event.offsetX,event.offsetY,'c',count);
 				++count;
 			}
 			*/
@@ -73,9 +78,9 @@
 				return;
 			}
 			setTimeout(function() {
+				voronoi.addDataToChart();
 				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
 				voronoi.renderDiagram();
-				voronoi.addDataToChart();
 				progressBar.value++;
 				if (voronoi.getProductiveCount() == 0)
 					i = n;

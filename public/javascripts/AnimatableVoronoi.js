@@ -20,11 +20,11 @@ function AnimatableVoronoi(view) {
 	this.coop_cost = 0;
 	this.dist = 0;
 
-	this.onResize();
-
 	this.chart = {};
 	this.chart.productive = [];
 	this.chart.nonProductive = [];
+
+	this.onResize();
 }
 
 AnimatableVoronoi.prototype.displayChartData =  function(chart){
@@ -208,6 +208,16 @@ AnimatableVoronoi.prototype.onKeyDown = function(event) {
 }
 
 AnimatableVoronoi.prototype.setSites = function(sites) {
+	if (sites.length > 0 && sites[0].constructor.name == 'Array'){
+		sitesGoodFormat = [];
+		for (let i = 0; i < sites.length; ++i){
+			sitesGoodFormat.push(new paper.Point(sites[i][1], sites[i][2], sites[i][3]));
+		}
+		sites = sitesGoodFormat;
+	}
+	else if (sites.length > 0 && sites[0].constructor.name != 'Point'){
+		console.log('Unsuported format');
+	}
 	this.sites = sites;
 	this.sitesWithColor = sites.slice(0);
 }

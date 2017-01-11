@@ -1,6 +1,6 @@
 
 
-const Voronoi = require('./module.voronoi');
+const Voronoi = require('../public/javascripts/voronoi_core');
 const voronoi = new Voronoi();
 const logger = require('./logger');
 const e = Math.exp(1);
@@ -13,7 +13,7 @@ const defaultSteepness = 2,
 const defaultCooperatingCost = 0.5,
 			defaultDefectingCost = 0;
 
-function SimulateVoronoi(id) {
+function SimulateVoronoi() {
 
 	//const e = Math.exp(1);
 	this.diagram = null;
@@ -35,7 +35,6 @@ function SimulateVoronoi(id) {
 	this.defectingCost = defaultDefectingCost;
 	this.Vn = 0;
 	this.V0 = 0;
-	this.id = id;
 	this.initVoronoi();
 	this.diagram = voronoi.compute(this.sites, this.bbox);
 	this.setPayoffs();
@@ -48,10 +47,14 @@ SimulateVoronoi.prototype.copy = function(v){
 	this.initialSize = v.initialSize;
 	this.cellakSzama = v.cellakSzama;
 	this.inflexiosPontHelye = v.inflexiosPontHelye;
+	this.steepness = v.steepness;
+	this.cooperatingCost = v.cooperatingCost;
+	this.defectingCost = v.defectingCost;
 	this.Vn = v.Vn;
 	this.V0 = v.V0;
 
 	this.diagram = v.diagram;
+	this.setPayoffs();
 }
 SimulateVoronoi.prototype.write = function(){
 	console.log("alive");
@@ -132,7 +135,7 @@ SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
 }
 
 SimulateVoronoi.prototype.simulate = function() {
-	var ret = [JSON.parse(JSON.stringify(this.sites))];
+	var ret = [];
 	for (var j = 0; j < this.gen_count; ++j) {
 		// var i = Math.floor(Math.random() * this.sites.length);
 		for (var i = 0; i < this.sites.length; ++i) {
