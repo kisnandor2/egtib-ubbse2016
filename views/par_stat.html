@@ -196,6 +196,9 @@
 		});
 
 		function submit1() {
+			progressBar.disabled = false;
+			$('#submit2')[0].disabled = false;
+			
 			let number 			= Math.max(Number($('#number')[0].value),0),
 					number_non 	= Number($('#number_non')[0].value),
 					gen_count 	= Math.max(Number($('#gen_count')[0].value),0),
@@ -267,56 +270,56 @@
 
 {% block body %}
 	<div class="row" >
-		<div class="col-sm-4">
+		<div class="col-sm-4" style = "height: 700px; widtht: 100%;">
 			<div class="panel panel-default">
 					<div class="panel-heading" style="background-color: rgb(40,40,40); color: rgb(255,255,255);">Set the parameters for the next run here:</div>
 						<div class="panel-body" style="text-align: center">
 							<label>Enter your own parameters:</label><br><br>
 							<form id="form1" style="text-align: left">
-							<div class="form-group">
-								<label for="number">Total number of cells:</label>
-								<input type="number" class="form-control" id="number" min="0" value="160">
-							</div>
-							<div class="form-group">
-								<label for="number_non">Approximate number of non-productive cells:</label>
-								<input type="number" class="form-control" id="number_non" min="0" max="100" value="10">
-							</div>
-							<div class="form-group">
-								<label for="gen_count">Number of generations:</label>
-								<input type="number" class="form-control" id="gen_count" min="0" value="10">
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="number" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Total number of cells:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="number" min="0" value="160">
+								</div>
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="number_non" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Approximate number of non-productive cells:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="number_non" min="0" max="100" value="10">
+								</div>
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="gen_count" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Number of generations:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="gen_count" min="0" value="10">
+								</div>	
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="coop_cost" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Cost of cooperative cells:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="coop_cost" value="0.1" step="0.01" min="0" max="1">
+								</div>	
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="dist" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Distance of interaction:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="dist" min="0" value="1">
+								</div>						
+
+							</form><br>
+
+						<label > --------------- OR ---------------</label><br><br>
+
+						<label >Select a preset:</label><br><br>
+						<form style="text-align: left">
+							<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+								<label style="width:50%;float:left;margin-top:6px;padding-bottom:10px;" for="presets">Choose your preset:</label>
+								<select style="width:50%;float:right;" class="form-control" id="presets">
+									<option>Default cancer</option>
+								</select>
 							</div>	
-							<div class="form-group">
-								<label for="coop_cost">Cost of cooperative cells:</label>
-								<input type="number" class="form-control" id="coop_cost" value="0.1" step="0.01" min="0" max="1">
-							</div>	
-							<div class="form-group">
-								<label for="dist">Distance of interaction:</label>
-								<input type="number" class="form-control" id="dist" min="0" value="1">
-							</div>						
-							<input type="button" class="btn btn-default submit" onclick="submit1();" value="Submit"/>
-					</form><br>
-
-					<label> --------------- OR ---------------</label><br><br>
-
-					<label>Select a preset:</label><br><br>
-							<form style="text-align: left">
-								<div class="form-group">
-							<label for="presets">Choose your preset:</label>
-							<select class="form-control" id="presets">
-								<option>Default cancer</option>
-							</select>
-						</div>
-
-						<input type="button" class="btn btn-default submit" onclick="submit2();" value="Submit"/>
-					</form>
-						</div>
+						</form>
+						<input type="button" style="width:100%;margin-bottom:25px;margin-top:15px;" class="btn btn-default submit" onclick="submit1();" value="Render starting diagram"/>
+						<input id="submit2" type="button" style="width:100%;margin-bottom:25px;margin-top:15px;" class="btn btn-default submit" onclick="submit2();" value="Start simulating" disabled="true"/>
+					</div>
 				</div>
 		</div>
 		<div class="col-sm-8" style = "height: 80%; widtht: 100%;">
 			<div class="panel panel-default">
 				<canvas id="canvas" resize></canvas>
 			</div>
-			<input id="simulation_progress" type="range"  min="0" max="10" value="0" style="width:85%; float:right;" onchange="changePBValue(this.value)"/>
+			<input id="simulation_progress" type="range"  min="0" max="10" value="0" style="width:85%; float:right;" onchange="changePBValue(this.value)" disabled="true"/>
 			<span id="range" style="width:15%; float:left;"><b>Gen count: 0</b></span>
 			<!--<progress value="0" max="100" id="simulation_progress" style="width:100%"></progress>-->
 		</div>
