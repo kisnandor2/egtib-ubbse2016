@@ -76,6 +76,7 @@
 			if (i >= n) {
 				$(".submit")[0].disabled = false;
 				$(".submit")[1].disabled = false;
+				progressBar.disabled = false;
 				voronoi.displayChartData(chart);
 				return;
 			}
@@ -254,6 +255,7 @@
 					$("body").removeClass("loading")
 					$(".submit")[0].disabled = true;
 					$(".submit")[1].disabled = true;
+					progressBar.disabled = true;
 					render(0, sitesList.length, sitesList);
 				};
 			}
