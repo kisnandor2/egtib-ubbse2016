@@ -18,6 +18,9 @@
 		var sitesList;
 		var originalSites;
 		window.onload = function() {
+
+
+
 			progressBar = $("#simulation_progress")[0];
 
 			let canvas = $('#canvas')[0];
@@ -41,7 +44,7 @@
 			voronoi.setCoop_Cost(defaultCoopCost);
 			$('#coop_cost')[0].value = defaultCoopCost;
 
-			//voronoi.renderDiagram();
+			voronoi.renderDiagram();
 
 			let count=0;
 
