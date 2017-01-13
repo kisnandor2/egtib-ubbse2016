@@ -2,6 +2,7 @@
 
 {% block head %}
 	<title> Simulation </title>
+	<link rel="stylesheet" href="/stylesheets/style.css">
 	<link rel="stylesheet" href="/stylesheets/voronoi_style.css">
 	<link rel="stylesheet" href="/stylesheets/loading_clock.css">
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
@@ -14,6 +15,7 @@
 		var dcolor=150;
 		var ccolor=97;
 		var progressBar;
+		var sitesList;
 
 		window.onload = function() {
 			progressBar = $("#simulation_progress")[0];
@@ -81,12 +83,35 @@
 				voronoi.addDataToChart();
 				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
 				voronoi.renderDiagram();
-				progressBar.value++;
+				progressBar.value++
+				showPBValue();
 				if (voronoi.getProductiveCount() == 0)
 					i = n;
 				render(i + 1, n, sitesList);
 				return;
 			}, 0)
+		}
+		function renderone(i, sitesList) {
+			setTimeout(function() {
+				voronoi.addDataToChart();
+				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
+				voronoi.renderDiagram();
+				if (voronoi.getProductiveCount() == 0)
+					i = n;
+				return;
+			}, 0)
+		}
+
+		//Changes slider value
+		function changePBValue(newValue) {
+			renderone(newValue,sitesList);
+			progressBar.value=newValue;
+			showPBValue();
+		}
+
+		//Updates the span next to the slider
+		function showPBValue() {
+			document.getElementById("range").innerHTML="<b>Gen count: "+progressBar.value+"</b>";
 		}
 		</script>
 
@@ -174,6 +199,7 @@
 			//Reset the progressBar
 			progressBar.max = gen_count;
 			progressBar.value = 0;
+			showPBValue();
 
 			try {
 				voronoi.setNonCooperatingChance(number_non/number);
@@ -218,7 +244,7 @@
 				$("body").addClass("loading");
 				connection.onmessage = function (e) {
 					//Get results via the websocket
-					let sitesList = JSON.parse(e.data);
+					sitesList = JSON.parse(e.data);
 					$("body").removeClass("loading")
 					$(".submit")[0].disabled = true;
 					$(".submit")[1].disabled = true;
@@ -278,11 +304,13 @@
 						</div>
 				</div>
 		</div>
-		<div class="col-sm-8" style = "height: 90%">
+		<div class="col-sm-8" style = "height: 80%; widtht: 100%;">
 			<div class="panel panel-default">
-						<canvas id="canvas" resize></canvas>
+				<canvas id="canvas" resize></canvas>
 			</div>
-			<progress value="0" max="100" id="simulation_progress" style="width:100%"></progress>
+			<input id="simulation_progress" type="range"  min="0" max="10" value="0" style="width:85%; float:right;" onchange="changePBValue(this.value)"/>
+			<span id="range" style="width:15%; float:left;"><b>Gen count: 0</b></span>
+			<!--<progress value="0" max="100" id="simulation_progress" style="width:100%"></progress>-->
 		</div>
 	</div>
 	<div class="row">
