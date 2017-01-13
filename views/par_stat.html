@@ -16,7 +16,7 @@
 		var ccolor=97;
 		var progressBar;
 		var sitesList;
-
+		var originalSites;
 		window.onload = function() {
 			progressBar = $("#simulation_progress")[0];
 
@@ -93,12 +93,17 @@
 		}
 		function renderone(i, sitesList) {
 			setTimeout(function() {
-				voronoi.addDataToChart();
-				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
-				voronoi.renderDiagram();
-				if (voronoi.getProductiveCount() == 0)
-					i = n;
-				return;
+				if (i>0) {
+					voronoi.addDataToChart();
+					voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i-1]));
+					voronoi.renderDiagram();
+					return;
+				} else {
+					voronoi.addDataToChart();
+					voronoi.setSites(voronoi.sitesBadFormatToPointFormat(originalSites));
+					voronoi.renderDiagram();
+					return;
+				}
 			}, 0)
 		}
 
@@ -197,6 +202,7 @@
 					dist 				= Math.max(Number($('#dist')[0].value),0);
 
 			//Reset the progressBar
+			progressBar.min = 0;
 			progressBar.max = gen_count;
 			progressBar.value = 0;
 			showPBValue();
@@ -204,7 +210,7 @@
 			try {
 				voronoi.setNonCooperatingChance(number_non/number);
 				let sites = voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(number)), Math.ceil(Math.sqrt(number))), true);
-
+				originalSites = sites;
 				voronoi.setSites(sites);
 				voronoi.setGen_Count(gen_count);
 				voronoi.setCoop_Cost(coop_cost);
@@ -226,7 +232,7 @@
 			presets = $('#presets')[0].value;
 			console.log(presets);
 			progressBar.value = 0;
-
+			showPBValue();
 			//Send data to server via websocket
 			json = JSON.stringify({
 				bbox: 		 voronoi.getBbox(), 
