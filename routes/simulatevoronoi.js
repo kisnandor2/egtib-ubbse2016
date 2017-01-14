@@ -35,10 +35,7 @@ function SimulateVoronoi() {
 	this.defectingCost = defaultDefectingCost;
 	this.Vn = 0;
 	this.V0 = 0;
-	this.initVoronoi();
-	this.diagram = voronoi.compute(this.sites, this.bbox);
-	this.setPayoffs();
-	//logger.trace("new SimulateVoronoi created");
+	logger.debug("new SimulateVoronoi created");
 }
 SimulateVoronoi.prototype.copy = function(v){
 	this.diagram =  v.diagram;
