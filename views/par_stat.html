@@ -80,9 +80,17 @@
 		function pause_restart() {
 			paused = 1 - paused;
 			progressBar.disabled = paused == 0 ? true : false;
-			$(".submit")[2].value = paused == 0? "Pause the Simulation" : "Resume the simulation";
+			$(".submit")[3].value = paused == 0? "Pause the Simulation" : "Resume the simulation";
 			render(Number(progressBar.value),sitesList.length,sitesList);
 
+		}
+
+		// Sets new parameters to an existing voronoi graph
+		function setVoronoi (){
+			let coop_cost 	= Number($('#coop_cost')[0].value),
+			    dist	= Math.max(Number($('#dist')[0].value),0);
+			voronoi.setCoop_Cost(coop_cost);
+			voronoi.setDist(dist);
 		}
 
 
@@ -91,10 +99,11 @@
 			if (paused == 1) { return; }
 			if (i >= n) {
 				paused = 1;
-				$(".submit")[2].value = "Resume the simulation";
+				$(".submit")[3].value = "Resume the simulation";
 				$(".submit")[0].disabled = false;
 				$(".submit")[1].disabled = false;
-				$(".submit")[2].disabled = true;
+				$(".submit")[2].disabled = false;
+				$(".submit")[3].disabled = true;
 				progressBar.disabled = false;
 				voronoi.displayChartData(chart);
 				return;
@@ -129,8 +138,8 @@
 
 		//Changes slider value
 		function changePBValue(newValue) {
-			if (newValue != sitesList.length) $(".submit")[2].disabled = false;
-			else $(".submit")[2].disabled = true;
+			if (newValue != sitesList.length) $(".submit")[3].disabled = false;
+			else $(".submit")[3].disabled = true;
 			renderone(newValue,sitesList);
 			progressBar.value=newValue;
 			showPBValue();
@@ -220,11 +229,11 @@
 			progressBar.disabled = false;
 			$('#submit2')[0].disabled = false;
 			
-			let number 			= Math.max(Number($('#number')[0].value),0),
+			let 		number 		= Math.max(Number($('#number')[0].value),0),
 					number_non 	= Number($('#number_non')[0].value),
 					gen_count 	= Math.max(Number($('#gen_count')[0].value),0),
 					coop_cost 	= Number($('#coop_cost')[0].value),
-					dist 				= Math.max(Number($('#dist')[0].value),0);
+					dist 		= Math.max(Number($('#dist')[0].value),0);
 
 			//Reset the progressBar
 			progressBar.min = 0;
@@ -281,7 +290,8 @@
 					$("body").removeClass("loading")
 					$(".submit")[0].disabled = true;
 					$(".submit")[1].disabled = true;
-					$(".submit")[2].disabled = false;
+					$(".submit")[2].disabled = true;
+					$(".submit")[3].disabled = false;
 					progressBar.disabled = true;
 					render(0, sitesList.length, sitesList);
 				};
@@ -334,9 +344,10 @@
 								</select>
 							</div>	
 						</form>
-						<input type="button" style="width:100%;margin-bottom:25px;margin-top:15px;" class="btn btn-default submit" onclick="submit1();" value="Render starting diagram"/>
-						<input id="submit2" type="button" style="width:50%;margin-bottom:25px;margin-top:15px;float:left;" class="btn btn-default submit" onclick="submit2();" value="Start the simulation" disabled="true"/>
-						<input id="pause" type="button" style="width:50%;margin-bottom:25px;margin-top:15px;float:right;" class="btn btn-default submit" onclick="pause_restart();" value="Pause the Simulation" disabled="true"/>
+						<input type="button" style="width:50%;margin-bottom:5px;margin-top:15px;float:left;" class="btn btn-default submit" onclick="submit1();" value="Render new diagram"/>
+						<input type="button" style="width:50%;margin-bottom:5px;margin-top:15px;float:right;" class="btn btn-default submit" onclick="setVoronoi();" value="Set new parameters" disabled = "true"/>
+						<input id="submit2" type="button" style="width:50%;margin-bottom:25px;margin-top:5px;float:left;" class="btn btn-default submit" onclick="submit2();" value="Start the simulation" disabled="true"/>
+						<input id="pause" type="button" style="width:50%;margin-bottom:25px;margin-top:5px;float:right;" class="btn btn-default submit" onclick="pause_restart();" value="Pause the Simulation" disabled="true"/>
 					</div>
 				</div>
 		</div>
