@@ -108,7 +108,7 @@
 				$(".submit")[0].disabled = false;
 				$(".submit")[1].disabled = false;
 				$(".submit")[2].disabled = false;
-				$(".submit")[3].disabled = true;
+				//$(".submit")[3].disabled = true;
 				progressBar.disabled = false;
 				voronoi.displayChartData(chart);
 				return;
@@ -143,8 +143,8 @@
 
 		//Changes slider value
 		function changePBValue(newValue) {
-			if (newValue != sitesList.length) $(".submit")[3].disabled = false;
-			else $(".submit")[3].disabled = true;
+			/*if (newValue != sitesList.length) $(".submit")[3].disabled = false;
+			else $(".submit")[3].disabled = true;*/
 			renderone(newValue,sitesList);
 			progressBar.value=newValue;
 			showPBValue();
