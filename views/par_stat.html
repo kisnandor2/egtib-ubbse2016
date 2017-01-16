@@ -100,7 +100,6 @@
 
 
 		function render(i, n, sitesList) {
-			console.log(i);
 			if (paused == 1) { return; }
 			if (i >= n) {
 				paused = 1;
@@ -110,11 +109,15 @@
 				$(".submit")[2].disabled = false;
 				//$(".submit")[3].disabled = true;
 				progressBar.disabled = false;
-				voronoi.displayChartData(chart);
+				if (chart.xAxis[0].categories.length != voronoi.getGen_Count()){
+					voronoi.displayChartData(chart);
+				}
 				return;
 			}
 			setTimeout(function() {
-				voronoi.addDataToChart();
+				if (chart.xAxis[0].categories.length != voronoi.getGen_Count()){
+					voronoi.addDataToChart();
+				}
 				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
 				voronoi.renderDiagram();
 				progressBar.value++
@@ -254,8 +257,8 @@
 				voronoi.setCoop_Cost(coop_cost);
 				voronoi.setDist(dist);
 
-				voronoi.renderDiagram();
 				voronoi.resetChart(chart);
+				voronoi.renderDiagram();
 			}
 			catch (error){
 				voronoi.setNonCooperatingChance(0.5);
@@ -269,7 +272,6 @@
 		function submit2() {
 			paused = 0;			
 			presets = $('#presets')[0].value;
-			console.log(presets);
 			progressBar.value = 0;
 			showPBValue();
 			//Send data to server via websocket
@@ -299,6 +301,7 @@
 					$(".submit")[3].disabled = false;
 					$(".submit")[3].value = "Pause the Simulation";
 					progressBar.disabled = true;
+					voronoi.resetChart(chart);
 					render(0, sitesList.length, sitesList);
 				};
 			}
