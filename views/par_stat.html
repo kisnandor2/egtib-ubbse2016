@@ -2,6 +2,7 @@
 
 {% block head %}
 	<title> Simulation </title>
+	<link rel="stylesheet" href="/stylesheets/style.css">
 	<link rel="stylesheet" href="/stylesheets/voronoi_style.css">
 	<link rel="stylesheet" href="/stylesheets/loading_clock.css">
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
@@ -14,8 +15,13 @@
 		var dcolor=150;
 		var ccolor=97;
 		var progressBar;
-
+		var sitesList;
+		var originalSites;
+		var paused = 0;
 		window.onload = function() {
+
+
+
 			progressBar = $("#simulation_progress")[0];
 
 			let canvas = $('#canvas')[0];
@@ -25,17 +31,17 @@
 			voronoi = new AnimatableVoronoi(view);
 
 			//GenerationCount
-			let defaultGenerationCount = 1;
+			let defaultGenerationCount = 10;
 			voronoi.setGen_Count(defaultGenerationCount);
 			$('#gen_count')[0].value = defaultGenerationCount;
 
 			//CellCount
-			let defaultCellCount = 16;
+			let defaultCellCount = 160;
 			voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(defaultCellCount)), Math.ceil(Math.sqrt(defaultCellCount))), true));
 			$('#number')[0].value = defaultCellCount;
 
 			//CoopCost
-			let defaultCoopCost = 0.5;
+			let defaultCoopCost = 0.1;
 			voronoi.setCoop_Cost(defaultCoopCost);
 			$('#coop_cost')[0].value = defaultCoopCost;
 
@@ -69,11 +75,36 @@
 			}
 			*/
 		}
+		
+		// If paused then unpauses otherwise pauses the animation
+		function pause_restart() {
+			paused = 1 - paused;
+			progressBar.disabled = paused == 0 ? true : false;
+			$(".submit")[3].value = paused == 0? "Pause the Simulation" : "Resume the simulation";
+			render(Number(progressBar.value),sitesList.length,sitesList);
+
+		}
+
+		// Sets new parameters to an existing voronoi graph
+		function setVoronoi (){
+			let coop_cost 	= Number($('#coop_cost')[0].value),
+			    dist	= Math.max(Number($('#dist')[0].value),0);
+			voronoi.setCoop_Cost(coop_cost);
+			voronoi.setDist(dist);
+		}
+
 
 		function render(i, n, sitesList) {
+			console.log(i);
+			if (paused == 1) { return; }
 			if (i >= n) {
+				paused = 1;
+				$(".submit")[3].value = "Resume the simulation";
 				$(".submit")[0].disabled = false;
 				$(".submit")[1].disabled = false;
+				$(".submit")[2].disabled = false;
+				$(".submit")[3].disabled = true;
+				progressBar.disabled = false;
 				voronoi.displayChartData(chart);
 				return;
 			}
@@ -81,12 +112,42 @@
 				voronoi.addDataToChart();
 				voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i]));
 				voronoi.renderDiagram();
-				progressBar.value++;
+				progressBar.value++
+				showPBValue();
 				if (voronoi.getProductiveCount() == 0)
 					i = n;
 				render(i + 1, n, sitesList);
 				return;
 			}, 0)
+		}
+		function renderone(i, sitesList) {
+			setTimeout(function() {
+				if (i>0) {
+					voronoi.addDataToChart();
+					voronoi.setSites(voronoi.sitesBadFormatToPointFormat(sitesList[i-1]));
+					voronoi.renderDiagram();
+					return;
+				} else {
+					voronoi.addDataToChart();
+					voronoi.setSites(voronoi.sitesBadFormatToPointFormat(originalSites));
+					voronoi.renderDiagram();
+					return;
+				}
+			}, 0)
+		}
+
+		//Changes slider value
+		function changePBValue(newValue) {
+			if (newValue != sitesList.length) $(".submit")[3].disabled = false;
+			else $(".submit")[3].disabled = true;
+			renderone(newValue,sitesList);
+			progressBar.value=newValue;
+			showPBValue();
+		}
+
+		//Updates the span next to the slider
+		function showPBValue() {
+			document.getElementById("range").innerHTML="<b>Gen count: "+progressBar.value+"</b>";
 		}
 		</script>
 
@@ -165,20 +226,24 @@
 		});
 
 		function submit1() {
-			let number 			= Math.max(Number($('#number')[0].value),0),
+			progressBar.disabled = false;
+			$('#submit2')[0].disabled = false;
+			
+			let 		number 		= Math.max(Number($('#number')[0].value),0),
 					number_non 	= Number($('#number_non')[0].value),
 					gen_count 	= Math.max(Number($('#gen_count')[0].value),0),
 					coop_cost 	= Number($('#coop_cost')[0].value),
-					dist 				= Math.max(Number($('#dist')[0].value),0);
+					dist 		= Math.max(Number($('#dist')[0].value),0);
 
 			//Reset the progressBar
+			progressBar.min = 0;
 			progressBar.max = gen_count;
 			progressBar.value = 0;
+			showPBValue();
 
 			try {
 				voronoi.setNonCooperatingChance(number_non/number);
 				let sites = voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(number)), Math.ceil(Math.sqrt(number))), true);
-
 				voronoi.setSites(sites);
 				voronoi.setGen_Count(gen_count);
 				voronoi.setCoop_Cost(coop_cost);
@@ -197,10 +262,11 @@
 		}
 
 		function submit2() {
+			paused = 0;			
 			presets = $('#presets')[0].value;
 			console.log(presets);
 			progressBar.value = 0;
-
+			showPBValue();
 			//Send data to server via websocket
 			json = JSON.stringify({
 				bbox: 		 voronoi.getBbox(), 
@@ -210,6 +276,8 @@
 				dist: 		 voronoi.getDist(),
 				//send more data here
 			});
+
+			originalSites = voronoi.getSites();
 			connection.send(json);
 
 			connection.onmessage = function(e) {
@@ -218,10 +286,14 @@
 				$("body").addClass("loading");
 				connection.onmessage = function (e) {
 					//Get results via the websocket
-					let sitesList = JSON.parse(e.data);
+					sitesList = JSON.parse(e.data);
 					$("body").removeClass("loading")
 					$(".submit")[0].disabled = true;
 					$(".submit")[1].disabled = true;
+					$(".submit")[2].disabled = true;
+					$(".submit")[3].disabled = false;
+					$(".submit")[3].value = "Pause the Simulation";
+					progressBar.disabled = true;
 					render(0, sitesList.length, sitesList);
 				};
 			}
@@ -232,57 +304,61 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row" >
-		<div class="col-sm-4">
+	<div class="row" style="height: 120%;" >
+		<div class="col-sm-4" style = "widtht: 100%;">
 			<div class="panel panel-default">
 					<div class="panel-heading" style="background-color: rgb(40,40,40); color: rgb(255,255,255);">Set the parameters for the next run here:</div>
 						<div class="panel-body" style="text-align: center">
-							<label>Enter your own parameters:</label><br><br>
+							<label>Enter your own parameters:</label>
 							<form id="form1" style="text-align: left">
-							<div class="form-group">
-								<label for="number">Total number of cells:</label>
-								<input type="number" class="form-control" id="number" min="0" value="100">
-							</div>
-							<div class="form-group">
-								<label for="number_non">Approximate number of non-productive cells:</label>
-								<input type="number" class="form-control" id="number_non" min="0" max="100" value="50">
-							</div>
-							<div class="form-group">
-								<label for="gen_count">Number of generations:</label>
-								<input type="number" class="form-control" id="gen_count" min="0" value="100">
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="number" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Total number of cells:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="number" min="0" value="160">
+								</div>
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="number_non" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Number of non-productive cells:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="number_non" min="0" max="100" value="10">
+								</div>
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="gen_count" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Number of generations:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="gen_count" min="0" value="10">
+								</div>	
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="coop_cost" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Cost of cooperative cells:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="coop_cost" value="0.1" step="0.01" min="0" max="1">
+								</div>	
+								<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+									<label for="dist" style="width:50%;float:left;margin-top:6px;padding-bottom:10px;">Distance of interaction:</label>
+									<input type="number" style="width:50%;float:right;" class="form-control" id="dist" min="0" value="1">
+								</div>						
+
+							</form>
+
+						<label > --------------- OR ---------------</label><br>
+
+						<label >Select a preset:</label>
+						<form style="text-align: left">
+							<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
+								<label style="width:50%;float:left;margin-top:6px;padding-bottom:10px;" for="presets">Choose your preset:</label>
+								<select style="width:50%;float:right;" class="form-control" id="presets">
+									<option>Default cancer</option>
+								</select>
 							</div>	
-							<div class="form-group">
-								<label for="coop_cost">Cost of cooperative cells:</label>
-								<input type="number" class="form-control" id="coop_cost" value="0.5" step="0.01" min="0" max="1">
-							</div>	
-							<div class="form-group">
-								<label for="dist">Distance of interaction:</label>
-								<input type="number" class="form-control" id="dist" min="0" value="1">
-							</div>						
-							<input type="button" class="btn btn-default submit" onclick="submit1();" value="Submit"/>
-					</form><br>
-
-					<label> --------------- OR ---------------</label><br><br>
-
-					<label>Select a preset:</label><br><br>
-							<form style="text-align: left">
-								<div class="form-group">
-							<label for="presets">Choose your preset:</label>
-							<select class="form-control" id="presets">
-								<option>Default cancer</option>
-							</select>
-						</div>
-
-						<input type="button" class="btn btn-default submit" onclick="submit2();" value="Submit"/>
-					</form>
-						</div>
+						</form>
+						<input type="button" style="width:50%;margin-bottom:5px;margin-top:15px;float:left;" class="btn btn-default submit" onclick="submit1();" value="Render new diagram"/>
+						<input type="button" style="width:50%;margin-bottom:5px;margin-top:15px;float:right;" class="btn btn-default submit" onclick="setVoronoi();" value="Set new parameters" disabled = "true"/>
+						<input id="submit2" type="button" style="width:50%;margin-bottom:25px;margin-top:5px;float:left;" class="btn btn-default submit" onclick="submit2();" value="Start the simulation" disabled="true"/>
+						<input id="pause" type="button" style="width:50%;margin-bottom:25px;margin-top:5px;float:right;" class="btn btn-default submit" onclick="pause_restart();" value="Pause the Simulation" disabled="true"/>
+					</div>
 				</div>
 		</div>
-		<div class="col-sm-8" style = "height: 90%">
+		<div class="col-sm-8" style = "height: 75%; widtht: 100%;">
 			<div class="panel panel-default">
-						<canvas id="canvas" resize></canvas>
+				<canvas id="canvas" resize></canvas>
 			</div>
-			<progress value="0" max="100" id="simulation_progress"></progress>
+			<input id="simulation_progress" type="range"  min="0" max="10" value="0" style="width:85%; float:right;" onchange="changePBValue(this.value)" disabled="true"/>
+			<span id="range" style="width:15%; float:left;"><b>Gen count: 0</b></span>
+			<!--<progress value="0" max="100" id="simulation_progress" style="width:100%"></progress>-->
 		</div>
 	</div>
 	<div class="row">
