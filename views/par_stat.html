@@ -292,6 +292,7 @@
 					$(".submit")[1].disabled = true;
 					$(".submit")[2].disabled = true;
 					$(".submit")[3].disabled = false;
+					$(".submit")[3].value = "Pause the Simulation";
 					progressBar.disabled = true;
 					render(0, sitesList.length, sitesList);
 				};
@@ -303,8 +304,8 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row" >
-		<div class="col-sm-4" style = "height: 750px; widtht: 100%;">
+	<div class="row" style="height: 120%;" >
+		<div class="col-sm-4" style = "widtht: 100%;">
 			<div class="panel panel-default">
 					<div class="panel-heading" style="background-color: rgb(40,40,40); color: rgb(255,255,255);">Set the parameters for the next run here:</div>
 						<div class="panel-body" style="text-align: center">
@@ -351,7 +352,7 @@
 					</div>
 				</div>
 		</div>
-		<div class="col-sm-8" style = "height: 80%; widtht: 100%;">
+		<div class="col-sm-8" style = "height: 75%; widtht: 100%;">
 			<div class="panel panel-default">
 				<canvas id="canvas" resize></canvas>
 			</div>
