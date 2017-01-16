@@ -88,9 +88,14 @@
 		// Sets new parameters to an existing voronoi graph
 		function setVoronoi (){
 			let coop_cost 	= Number($('#coop_cost')[0].value),
-			    dist	= Math.max(Number($('#dist')[0].value),0);
+			    dist	= Math.max(Number($('#dist')[0].value),1),
+			    gen_count = Math.max(Number($('#gen_count')[0].value),1);
 			voronoi.setCoop_Cost(coop_cost);
 			voronoi.setDist(dist);
+			voronoi.setGen_Count(gen_count);
+			progressBar.max = gen_count;
+			progressBar.value = 0;
+			showPBValue();
 		}
 
 
@@ -250,7 +255,7 @@
 				voronoi.setDist(dist);
 
 				voronoi.renderDiagram();
-				voronoi.resetChart();
+				voronoi.resetChart(chart);
 			}
 			catch (error){
 				voronoi.setNonCooperatingChance(0.5);

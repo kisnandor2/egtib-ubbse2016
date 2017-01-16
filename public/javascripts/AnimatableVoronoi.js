@@ -28,8 +28,9 @@ function AnimatableVoronoi(view) {
 }
 
 AnimatableVoronoi.prototype.displayChartData =  function(chart){
-	let categories = [];
-	for (i = 0; i < voronoi.gen_count; i++) {
+	let categories = chart.xAxis[0].categories;
+	let initialChartCategoriesCount = chart.xAxis[0].categories.length;
+	for (i = initialChartCategoriesCount; i < initialChartCategoriesCount + voronoi.gen_count; i++) {
 		categories.push(i + 1);
 	}
 	chart.series[0].setData(this.chart.productive);
@@ -55,9 +56,10 @@ AnimatableVoronoi.prototype.getProductiveCount = function() {
 	return k;
 }
 
-AnimatableVoronoi.prototype.resetChart = function() {
+AnimatableVoronoi.prototype.resetChart = function(chart) {
 	this.chart.productive = [];
 	this.chart.nonProductive = [];
+	chart.xAxis[0].categories = [];
 }
 
 AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadFormat) {
