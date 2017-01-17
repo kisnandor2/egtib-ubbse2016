@@ -13,6 +13,13 @@ const defaultSteepness = 2,
 const defaultCooperatingCost = 0.5,
 			defaultDefectingCost = 0;
 
+const defaultDist = 1, 
+			shape_of_dif = 1/2;
+			d = 0,
+			z = 20;
+const G = [];
+
+
 function SimulateVoronoi() {
 
 	//const e = Math.exp(1);
@@ -33,8 +40,11 @@ function SimulateVoronoi() {
 	this.steepness = defaultSteepness;
 	this.cooperatingCost = defaultCooperatingCost;
 	this.defectingCost = defaultDefectingCost;
+	this.dist = defaultDist;
+	this.d = defaultDist * shape_of_dif;
 	this.Vn = 0;
 	this.V0 = 0;
+	this.neighborMatrix = [];
 	logger.debug("new SimulateVoronoi created");
 }
 SimulateVoronoi.prototype.copy = function(v){
@@ -47,16 +57,18 @@ SimulateVoronoi.prototype.copy = function(v){
 	this.steepness = v.steepness;
 	this.cooperatingCost = v.cooperatingCost;
 	this.defectingCost = v.defectingCost;
+	this.dist = v.dist;
+	this.d = v.d;
 	this.Vn = v.Vn;
 	this.V0 = v.V0;
-
+	this.neighborMatrix = v.neighborMatrix;
 	this.diagram = v.diagram;
 	this.setPayoffs();
 }
 SimulateVoronoi.prototype.write = function(){
 	console.log("alive");
 }
-SimulateVoronoi.prototype.init = function({sites, bbox, gen_count, coop_cost}){
+SimulateVoronoi.prototype.init = function({sites, bbox, gen_count, coop_cost, dist}){
 	logger.info('Init voronoi from the client data');
 	logger.debug('Coop cost: ', coop_cost);
 
@@ -64,6 +76,8 @@ SimulateVoronoi.prototype.init = function({sites, bbox, gen_count, coop_cost}){
 	this.bbox = bbox;
 	this.gen_count = gen_count;
 	this.cooperatingCost = coop_cost;
+	this.dist = dist;
+	this.d = dist * shape_of_dif;
 
 	try {
 		for (let i = 0; i < sites.length; ++i){
@@ -86,6 +100,8 @@ SimulateVoronoi.prototype.init = function({sites, bbox, gen_count, coop_cost}){
 		this.Vn = this.V(this.sites.length);
 		this.V0 = this.V(0);
 		this.diagram = voronoi.compute(this.sites, this.bbox);
+		this.calculateDiffGradient();
+		this.setMatrix();
 		this.setPayoffs();
 		return true;
 	}
@@ -93,7 +109,6 @@ SimulateVoronoi.prototype.init = function({sites, bbox, gen_count, coop_cost}){
 		logger.error('Invalid request JSON', error);
 		return false;
 	}
-
 }
 SimulateVoronoi.prototype.initVoronoi = function() {
 	this.sites = [];
@@ -163,10 +178,21 @@ SimulateVoronoi.prototype.simulate = function() {
 SimulateVoronoi.prototype.setPayoffs = function() {
 	for (var i = 0; i < this.sites.length; ++i) {
 		//Get 'c' neighbors
+		if (this.dist == 1) {
+
 		let neighbors = this.getNeighbors(this.sites[i], this.diagram);
-		let cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
+			var cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
+			var neighborsCount = neighbors.length;	
+		} else {
+
+		var neighborsCount = this.getNeighborsCount(this.sites[i].voronoiId, this.neighborMatrix);
+			var cooperatingNeighbors = this.getCooperatingNeighbors(this.sites[i].voronoiId, this.dist, this.neighborMatrix );
+
+		}	
+	 	//var cooperatingNeighbors = this.getCooperatingNeighbors(this.sites[i].voronoiId, this.dist, this.neighborMatrix );
+
 		//Calculate the payoff
-		this.sites[i].payoff = this.payoff(cooperatingNeighbors, this.sites[i].cost, neighbors.length);
+		this.sites[i].payoff = this.payoff(cooperatingNeighbors, this.sites[i].cost, neighborsCount);
 	}
 }
 
@@ -181,12 +207,19 @@ SimulateVoronoi.prototype.V = function(i, neighborsCount) {
 SimulateVoronoi.prototype.getNeighbors = function(p, diagram) {
 	//find neighbors of cell which has site at p point
 	var neighbors = [];
+	var neighborsid = [];
 	var halfedges = this.getCellBySite(p, diagram.cells).halfedges;
 	for (var i in halfedges) {
 		var lsite = halfedges[i].edge.lSite
-		if (lsite != null && !this.compareSites(lsite, p)) neighbors.push(lsite);
+		if (lsite != null && !this.compareSites(lsite, p)) {
+			neighbors.push(lsite);
+			neighborsid.push(lsite.voronoiId);
+		}
 		var rsite = halfedges[i].edge.rSite
-		if (rsite != null && !this.compareSites(rsite, p)) neighbors.push(rsite);
+		if (rsite != null && !this.compareSites(rsite, p)){
+		neighbors.push(rsite);
+		neighborsid.push(rsite.voronoiId)	
+		} 
 	}
 	return neighbors;
 }
@@ -211,5 +244,81 @@ SimulateVoronoi.prototype.testNeighborCount = function(){
 			console.log('ERROR ' + i);
 	}
 }
+
+SimulateVoronoi.prototype.setMatrix = function(){
+	for (var i=0; i<this.sites.length; ++i){
+		this.neighborMatrix.push([]);
+		for (var j=0; j<this.sites.length; ++j){
+			this.neighborMatrix[i].push(0);
+		}
+	}
+	for (var i=0; i<this.sites.length; ++i){
+		var halfedges = this.getCellBySite(this.sites[i], this.diagram.cells).halfedges;
+		for (var j in halfedges) {
+			var lsite = halfedges[j].edge.lSite
+			if (lsite != null && !this.compareSites(lsite, this.sites[i])) {
+				this.neighborMatrix[this.sites[i].voronoiId][lsite.voronoiId] = lsite.attrib;
+			}
+			var rsite = halfedges[j].edge.rSite
+			if (rsite != null && !this.compareSites(rsite, this.sites[i])){
+				this.neighborMatrix[this.sites[i].voronoiId][rsite.voronoiId] = rsite.attrib;
+
+		} 
+	}
+	}
+}
+SimulateVoronoi.prototype.getNeighborsCount = function(k, table){
+	var count = 0;
+	for (var i=0; i<table[k].length; ++i){
+		if (table[k][i] != 0) {
+			count++;
+		}
+	}
+	return count;
+}
+SimulateVoronoi.prototype.getCooperatingNeighbors = function(k, dist, table){
+
+	var neighbors = []; neighbors.push(k);
+	var newneighbors = [];
+	var coops = 0;
+	var newtable = [];
+	var seen  = [];
+	for (var i=0; i<table[0].length; i++){
+		seen.push(0);
+	}
+	seen[k] = 1;
+	newtable = table.slice();
+	for (var d=1; d<=dist; ++d){
+		newneighbors = [];
+		var gradcoops = 0;
+		for (var i=0; i<neighbors.length;  ++i){
+			for (var j=0; j<newtable[i].length; ++j){
+				if (seen[j]== 0 && newtable[neighbors[i]][j] == 'c') {
+					gradcoops++;
+					newneighbors.push(j);
+					seen[j] = 1;
+				} else if (seen[j] == 0 && table[neighbors[i]][j] == 'd'){
+					newneighbors.push(j);
+					seen[j] = 1;
+				}
+			}
+		}
+		neighbors = newneighbors.slice();
+		coops = coops + G[d] * gradcoops;
+	}
+	return coops;
+}
+
+SimulateVoronoi.prototype.calculateDiffGradient = function(){
+	G[0] = 1;
+	for (var i = 1; i<=this.dist; ++i){
+		G[i] = 1 - ((this.g(i)-this.g(0)/this.g(this.dist)-this.g(0)));
+	}
+}
+
+SimulateVoronoi.prototype.g = function(i){
+	return 1 / (1 + Math.pow(e, (-z * (i - this.d) / this.dist)));
+}
+
 
 module.exports = SimulateVoronoi;
