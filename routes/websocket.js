@@ -24,7 +24,11 @@ Socket.prototype.listen = function() {
 		})
 
 		socket.on('message', function(msg) {
-			data = JSON.parse(msg)
+			data = JSON.parse(msg);
+			if (data.heartbeat){
+				logger.debug(data.heartbeat);
+				return;
+			}
 			//Get session variable
 			sessionParser.store.get(socket.sessionID, function(err, session) {
 				session.sites 		= data.sites;
