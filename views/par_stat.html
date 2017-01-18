@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
 	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
+	<script type="text/javascript" src="/javascripts/presets.js"></script>
 	<script type="text/javascript" src="/javascripts/event_functions.js"></script>
 
 {% endblock %}
@@ -43,14 +44,15 @@
 
 							</form>
 
-						<label > --------------- OR ---------------</label><br>
-
-						<label >Select a preset:</label>
 						<form style="text-align: left">
 							<div class="form-group" style="padding-bottom:25px;padding-top:15px;">
 								<label style="width:50%;float:left;margin-top:6px;padding-bottom:10px;" for="presets">Choose your preset:</label>
-								<select style="width:50%;float:right;" class="form-control" id="presets">
-									<option>Default cancer</option>
+								<select style="width:50%;float:right;" class="form-control" id="presets" onchange="changePreset();">
+									<option>Default</option>
+									<option>River</option>
+									<option>Corner</option>
+									<option>X</option>
+									<option>GameBoard</option>
 								</select>
 							</div>	
 						</form>
