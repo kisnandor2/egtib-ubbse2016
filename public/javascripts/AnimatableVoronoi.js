@@ -73,8 +73,23 @@ AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadForma
 }
 
 
+AnimatableVoronoi.prototype.changeColor = function(x,y){
+	let min = 9999;
+	let p = undefined;
+	for (point of this.sites){
+		let dist = Math.sqrt(Math.pow(point.x-x,2) + Math.pow(point.y-y,2));
+		if (dist < min){
+			min = dist;
+			p = point;
+		}
+	}
+	return p;
+}
+
 AnimatableVoronoi.prototype.onMouseDown = function(x,y,attrib) {
 	this.sites.push(new paper.Point(x,y,attrib));
+	// let p = this.changeColor(x,y);
+	// p.attrib = 'd';
 	this.setSites(this.sites);
 	this.renderDiagram();
 }
