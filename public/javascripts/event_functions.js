@@ -143,8 +143,13 @@
 
 		async function heartbeat(){
 			while(true){
-				connection.send(JSON.stringify({heartbeat: 'heartbeat'}));
-				await sleep(30000);
+				try{
+					connection.send(JSON.stringify({heartbeat: 'heartbeat'}));
+					await sleep(30000);
+				}
+				catch(error){
+					//
+				}
 			}
 		}
 
