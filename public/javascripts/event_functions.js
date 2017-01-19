@@ -11,8 +11,6 @@
 
 		window.onload = function() {
 
-			heartbeat();
-
 			progressBar = $("#simulation_progress")[0];
 
 			let canvas = $('#canvas')[0];
@@ -143,12 +141,12 @@
 
 		async function heartbeat(){
 			while(true){
-				try{
+				if (connection.readyState == 1){
 					connection.send(JSON.stringify({heartbeat: 'heartbeat'}));
 					await sleep(30000);
 				}
-				catch(error){
-					//
+				else{
+					await sleep(100);
 				}
 			}
 		}
@@ -311,3 +309,5 @@
 			}
 
 		}
+
+		heartbeat();
