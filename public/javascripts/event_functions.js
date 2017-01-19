@@ -310,4 +310,6 @@
 
 		}
 
-		heartbeat();
+		setTimeout(function(){
+			heartbeat();
+		}, 1000)
