@@ -11,7 +11,7 @@
 
 		window.onload = function() {
 
-			// heartbeat();
+			heartbeat();
 
 			progressBar = $("#simulation_progress")[0];
 
@@ -137,16 +137,16 @@
 			chart.xAxis[0].setCategories(categories);
 		}
 
-		// function sleep(ms) {
-		//   return new Promise(resolve => setTimeout(resolve, ms));
-		// }
+		function sleep(ms) {
+		  return new Promise(resolve => setTimeout(resolve, ms));
+		}
 
-		// async function heartbeat(){
-		// 	while(true){
-		// 		connection.send(JSON.stringify({heartbeat: 'heartbeat'}));
-		// 		await sleep(30000);
-		// 	}
-		// }
+		async function heartbeat(){
+			while(true){
+				connection.send(JSON.stringify({heartbeat: 'heartbeat'}));
+				await sleep(30000);
+			}
+		}
 
 // If paused then unpauses otherwise pauses the animation
 		function pause_restart() {

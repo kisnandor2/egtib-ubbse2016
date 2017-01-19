@@ -87,9 +87,9 @@ AnimatableVoronoi.prototype.changeColor = function(x,y){
 }
 
 AnimatableVoronoi.prototype.onMouseDown = function(x,y,attrib) {
-	this.sites.push(new paper.Point(x,y,attrib));
-	// let p = this.changeColor(x,y);
-	// p.attrib = 'd';
+	// this.sites.push(new paper.Point(x,y,attrib));
+	let p = this.changeColor(x,y);
+	p.attrib = 'd';
 	this.setSites(this.sites);
 	this.renderDiagram();
 }
