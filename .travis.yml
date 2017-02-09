@@ -17,7 +17,6 @@ services:
 # pushes to Heroku registry, app goes live from there
 script:
   # Put testing here
-  
   # login to Heroku registry
   - docker login -u="$DOCKER_USERNAME" -p="$api_key" registry.heroku.com
   # build Docker image
