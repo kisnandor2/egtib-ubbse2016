@@ -2,33 +2,10 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<style>
-	.container {
-	position: relative;
-	height: 14rem;
-}
-
-.jumbotron {
-	position: absolute;
-	top: 200%;
-	transform: translate(20%, -50%);
-}
-		body::before {
-			background: url(/images/greet_background.jpg) no-repeat center center fixed;
-			content: '';
-			z-index: -1;
-			width: 100%;
-			height: 100%;
-			position:absolute; 
-			-webkit-background-size: cover;
-			-moz-background-size: cover;
-			-o-background-size: cover;
-			background-size: cover;
-			-webkit-filter: blur(5px);
-			-moz-filter: blur(5px);
-			-o-filter: blur(5px);
-			-ms-filter: blur(5px);
-			filter: blur(5px);
+	<link rel="stylesheet" href="/stylesheets/greet.css">
+	<style type="text/css">
+		.jumbotron {
+			transform: translate(20%, -50%);
 		}
 	</style>
 {% endblock %}

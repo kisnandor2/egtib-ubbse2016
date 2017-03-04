@@ -23,21 +23,23 @@ function AnimatableVoronoi(view) {
 	this.chart = {};
 	this.chart.productive = [];
 	this.chart.nonProductive = [];
+	this.categories = [];
 
 	this.onResize();
 }
 
-AnimatableVoronoi.prototype.displayChartData =  function(chart){
-	let categories = chart.xAxis[0].categories;
-	let initialChartCategoriesCount = chart.xAxis[0].categories.length;
-	for (i = initialChartCategoriesCount; i < initialChartCategoriesCount + voronoi.gen_count; i++) {
-		categories.push(i + 1);
+AnimatableVoronoi.prototype.displayChartData =  function(){
+	if (this.categories.length == 0){
+		this.categories.push(1);
+	}
+	else {
+		this.categories.push(this.categories[this.categories.length-1] + 1);
 	}
 	chart.series[0].setData(this.chart.productive);
 	chart.series[1].setData(this.chart.nonProductive);
 	chart.series[2].setData([]);	//not sure why but sometimes the chart needs this to work correctly
 	chart.series[2].setData(this.chart.nonProductive);
-	chart.xAxis[0].setCategories(categories);
+	chart.xAxis[0].setCategories(this.categories);
 }
 
 AnimatableVoronoi.prototype.addDataToChart = function(){
@@ -45,6 +47,9 @@ AnimatableVoronoi.prototype.addDataToChart = function(){
 	this.chart.productive.push(p);
 	let n = this.sites.length;
 	this.chart.nonProductive.push(n-p);
+	if (this.categories.length <= this.gen_count) {
+		this.displayChartData();
+	}
 }
 
 AnimatableVoronoi.prototype.getProductiveCount = function() {
@@ -60,6 +65,7 @@ AnimatableVoronoi.prototype.resetChart = function(chart) {
 	this.chart.productive = [];
 	this.chart.nonProductive = [];
 	chart.xAxis[0].categories = [];
+	this.categories = [];
 }
 
 AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadFormat) {
