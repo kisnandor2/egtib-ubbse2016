@@ -84,7 +84,7 @@ AnimatableVoronoi.prototype.changeColor = function(x,y){
 	let p = undefined;
 	for (point of this.sites){
 		let dist = Math.sqrt(Math.pow(point.x-x,2) + Math.pow(point.y-y,2));
-		if (dist < min){
+		if (dist < min && dist != 0){
 			min = dist;
 			p = point;
 		}
@@ -93,11 +93,16 @@ AnimatableVoronoi.prototype.changeColor = function(x,y){
 }
 
 AnimatableVoronoi.prototype.onMouseDown = function(x,y,attrib) {
-	// this.sites.push(new paper.Point(x,y,attrib));
-	let p = this.changeColor(x,y);
-	p.attrib = 'd';
-	this.setSites(this.sites);
+	let oldPoint = this.changeColor(x,y);
+	console.log(oldPoint);
+	let newPoint = new paper.Point(x,y,attrib);
+	console.log(newPoint);
+	this.sites.push(newPoint);
 	this.renderDiagram();
+	// let p = ;
+	// p.attrib = 'd';
+	// this.setSites(this.sites);
+	// this.renderDiagram();
 }
 
 AnimatableVoronoi.prototype.onMouseMove = function(x,y,attrib,count) {

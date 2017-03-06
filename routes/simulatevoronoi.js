@@ -144,25 +144,41 @@ SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
 SimulateVoronoi.prototype.simulate = function() {
     var ret = [];
     for (var j = 0; j < this.gen_count; ++j) {
-        // var i = Math.floor(Math.random() * this.sites.length);
+        this.sitesAfterSplit = this.sites.slice(0);
         for (var i = 0; i < this.sites.length; ++i) {
             //Get 'c' neighbors
-            var neighbors = this.getNeighbors(this.sites[i], this.diagram);
-            var cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
+            // var neighbors = this.getNeighbors(this.sites[i], this.diagram);
+            // var cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
 
-            //Select a random neighbor and change payoffs if needed
-            var k = Math.floor(Math.random() * neighbors.length);
-            try {
-                if (neighbors[k].payoff > this.sites[i].payoff) {
-                    this.sites[i].attrib = neighbors[k].attrib;
-                    this.sites[i].cost = neighbors[k].cost;
-                    this.setPayoffs();
-                }
-            } catch (error) {
-                logger.error('No neighbors found at: ', i);
+            // //Select a random neighbor and change payoffs if needed
+            // var k = Math.floor(Math.random() * neighbors.length); //? check if OK?
+            // try {
+            //     if (neighbors[k].payoff > this.sites[i].payoff) {
+            //         this.sites[i].attrib = neighbors[k].attrib;
+            //         this.sites[i].cost = neighbors[k].cost;
+            //         this.setPayoffs();
+            //     }
+            // } catch (error) {
+            //     logger.error('No neighbors found at: ', i);
+            // }
+            let p1 = this.sites[i];
+            var p2 = {x : 0, y: 0, attrib : 'c'};
+            if (i < this.sites.length-1)
+                p2 = this.sites[i+1];
+            if (p1.x > p2.x) {
+                p2 = {};
+                p2.x = this.bbox.xr;
+                p2.y = this.bbox.yb;
             }
+            this.sitesAfterSplit.push({
+                x: (p1.x+p2.x)/2,
+                y: (p1.y+p2.y)/2,
+                attrib : 'd'
+            });
+            console.log('computed')
         }
         //Create a copy of this generation and push it to results
+        this.sites = this.sitesAfterSplit;
         ret.push(JSON.parse(JSON.stringify(this.sites)));
     }
     logger.debug('Simulation length(Generations):', ret.length);

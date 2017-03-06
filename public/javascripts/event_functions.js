@@ -20,12 +20,19 @@ window.onload = function() {
     voronoi = new AnimatableVoronoi(view);
 
     //GenerationCount
-    let defaultGenerationCount = 10;
+    let defaultGenerationCount = 1;
     voronoi.setGen_Count(defaultGenerationCount);
     $('#gen_count')[0].value = defaultGenerationCount;
 
+
+    //Number of non_productive cells
+    let nonProductiveCellCount = 0;
+    voronoi.setNonCooperatingChance(nonProductiveCellCount);
+    $('#number_non')[0].value = nonProductiveCellCount;
+
+
     //CellCount
-    let defaultCellCount = 160;
+    let defaultCellCount = 16;
     voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(defaultCellCount)), Math.ceil(Math.sqrt(defaultCellCount))), true));
     $('#number')[0].value = defaultCellCount;
 
@@ -46,6 +53,7 @@ window.onload = function() {
 
     canvas.onclick = function(event) {
         color = context.getImageData(event.offsetX, event.offsetY, 1, 1).data[1];
+        console.log(color);
         if (color == dcolor)
             voronoi.onMouseDown(event.offsetX, event.offsetY, 'd');
         if (color == ccolor)
@@ -53,7 +61,7 @@ window.onload = function() {
     }
 
     //slow motion
-    /*
+    	
     canvas.onmousemove = function(event){
     	color = context.getImageData(event.offsetX, event.offsetY, 1, 1).data[1];
     	if(color==dcolor)
@@ -62,8 +70,6 @@ window.onload = function() {
     			voronoi.onMouseMove(event.offsetX,event.offsetY,'c',count);
     	++count;
     }
-    */
-
 
     //chart
     chart = Highcharts.chart('container', {
