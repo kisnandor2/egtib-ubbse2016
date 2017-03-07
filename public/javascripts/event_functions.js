@@ -293,7 +293,11 @@ function submit2() {
 
     connection.onmessage = function(e) {
         //If the websocket processed the information simulate on the server side
-        $.get("voronoi/data");
+        $.get("voronoi/data", function(data, textStatus, response){
+        	if (response.responseText != 'ok'){
+        		alert("Some error occured on the server side. We are sorry :(");
+        	}
+        });
         $("body").addClass("loading");
         connection.onmessage = function(e) {
             //Get results via the websocket

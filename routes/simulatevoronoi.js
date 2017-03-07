@@ -138,44 +138,52 @@ SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
 
 SimulateVoronoi.prototype.simulate = function() {
     var ret = [];
-    for (var j = 0; j < this.gen_count; ++j) {
-        var sitesAfterSplit = JSON.parse(JSON.stringify(this.sites));
-        for (var i = 0; i < this.sites.length; ++i) {
-            console.log("L: " + this.sites.length);
-            //Get 'c' neighbors
-            // var neighbors = this.getNeighbors(this.sites[i], this.diagram);
-            // var cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
-
-            // //Select a random neighbor and change payoffs if needed
-            // var k = Math.floor(Math.random() * neighbors.length); //? check if OK?
-            // try {
-            //     if (neighbors[k].payoff > this.sites[i].payoff) {
-            //         this.sites[i].attrib = neighbors[k].attrib;
-            //         this.sites[i].cost = neighbors[k].cost;
-            //         this.setPayoffs();
-            //     }
-            // } catch (error) {
-            //     logger.error('No neighbors found at: ', i);
-            // }
-            let n = this.getNeighbors(this.sites[i], this.diagram);
-            s = {x : 0, y: 0}
-            for (k in n){
-              s.x += n[k].x;
-              s.y += n[k].y;
+    for (let j = 0; j < this.gen_count; ++j) {
+        let sitesAfterSplit = [];
+        for (let i = 0; i < this.sites.length; ++i) {
+            //Select a random neighbor and change payoffs if needed
+            let neighbors = this.getNeighbors(this.sites[i], this.diagram);
+            let rand = Math.floor(Math.random() * neighbors.length); //? check if OK?
+            try {
+                if (neighbors[rand].payoff > this.sites[i].payoff) {
+                    this.sites[i].attrib = neighbors[rand].attrib;
+                    this.sites[i].cost = neighbors[rand].cost;
+                    this.setPayoffs();
+                }
+            } catch (error) {
+                logger.error('No neighbors found at: ', i);
             }
-            s.x /= n.length;
-            s.y /= n.length;
-            s.attrib = 'd';
+
+            //Divide the i'th cell
+            s = {x : 0, y: 0}
+            for (let k in neighbors){
+              s.x += neighbors[k].x;
+              s.y += neighbors[k].y;
+            }
+            s.x /= neighbors.length;
+            s.y /= neighbors.length;
+            s.attrib = this.sites[i].attrib;
             sitesAfterSplit.push(s);
-            console.log(sitesAfterSplit.length);
         }
         //Create a copy of this generation and push it to results
-        this.sites = JSON.parse(JSON.stringify(sitesAfterSplit))
+        this.sites = this.sites.concat(sitesAfterSplit);
         ret.push(JSON.parse(JSON.stringify(this.sites)));
+        this.diagram = voronoi.compute(this.sites, this.bbox);
+        this.checkVoronoiID();
+        this.setMatrix();
     }
     logger.debug('Simulation length(Generations):', ret.length);
     return ret;
 };
+
+SimulateVoronoi.prototype.checkVoronoiID = function() {
+  for (var i in this.sites){
+    if (this.sites[i].voronoiId == undefined){
+      logger.error("Site with nr " + i + " has error");
+      logger.error(this.sites[i]);
+    }
+  }
+}
 
 SimulateVoronoi.prototype.setPayoffs = function() {
     for (var i = 0; i < this.sites.length; ++i) {
@@ -243,6 +251,7 @@ SimulateVoronoi.prototype.testNeighborCount = function() {
 }
 
 SimulateVoronoi.prototype.setMatrix = function() {
+    this.neighborMatrix = [];
     for (var i = 0; i < this.sites.length; ++i) {
         this.neighborMatrix.push([]);
         for (var j = 0; j < this.sites.length; ++j) {
@@ -259,7 +268,6 @@ SimulateVoronoi.prototype.setMatrix = function() {
             var rsite = halfedges[j].edge.rSite
             if (rsite != null && !this.compareSites(rsite, this.sites[i])) {
                 this.neighborMatrix[this.sites[i].voronoiId][rsite.voronoiId] = rsite.attrib;
-
             }
         }
     }
@@ -318,5 +326,24 @@ SimulateVoronoi.prototype.g = function(i) {
     return 1 / (1 + Math.pow(e, (-z * (i - this.d) / this.dist)));
 }
 
+/**
+ * Calculates the dividing chance
+ * @time   - as time progresses ahead so does the function value change
+ * @return - value between [0,1]
+ */
+SimulateVoronoi.prototype.dividingChance = function(time) {
+  //TODO: this should be a function, not random
+  return Math.random();
+}
+
+/**
+ * Calculates the death chance
+ * @time   - as time progresses ahead so does the function value change
+ * @return - value between [0,1]
+ */
+SimulateVoronoi.prototype.deathChance = function(time) {
+  //TODO: this should be a function, not random
+  return Math.random();
+}
 
 module.exports = SimulateVoronoi;

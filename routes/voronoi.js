@@ -14,8 +14,14 @@ var setWebSocket = function(webSocketServer){
 router.get('/data', function(req, res) {
 	let v = new SimulateVoronoi();
 	v.init(req.session);	//ES6 parameter destructuring
-	server.sendData(JSON.stringify(v.simulate()));
-	res.status(200).send('ok');
+	try {
+		server.sendData(JSON.stringify(v.simulate()));
+		res.status(200).send('ok');
+	}
+	catch (error) {
+		server.sendData(JSON.stringify("error"));
+		res.status(200).send('error');
+	}
 });
 
 module.exports = {
