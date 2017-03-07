@@ -95,10 +95,10 @@ AnimatableVoronoi.prototype.changeColor = function(x,y){
 AnimatableVoronoi.prototype.onMouseDown = function(x,y,attrib) {
 	let oldPoint = this.changeColor(x,y);
 	console.log(oldPoint);
-	let newPoint = new paper.Point(x,y,attrib);
-	console.log(newPoint);
-	this.sites.push(newPoint);
-	this.renderDiagram();
+	// let newPoint = new paper.Point(x,y,attrib);
+	// console.log(newPoint);
+	// this.sites.push(newPoint);
+	// this.renderDiagram();
 	// let p = ;
 	// p.attrib = 'd';
 	// this.setSites(this.sites);

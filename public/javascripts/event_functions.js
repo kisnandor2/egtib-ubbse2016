@@ -61,7 +61,7 @@ window.onload = function() {
     }
 
     //slow motion
-    	
+    	/*
     canvas.onmousemove = function(event){
     	color = context.getImageData(event.offsetX, event.offsetY, 1, 1).data[1];
     	if(color==dcolor)
@@ -70,7 +70,7 @@ window.onload = function() {
     			voronoi.onMouseMove(event.offsetX,event.offsetY,'c',count);
     	++count;
     }
-
+*/
     //chart
     chart = Highcharts.chart('container', {
 

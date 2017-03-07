@@ -20,12 +20,7 @@ const G = [];
 
 function SimulateVoronoi() {
     this.diagram = null;
-    this.bbox = {
-        xl: 0,
-        xr: 800,
-        yt: 0,
-        yb: 600
-    };
+    this.bbox = {};
     this.sites = [];
     this.initialSize = {
         x: 1360,
@@ -144,8 +139,9 @@ SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
 SimulateVoronoi.prototype.simulate = function() {
     var ret = [];
     for (var j = 0; j < this.gen_count; ++j) {
-        this.sitesAfterSplit = this.sites.slice(0);
+        var sitesAfterSplit = JSON.parse(JSON.stringify(this.sites));
         for (var i = 0; i < this.sites.length; ++i) {
+            console.log("L: " + this.sites.length);
             //Get 'c' neighbors
             // var neighbors = this.getNeighbors(this.sites[i], this.diagram);
             // var cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
@@ -161,24 +157,20 @@ SimulateVoronoi.prototype.simulate = function() {
             // } catch (error) {
             //     logger.error('No neighbors found at: ', i);
             // }
-            let p1 = this.sites[i];
-            var p2 = {x : 0, y: 0, attrib : 'c'};
-            if (i < this.sites.length-1)
-                p2 = this.sites[i+1];
-            if (p1.x > p2.x) {
-                p2 = {};
-                p2.x = this.bbox.xr;
-                p2.y = this.bbox.yb;
+            let n = this.getNeighbors(this.sites[i], this.diagram);
+            s = {x : 0, y: 0}
+            for (k in n){
+              s.x += n[k].x;
+              s.y += n[k].y;
             }
-            this.sitesAfterSplit.push({
-                x: (p1.x+p2.x)/2,
-                y: (p1.y+p2.y)/2,
-                attrib : 'd'
-            });
-            console.log('computed')
+            s.x /= n.length;
+            s.y /= n.length;
+            s.attrib = 'd';
+            sitesAfterSplit.push(s);
+            console.log(sitesAfterSplit.length);
         }
         //Create a copy of this generation and push it to results
-        this.sites = this.sitesAfterSplit;
+        this.sites = JSON.parse(JSON.stringify(sitesAfterSplit))
         ret.push(JSON.parse(JSON.stringify(this.sites)));
     }
     logger.debug('Simulation length(Generations):', ret.length);
