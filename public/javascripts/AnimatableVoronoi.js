@@ -117,10 +117,9 @@ AnimatableVoronoi.prototype.onMouseMove = function(x,y,attrib,count) {
 AnimatableVoronoi.prototype.renderDiagram = function() {
 	project.activeLayer.removeChildren();
 	this.diagram = this.voronoi.compute(this.sites, this.bbox);
-	let diagram = this.diagram;
-	if (diagram) {
+	if (this.diagram) {
 		for (let i = 0, l = this.sites.length; i < l; i++) {
-			let cell = diagram.cells[this.sites[i].voronoiId];
+			let cell = this.diagram.cells[this.sites[i].voronoiId];
 			if (cell) {
 				let halfedges = cell.halfedges,
 					length = halfedges.length;

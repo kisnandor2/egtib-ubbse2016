@@ -169,6 +169,7 @@ SimulateVoronoi.prototype.simulate = function() {
         this.sites = this.sites.concat(sitesAfterSplit);
         ret.push(JSON.parse(JSON.stringify(this.sites)));
         this.diagram = voronoi.compute(this.sites, this.bbox);
+        this.removeDuplicatesFromSites();
         this.checkVoronoiID();
         this.setMatrix();
     }
@@ -176,7 +177,17 @@ SimulateVoronoi.prototype.simulate = function() {
     return ret;
 };
 
+SimulateVoronoi.prototype.removeDuplicatesFromSites = function(){
+  for (var i in this.sites){
+    if (this.sites[i].voronoiId == undefined){
+      this.sites.splice(i, 1);
+    }
+  }
+}
+
 SimulateVoronoi.prototype.checkVoronoiID = function() {
+  console.log(this.sites);
+  logger.fatal("aaa");
   for (var i in this.sites){
     if (this.sites[i].voronoiId == undefined){
       logger.error("Site with nr " + i + " has error");
@@ -254,6 +265,9 @@ SimulateVoronoi.prototype.setMatrix = function() {
     this.neighborMatrix = [];
     for (var i = 0; i < this.sites.length; ++i) {
         this.neighborMatrix.push([]);
+        if (this.sites[i] == undefined){
+          logger.error(this.sites[i+1]);
+        }
         for (var j = 0; j < this.sites.length; ++j) {
             this.neighborMatrix[i].push(0);
         }

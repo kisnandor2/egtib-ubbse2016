@@ -19,6 +19,7 @@ router.get('/data', function(req, res) {
 		res.status(200).send('ok');
 	}
 	catch (error) {
+		logger.error(error);
 		server.sendData(JSON.stringify("error"));
 		res.status(200).send('error');
 	}
