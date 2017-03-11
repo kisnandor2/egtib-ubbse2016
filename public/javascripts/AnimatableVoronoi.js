@@ -1,4 +1,4 @@
-function AnimatableVoronoi(view) {
+function AnimatableVoronoi(view, context) {
 	this.voronoi = new Voronoi();
 	this.cooperatorColor = new paper.Color(0.95,0.38,0.02); //#f36205
 	this.defectorColor = new paper.Color(0.18,0.59,0.85); //#2f98da
@@ -24,6 +24,7 @@ function AnimatableVoronoi(view) {
 	this.chart.productive = [];
 	this.chart.nonProductive = [];
 	this.categories = [];
+	this.context = context;
 
 	this.onResize();
 }
@@ -135,6 +136,9 @@ AnimatableVoronoi.prototype.renderDiagram = function() {
 			}
 		}
 	}
+	// for (let i in this.sites){
+	// 	this.context.fillText(Math.floor(this.sites[i].x) + ", " + Math.floor(this.sites[i].y), this.sites[i].x-50, this.sites[i].y);
+	// }
 }
 
 AnimatableVoronoi.prototype.getPointAttribute = function(point) {

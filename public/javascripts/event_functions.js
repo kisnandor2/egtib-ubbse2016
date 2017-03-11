@@ -17,7 +17,8 @@ window.onload = function() {
     let context = canvas.getContext('2d');
     paper.install(window);
     paper.setup(canvas);
-    voronoi = new AnimatableVoronoi(view);
+    voronoi = new AnimatableVoronoi(view, context);
+
 
     //GenerationCount
     let defaultGenerationCount = 1;
