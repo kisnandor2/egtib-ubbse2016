@@ -129,15 +129,6 @@ SimulateVoronoi.prototype.initVoronoi = function() {
     this.V0 = this.V(0);
 };
 
-SimulateVoronoi.prototype.getCooperatingNeighborsCount = function(neighbors) {
-    let cooperatingNeighbors = 0;
-    for (var k = 0; k < neighbors.length; ++k) {
-        if (neighbors[k].attrib == 'c')
-            ++cooperatingNeighbors;
-    }
-    return cooperatingNeighbors;
-}
-
 SimulateVoronoi.prototype.simulate = function() {
     var ret = [];
     for (let j = 0; j < this.gen_count; ++j) {
@@ -242,14 +233,8 @@ SimulateVoronoi.prototype.checkVoronoiID = function() {
 SimulateVoronoi.prototype.setPayoffs = function() {
     for (var i = 0; i < this.sites.length; ++i) {
         //Get 'c' neighbors
-        if (this.dist == 1) {
-            let neighbors = this.getNeighbors(this.sites[i], this.diagram);
-            var cooperatingNeighbors = this.getCooperatingNeighborsCount(neighbors);
-            var neighborsCount = neighbors.length;
-        } else {
-            var neighborsCount = this.getNeighborsCount(this.sites[i].voronoiId, this.neighborMatrix);
-            var cooperatingNeighbors = this.getCooperatingNeighbors(this.sites[i].voronoiId, this.dist, this.neighborMatrix);
-        }
+        var neighborsCount = this.getNeighborsCount(this.sites[i].voronoiId, this.neighborMatrix);
+        var cooperatingNeighbors = this.getCooperatingNeighbors(this.sites[i].voronoiId, this.dist, this.neighborMatrix);
         //Calculate the payoff
         this.sites[i].payoff = this.payoff(cooperatingNeighbors, this.sites[i].cost, neighborsCount);
     }
@@ -354,7 +339,7 @@ SimulateVoronoi.prototype.getCooperatingNeighbors = function(k, dist, table) {
     }
     seen[k] = 1;
     newtable = table.slice();
-    for (var d = 1; d <= dist; ++d) {
+    for (var d = 0; d < dist; ++d) {
         newneighbors = [];
         var gradcoops = 0;
         for (var i = 0; i < neighbors.length; ++i) {
