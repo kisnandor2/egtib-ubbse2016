@@ -18,7 +18,7 @@ const defaultCooperatingCost = 0.5,
 
 /**
  * SimulateVoronoi Class - allows us to simulate using voronoi diagram
- * SimulateVoronoi constructor
+ * @constructor
  */
 function SimulateVoronoi() {
 	this.sites = [];
@@ -42,11 +42,11 @@ function SimulateVoronoi() {
 /**
  * Builds up a SimulateVoronoi from client data
  *
- * @sites 		- Diagram sites coordinates(ex. [{x:5,y:5},{},...])
- * @bbox  		- Coordinates(top,bot on X and Y) of the ractangle where it was drawn
- * @gen_count - Generation count for the simulation
- * @coop_cost - Cost of a cooperating cell(between 0 and 1)
- * @dist 			- Distance of interaction used in the simulation
+ * @param {array} sites 		- Diagram sites coordinates(ex. [{x:5,y:5},{},...])
+ * @param {object} bbox  		- Coordinates(top,bot on X and Y) of the ractangle where it was drawn
+ * @param {int} gen_count 	- Generation count for the simulation
+ * @param {float} coop_cost - Cost of a cooperating cell(between 0 and 1)
+ * @param {int} dist 				- Distance of interaction used in the simulation
  */
 SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, dist }) {
 	logger.info('Init voronoi from the client data');
@@ -126,9 +126,9 @@ SimulateVoronoi.prototype.simulate = function() {
 /**
  * Divides a cell in two smaller cells
  *
- * @actualPoint 				 - the point which has to be divided(same format as in sites)
- * @listToBeInsertedInto - the new points are inserted in this array
- * @neighbors 					 - the neighbors of the point(used for calculating the new points)
+ * @param {point} actualPoint 				 - the point which has to be divided(same format as in sites)
+ * @param {array} listToBeInsertedInto - the new points are inserted in this array
+ * @param {array} neighbors 					 - the neighbors of the point(used for calculating the new points)
  */
 SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors){
 	//Check if division is needed
@@ -210,7 +210,7 @@ SimulateVoronoi.prototype.checkVoronoiID = function() {
 /**
  * Sets the payoffs of all(see optional) the cells
  *
- * @point - optional parameter, if set then only this points and its neighbors payoff will be recalculated
+ * @param {point} point - optional parameter, if set then only this points and its neighbors payoff will be recalculated
  */
 SimulateVoronoi.prototype.setPayoffs = function(point) {
 	var neighbors = this.sites;
@@ -229,9 +229,9 @@ SimulateVoronoi.prototype.setPayoffs = function(point) {
 /**
  * Function used for calculating the actual payoff value
  *
- * @cooperatingNeighborsCount
- * @cost
- * @neighborsCount
+ * @param {int} 	cooperatingNeighborsCount
+ * @param {float} cost
+ * @param {int} 	neighborsCount
  */
 SimulateVoronoi.prototype.payoff = function(cooperatingNeighborsCount, cost, neighborsCount) {
 	return (this.V(cooperatingNeighborsCount, neighborsCount) - this.V(0, neighborsCount)) / (this.V(neighborsCount, neighborsCount) - this.V(0, neighborsCount)) - cost;
@@ -247,7 +247,7 @@ SimulateVoronoi.prototype.V = function(i, neighborsCount) {
 /**
  * Finds a cell by a site coordinate
  *
- * @return - the cell which site is equal to point
+ * @returns {cell} - the cell which site is equal to point
  */
 SimulateVoronoi.prototype.getCellBySite = function(point, cells) {
 	for (let i = 0; i < cells.length; ++i) {
@@ -287,8 +287,8 @@ SimulateVoronoi.prototype.initNeighborMatrix = function() {
 /**
  * Finds all neighbors of a point/site/cell
  *
- * @p 		 - a point/site/cell
- * @return - array of neighbors
+ * @param   {point} p - a point/site/cell
+ * @returns {array}		- array of neighbors
  */
 SimulateVoronoi.prototype.getNeighbors = function(p) {
 	//Find neighbors of cell which has site at p point
@@ -310,8 +310,8 @@ SimulateVoronoi.prototype.getNeighbors = function(p) {
 /**
  * Counts the neighbors of a point/site/cell
  * 
- * @index	 - the index(voronoiID) of a point/site/cell
- * @return - total number of neighbors
+ * @param 	{int} index	 - the index(voronoiID) of a point/site/cell
+ * @returns {int}			 - total number of neighbors
  */
 SimulateVoronoi.prototype.getNeighborsCount = function(index) {
 	var count = 0;
@@ -327,8 +327,8 @@ SimulateVoronoi.prototype.getNeighborsCount = function(index) {
  * Counts the cooperating neighbors of a point/site/cell
  * Distance is taken in consideration
  * 
- * @k			 - the index(voronoiID) of a point/site/cell
- * @return - total number of cooperating neighbors
+ * @param 	{int} k	- the index(voronoiID) of a point/site/cell
+ * @returns {int} 	- total number of cooperating neighbors
  */
 SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
 	var neighbors = [];
@@ -384,8 +384,8 @@ SimulateVoronoi.prototype.g = function(i) {
 
 /**
  * Calculates the dividing chance
- * @time   - as time progresses ahead so does the function value change
- * @return - value between [0,1]
+ * @param 	{int} time - as time progresses ahead so does the function value change
+ * @returns {float} 	 - value between [0,1]
  */
 SimulateVoronoi.prototype.dividingChance = function(time) {
 	//TODO: this should be a function, not random
@@ -394,8 +394,8 @@ SimulateVoronoi.prototype.dividingChance = function(time) {
 
 /**
  * Calculates the death chance
- * @time   - as time progresses ahead so does the function value change
- * @return - value between [0,1]
+ * @param {int} time - as time progresses ahead so does the function value change
+ * @returns {float}  - value between [0,1]
  */
 SimulateVoronoi.prototype.deathChance = function(time) {
 	//TODO: this should be a function, not random
