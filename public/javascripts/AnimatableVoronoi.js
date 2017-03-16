@@ -2,8 +2,6 @@ function AnimatableVoronoi(view, context) {
 	this.voronoi = new Voronoi();
 	this.cooperatorColor = new paper.Color(0.95,0.38,0.02); //#f36205
 	this.defectorColor = new paper.Color(0.18,0.59,0.85); //#2f98da
-	this.spotColor = new paper.Color('red');
-	this.selected = false;
 	this.sites = [];
 	this.sitesWithColor = [];
 	this.view = view;
@@ -14,6 +12,8 @@ function AnimatableVoronoi(view, context) {
 
 	this.diagram = undefined;
 
+	this.totalNumberOfCells = 0;
+	this.percentOfDefectingCells = 0;
 	this.cooperatingChance = 0.5;
 
 	this.gen_count = 0;
@@ -179,10 +179,10 @@ AnimatableVoronoi.prototype.generateBeeHivePoints = function(size, loose) {
 			if (loose)
 				point = point.add((col.divide(4)).multiply(paper.Point.random()).subtract(col.divide(4)));
 			let attrib = undefined;
-			if (Math.random() <= this.cooperatingChance)
-				attrib = 'c';
-			else
+			if (Math.random() <= this.percentOfDefectingCells/100)
 				attrib = 'd';
+			else
+				attrib = 'c';
 			point.attrib = attrib;
 			points.push(point);
 		}
@@ -231,13 +231,6 @@ AnimatableVoronoi.prototype.onResize = function() {
 	this.renderDiagram();
 }
 
-AnimatableVoronoi.prototype.onKeyDown = function(event) {
-	if (event.key == 'space') {
-		this.selected = !this.selected;
-		this.renderDiagram();
-	}
-}
-
 AnimatableVoronoi.prototype.setSites = function(sites) {
 	if (sites.length > 0 && sites[0].constructor.name == 'Array'){
 		sitesGoodFormat = [];
@@ -261,21 +254,13 @@ AnimatableVoronoi.prototype.getSites = function(){
 	return this.sites;
 }
 
-AnimatableVoronoi.prototype.setNonCooperatingChance = function(chance){
-	if (chance == undefined || isNaN(chance)){
-		throw "Invalid chance value";
-	}
-	if (chance < 0 || chance > 1)
-		this.cooperatingChance = 0.5;
-	else
-		this.cooperatingChance = 1-chance;
-}
-
 AnimatableVoronoi.prototype.getGen_Count = function(){
 	return this.gen_count;
 }
 
 AnimatableVoronoi.prototype.setGen_Count = function(gen_count){
+	if (gen_count <= 0)
+		return;
 	this.gen_count = gen_count;
 }
 
@@ -315,6 +300,8 @@ AnimatableVoronoi.prototype.compareSites = function(s1, s2) {
 }
 
 AnimatableVoronoi.prototype.setDist = function(dist){
+	if (dist < 0 || dist > 5)
+		return;
 	this.dist = dist;
 }
 
@@ -323,9 +310,27 @@ AnimatableVoronoi.prototype.getDist = function() {
 }
 
 AnimatableVoronoi.prototype.setCoop_Cost = function(coop_cost){
+	if (coop_cost < 0 || coop_cost > 1)
+		return;
 	this.coop_cost = coop_cost;
 }
 
 AnimatableVoronoi.prototype.getCoop_Cost = function(){
 	return this.coop_cost;
+}
+
+AnimatableVoronoi.prototype.setTotalNumberOfCells = function(value){
+	if (value <2 || value > 500)
+		return;
+	this.totalNumberOfCells = value;
+}
+
+AnimatableVoronoi.prototype.setPercentOfDefectingCells = function(value){
+	if (value < 0 || value > 100)
+		return;
+	this.percentOfDefectingCells = value;
+}
+
+AnimatableVoronoi.prototype.setChart = function(chart){
+	this.chart = chart;
 }

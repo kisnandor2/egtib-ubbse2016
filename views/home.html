@@ -8,8 +8,7 @@
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
 	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
-	<script type="text/javascript" src="/javascripts/presets.js"></script>
-	<script type="text/javascript" src="/javascripts/event_functions.js"></script>
+  <script type="text/javascript" src="/javascripts/angularControllers.js"></script>
 
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -19,11 +18,19 @@
 {% endblock %}
 
 {% block body %}
- <div class="section">
+<div ng-app="myApp">
+<div class="section" ng-controller="animatableVoronoiController">
   <div class="container" style="width:95%;">
+    <div class="row" id="successMessageRow">
+      <div class="col-md-4"></div>
+      <strong>
+      <div class="col-md-4" id="successMessage"></div>
+      </strong>
+      <div class="col-md-4"></div>
+    </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="panel panel-default">
+        <div class="panel panel-default" ng-controller="parameterController">
           <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Set the parameters for the next run here</div>
           <div class="panel-body">
             <form class="form-horizontal" role="form">
@@ -32,15 +39,15 @@
                   <label for="totalNumberOfCells" class="control-label">Total number of cells:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="number" class="form-control" id="totalNumberOfCells" placeholder="Total number of cells" min="0">
+                  <input type="number" class="form-control" id="totalNumberOfCells" min="0" ng-model="totalNumberOfCells" ng-init="totalNumberOfCells=defaultCellCount">
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-6">
-                  <label for="numberOfNonProductiveCells" class="control-label">Non-productive cell count:</label>
+                  <label for="percentOfDefectingCells" class="control-label">Percent of defecting cells:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="number" class="form-control" id="numberOfNonProductiveCells" placeholder="Non-productive count" min="0">
+                  <input type="number" class="form-control" id="percentOfDefectingCells" min="0" ng-model="percentOfDefectingCells" ng-init="percentOfDefectingCells=defaultNonProductiveCellCount">
                 </div>
               </div>
               <div class="form-group">
@@ -48,15 +55,15 @@
                   <label for="generationCount" class="control-label">Number of generations:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" min="0" class="form-control" id="generationCount" placeholder="Generation count">
+                  <input type="text" min="0" class="form-control" id="generationCount" ng-model="generationCount" ng-init="generationCount=defaultGenerationCount">
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-6">
-                  <label for="cooperaintCost" class="control-label">Cost of cooperative cells:</label>
+                  <label for="cooperatingCost" class="control-label">Cost of cooperative cells:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="number" min="0" max="1" class="form-control" id="cooperaintCost" placeholder="Cooperating cost">
+                  <input type="number" class="form-control" id="cooperatingCost" ng-model="cooperatingCost" ng-init="cooperatingCost=defaultCoopCost">
                 </div>
               </div>
               <div class="form-group">
@@ -64,31 +71,29 @@
                   <label for="distanceOfInteraction" class="control-label">Distance of interaction:</label>
                 </div>
                 <div class="col-sm-6">
-                  <input type="text" min="1" max="4" class="form-control" id="distanceOfInteraction" placeholder="Distance of interaction">
+                  <input type="text" min="1" max="4" class="form-control" id="distanceOfInteraction" ng-model="distanceOfInteraction" ng-init="distanceOfInteraction=defaultDistanceOfInteraction">
                 </div>
               </div>
             </form>
             <div class="row">
-              <div class="col-md-12">
-                <input type="button" class="btn btn-default submit col-md-6" value="Render new diagram" id="renderNewDiagram" onclick="renderNewDiagram();">
-                <input type="button" class="btn btn-default submit col-md-6" value="Set new parameters" id="setNewParameters" onclick="setNewParameters();">
-              </div>
-              <div class="col-md-12">
-                <input type="button" class="btn btn-default submit col-md-6" value="Start the simulation" id="startSimulation" onclick="startSimulation();">
-                <input type="button" class="btn btn-default submit col-md-6" value="Pause the simulation" id="pauseSimulation" onclick="pauseSimulation();">
-              </div>
+              <div class="col-md-1"></div>
+              <input type="button" class="btn btn-default submit col-md-5" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
+              <input type="button" class="btn btn-default submit col-md-5" value="Start the simulation" id="startSimulation" ng-controller="simulationController" ng-click="simulate()">
+              <div class="col-md-1"></div>
             </div>
           </div>
         </div>
       </div>
       <div class="col-md-8">
         <div class="row">
-          <canvas id="canvas" resize="" width="300" height="300"></canvas>
+          <canvas id="canvas" resize></canvas>
         </div>
         <div class="row">
           <div class="col-md-12">
             <div class="progress">
-              <div class="progress-bar" id="simulation_progress" style="width:50%"></div>
+              <div class="progress-bar" id="simulation_progress" style="width:50%">
+                <span>5/10</span>
+              </div>
             </div>
           </div>
         </div>
@@ -96,16 +101,19 @@
     </div>
   </div>
 </div>
-<div class="section">
+<div class="section" ng-controller="highChartsController">
   <div class="container">
     <div class="row">
       <div class="panel panel-default">
         <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Statistics</div>
         <div class="panel-body text-center">
-          <div id="highChartsCointainer"></div>
+          <div id="highChartsContainer"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
+</div>
+
+<div class="loading_clock"></div>
 {% endblock %}
