@@ -251,9 +251,15 @@ SimulateVoronoi.prototype.V = function(i, neighborsCount) {
  */
 SimulateVoronoi.prototype.getCellBySite = function(point, cells) {
 	for (let i = 0; i < cells.length; ++i) {
-		if (cells[i].site.x == point.x && cells[i].site.y == point.y) 
+		if (this.compareSites(point, cells[i].site)) 
 			return cells[i];
 	}
+}
+
+SimulateVoronoi.prototype.compareSites = function(site1, site2){
+	if (site1.x == site2.x && site1.y == site2.y)
+		return true;
+	return false;
 }
 
 /**

@@ -1,3 +1,58 @@
+/*
+ * object.watch polyfill
+ *
+ * 2012-04-03
+ *
+ * By Eli Grey, http://eligrey.com
+ * Public Domain.
+ * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+ */
+
+// object.watch
+if (!Object.prototype.watch) {
+    Object.defineProperty(Object.prototype, "watch", {
+          enumerable: false
+        , configurable: true
+        , writable: false
+        , value: function (prop, handler) {
+            var
+              oldval = this[prop]
+            , newval = oldval
+            , getter = function () {
+                return newval;
+            }
+            , setter = function (val) {
+                oldval = newval;
+                return newval = handler.call(this, prop, oldval, val);
+            }
+            ;
+            
+            if (delete this[prop]) { // can't watch constants
+                Object.defineProperty(this, prop, {
+                      get: getter
+                    , set: setter
+                    , enumerable: true
+                    , configurable: true
+                });
+            }
+        }
+    });
+}
+
+// object.unwatch
+if (!Object.prototype.unwatch) {
+    Object.defineProperty(Object.prototype, "unwatch", {
+          enumerable: false
+        , configurable: true
+        , writable: false
+        , value: function (prop) {
+            var val = this[prop];
+            delete this[prop]; // remove accessors
+            this[prop] = val;
+        }
+    });
+}
+
 const HOST = location.origin.replace(/^http/, 'ws');
 const connection = new WebSocket(HOST);
 var voronoi;
@@ -12,6 +67,12 @@ var chart;
 window.onload = function() {
 
     progressBar = $("#simulation_progress")[0];
+    progressBar.max = 10;
+    progressBar.value = 5;
+    progressBar.watch('value', function(id, oldVal, newVal){
+        let width = 100*newVal/this.max;
+        this.style.width = width + '%';
+    })
 
     let canvas = $('#canvas')[0];
     let context = canvas.getContext('2d');
@@ -20,31 +81,34 @@ window.onload = function() {
     voronoi = new AnimatableVoronoi(view, context);
 
 
+    //Distance of interaction
+    let defaultDistanceOfInteraction = 1;
+    voronoi.setDist(defaultDistanceOfInteraction);
+    $('#distanceOfInteraction')[0].value = defaultDistanceOfInteraction;
+
     //GenerationCount
     let defaultGenerationCount = 1;
     voronoi.setGen_Count(defaultGenerationCount);
-    $('#gen_count')[0].value = defaultGenerationCount;
+    $('#generationCount')[0].value = defaultGenerationCount;
 
 
     //Number of non_productive cells
     let nonProductiveCellCount = 0;
     voronoi.setNonCooperatingChance(nonProductiveCellCount);
-    $('#number_non')[0].value = nonProductiveCellCount;
+    $('#numberOfNonProductiveCells')[0].value = nonProductiveCellCount;
 
 
     //CellCount
     let defaultCellCount = 16;
     voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt(defaultCellCount)), Math.ceil(Math.sqrt(defaultCellCount))), true));
-    $('#number')[0].value = defaultCellCount;
+    $('#totalNumberOfCells')[0].value = defaultCellCount;
 
     //CoopCost
     let defaultCoopCost = 0.1;
     voronoi.setCoop_Cost(defaultCoopCost);
-    $('#coop_cost')[0].value = defaultCoopCost;
+    $('#cooperaintCost')[0].value = defaultCoopCost;
 
     voronoi.renderDiagram();
-
-    let count = 0;
 
     //-----------------------------------------------------------------
     //-----------------------------------------------------------------
@@ -73,7 +137,7 @@ window.onload = function() {
     }
 */
     //chart
-    chart = Highcharts.chart('container', {
+    chart = Highcharts.chart('highChartsCointainer', {
 
         chart: {
             type: 'column'
@@ -158,19 +222,19 @@ async function heartbeat() {
 }
 
 // If paused then unpauses otherwise pauses the animation
-function pause_restart() {
+function pauseSimulation() {
     paused = 1 - paused;
     progressBar.disabled = paused == 0 ? true : false;
-    $(".submit")[3].value = paused == 0 ? "Pause the Simulation" : "Resume the simulation";
+    $("#pauseSimulation")[0].value = paused == 0 ? "Pause the Simulation" : "Resume the simulation";
     render(Number(progressBar.value), sitesList.length, sitesList);
 }
 
 
 // Sets new parameters to an existing voronoi graph
-function setVoronoi() {
-    let coop_cost = Number($('#coop_cost')[0].value),
-        dist = Math.max(Number($('#dist')[0].value), 1),
-        gen_count = Math.max(Number($('#gen_count')[0].value), 1);
+function setNewParameters() {
+    let coop_cost = Number($('#cooperaintCost')[0].value),
+        dist = Math.max(Number($('#distanceOfInteraction')[0].value), 1),
+        gen_count = Math.max(Number($('#generationCount')[0].value), 1);
     voronoi.setCoop_Cost(coop_cost);
     voronoi.setDist(dist);
     voronoi.setGen_Count(gen_count);
@@ -187,15 +251,11 @@ function render(i, n, sitesList) {
     if (i >= n) {
     	voronoi.addDataToChart();
         paused = 1;
-        $(".submit")[3].value = "Resume the simulation";
-        $(".submit")[0].disabled = false;
-        $(".submit")[1].disabled = false;
-        $(".submit")[2].disabled = false;
-        //$(".submit")[3].disabled = true;
+        $("#pauseSimulation")[0].value = "Resume the simulation";
+        $("#renderNewDiagram")[0].disabled = false;
+        $("#setNewParameters")[0].disabled = false;
+        $("#startSimulation")[0].disabled = false;
         progressBar.disabled = false;
-        // if (chart.xAxis[0].categories.length != voronoi.getGen_Count()) {
-        //     voronoi.displayChartData(chart);
-        // }
         return;
     }
     setTimeout(function() {
@@ -231,7 +291,7 @@ function renderone(i, sitesList) {
 function changePBValue(newValue) {
     renderone(newValue, sitesList);
     progressBar.value = newValue;
-    showPBValue();
+    // showPBValue();
 }
 
 //Updates the span next to the slider
@@ -239,21 +299,21 @@ function showPBValue() {
     document.getElementById("range").innerHTML = "<b>Gen count: " + progressBar.value + "</b>";
 }
 
-function submit1() {
+function renderNewDiagram() {
     progressBar.disabled = false;
-    $('#submit2')[0].disabled = false;
+    $('#setNewParameters')[0].disabled = false;
 
-    let number = Math.max(Number($('#number')[0].value), 0),
-        number_non = Number($('#number_non')[0].value),
-        gen_count = Math.max(Number($('#gen_count')[0].value), 0),
-        coop_cost = Number($('#coop_cost')[0].value),
-        dist = Math.max(Number($('#dist')[0].value), 0);
+    let number = Math.max(Number($('#totalNumberOfCells')[0].value), 0),
+        number_non = Number($('#numberOfNonProductiveCells')[0].value),
+        gen_count = Math.max(Number($('#generationCount')[0].value), 0),
+        coop_cost = Number($('#cooperaintCost')[0].value),
+        dist = Math.max(Number($('#distanceOfInteraction')[0].value), 0);
 
     //Reset the progressBar
     progressBar.min = 0;
     progressBar.max = gen_count;
     progressBar.value = 0;
-    showPBValue();
+    // showPBValue();
 
     try {
         voronoi.setNonCooperatingChance(number_non / number);
@@ -274,11 +334,11 @@ function submit1() {
     }
 }
 
-function submit2() {
+function startSimulation() {
     paused = 0;
-    presets = $('#presets')[0].value;
+    // presets = $('#presets')[0].value;
     progressBar.value = 0;
-    showPBValue();
+    // showPBValue();
     //Send data to server via websocket
     json = JSON.stringify({
         bbox: voronoi.getBbox(),
@@ -304,11 +364,11 @@ function submit2() {
             //Get results via the websocket
             sitesList = JSON.parse(e.data);
             $("body").removeClass("loading")
-            $(".submit")[0].disabled = true;
-            $(".submit")[1].disabled = true;
-            $(".submit")[2].disabled = true;
-            $(".submit")[3].disabled = false;
-            $(".submit")[3].value = "Pause the Simulation";
+            $("#renderNewDiagram")[0].disabled = true;
+            $("#setNewParameters")[0].disabled = true;
+            $("#startSimulation")[0].disabled = true;
+            $("#pauseSimulation")[0].disabled = false;
+            $("#pauseSimulation")[0].value = "Pause the Simulation";
             progressBar.disabled = true;
             voronoi.resetChart(chart);
             render(0, sitesList.length, sitesList);
