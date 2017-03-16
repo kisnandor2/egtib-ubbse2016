@@ -7,7 +7,7 @@ app.controller('animatableVoronoiController', function($scope) {
 	initAlertBoxes();
 	initWebSocket();
 
-	//TODO: GET THIS OUT OF HERE?!!!!!
+	//TODO: Get this out of here?!!!!!
 	//DEBUGGING WITH THIS
 	v = $scope.voronoi;
 
