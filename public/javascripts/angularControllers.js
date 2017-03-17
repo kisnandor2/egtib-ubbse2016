@@ -2,7 +2,7 @@ var v;
 
 var app = angular.module('myApp', []);
 
-app.controller('animatableVoronoiController', function($scope) {
+app.controller('animatableVoronoiController', function($scope, $rootScope) {
 	initVoronoi();
 	initAlertBoxes();
 	initWebSocket();
@@ -41,6 +41,9 @@ app.controller('animatableVoronoiController', function($scope) {
 		voronoi.setCoop_Cost($scope.defaultCoopCost);
 
 		voronoi.renderDiagram();
+
+		//Makes voronoi visible for highChartsController to set the voronoi chart
+		$rootScope.voronoi = voronoi;
 	}
 	function initAlertBoxes(){
 		$scope.successMessage = $('<div />', {
@@ -193,20 +196,50 @@ app.controller('simulationController', function($scope){
       $scope.connection.onmessage = function(e) {
         //Get results via the websocket
         sitesList = JSON.parse(e.data);
-        // $scope.voronoi.resetChart(chart);
-        $("body").removeClass("loading")
-        // render(0, sitesList.length, sitesList);
+        for (let i = 0; i < sitesList.length; ++i){
+        	sitesList[i] = $scope.voronoi.sitesBadFormatToPointFormat(sitesList[i]);
+        }
+        $("body").removeClass("loading");
+        $scope.voronoi.renderChartData(sitesList);
+        $('#startSimulation')[0].style.display = 'none';
+        $('#pauseSimulation')[0].style.display = 'block';
+        $scope.voronoi.toBeRendered = 0;
+        $scope.voronoi.render();
       };
     }
 	}
 
+	$scope.pause = function(){
+		$('#pauseSimulation')[0].style.display = 'none';
+		$('#resumeSimulation')[0].style.display = 'block';
+		$scope.voronoi.toBeRendered = -9999;
+	}
+
+	$scope.resume = function(){
+		$('#pauseSimulation')[0].style.display = 'block';
+		$('#resumeSimulation')[0].style.display = 'none';	
+		$scope.voronoi.toBeRendered = 5; //progressBar.value
+		$scope.voronoi.render();
+	}
+
+	$scope.$watch('voronoi.toBeRendered', function(newVal, oldVal){
+		if (newVal >= $scope.voronoi.gen_count){
+			$('#resumeSimulation')[0].style.display = 'none';	
+			$('#pauseSimulation')[0].style.display = 'none';
+			$('#startSimulation')[0].style.display = 'block';
+		}
+	})
+
+	$scope.progressBarChange = function(){
+
+	}
 });
 
-app.controller('highChartsController', function($scope){
+app.controller('highChartsController', function($rootScope){
 	initHighCharts();
 
 	function initHighCharts(){
-		$scope.chart = Highcharts.chart('highChartsContainer', {
+		var chart = Highcharts.chart('highChartsContainer', {
 			chart: {type: 'column'},
 			title: {text: 'Number of cells, over time'},
 			xAxis: {categories: []},
@@ -249,9 +282,10 @@ app.controller('highChartsController', function($scope){
 			numberNonProductive.push(n - p);
 			categories.push(i + 1);
 		}
-		$scope.chart.series[0].setData(numberProductive);
-		$scope.chart.series[1].setData(numberNonProductive);
-		$scope.chart.series[2].setData(numberNonProductive);
-		$scope.chart.xAxis[0].setCategories(categories);
+		chart.series[0].setData(numberProductive);
+		chart.series[1].setData(numberNonProductive);
+		chart.series[2].setData(numberNonProductive);
+		chart.xAxis[0].setCategories(categories);
+		$rootScope.voronoi.setChart(chart);
 	}
 })

@@ -132,7 +132,7 @@ SimulateVoronoi.prototype.simulate = function() {
  */
 SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors){
 	//Check if division is needed
-	if (true) {
+	if (false) {
 		//Find X coordinate to divide
 		var min = 9999;
 			shiftOnX = 0,

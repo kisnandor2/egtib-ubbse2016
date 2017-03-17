@@ -21,52 +21,42 @@ function AnimatableVoronoi(view, context) {
 	this.dist = 0;
 
 	this.chart = {};
-	this.chart.productive = [];
-	this.chart.nonProductive = [];
-	this.categories = [];
+	this.sitesList = [];
+
 	this.context = context;
 
 	this.onResize();
 }
 
 AnimatableVoronoi.prototype.displayChartData =  function(){
-	if (this.categories.length == 0){
-		this.categories.push(1);
-	}
-	else {
-		this.categories.push(this.categories[this.categories.length-1] + 1);
-	}
-	chart.series[0].setData(this.chart.productive);
-	chart.series[1].setData(this.chart.nonProductive);
-	chart.series[2].setData([]);	//not sure why but sometimes the chart needs this to work correctly
-	chart.series[2].setData(this.chart.nonProductive);
-	chart.xAxis[0].setCategories(this.categories);
+	this.chart.series[0].setData(this.chart.productive);
+	this.chart.series[1].setData(this.chart.nonProductive);
+	this.chart.series[2].setData([]);	//not sure why but sometimes the chart needs this to work correctly
+	this.chart.series[2].setData(this.chart.nonProductive);
+	this.chart.xAxis[0].setCategories(this.categories);
 }
 
-AnimatableVoronoi.prototype.addDataToChart = function(){
-	let p = this.getProductiveCount();
+AnimatableVoronoi.prototype.addDataToChart = function(sites, i){
+	let p = this.getProductiveCount(sites);
 	this.chart.productive.push(p);
-	let n = this.sites.length;
+	let n = sites.length;
 	this.chart.nonProductive.push(n-p);
-	if (this.categories.length <= this.gen_count) {
-		this.displayChartData();
-	}
+	this.chart.categories.push(i);
 }
 
-AnimatableVoronoi.prototype.getProductiveCount = function() {
+AnimatableVoronoi.prototype.getProductiveCount = function(sites) {
 	let k = 0;
-	for (let i = 0; i < this.sites.length; ++i){
-		if (this.sites[i].attrib == 'c')
+	for (let i = 0; i < sites.length; ++i){
+		if (sites[i].attrib == 'c')
 			++k;
 	}
 	return k;
 }
 
-AnimatableVoronoi.prototype.resetChart = function(chart) {
+AnimatableVoronoi.prototype.resetChart = function() {
 	this.chart.productive = [];
 	this.chart.nonProductive = [];
-	chart.xAxis[0].categories = [];
-	this.categories = [];
+	this.chart.categories = [];
 }
 
 AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadFormat) {
@@ -128,7 +118,8 @@ AnimatableVoronoi.prototype.renderDiagram = function() {
 					let points = [];
 					for (let j = 0; j < length; j++) {
 						let v = halfedges[j].getEndpoint();
-						v.attrib = this.getPointAttribute(halfedges[j].site);
+						// v.attrib = this.getPointAttribute(halfedges[j].site);
+						v.attrib = halfedges[j].site.attrib;
 						points.push(new paper.Point(v));
 					}
 					this.createPath(points, this.sites[i]);
@@ -151,6 +142,33 @@ AnimatableVoronoi.prototype.getPointAttribute = function(point) {
 	}
 }
 
+AnimatableVoronoi.prototype.renderChartData = function(sitesList) {
+	this.resetChart();
+	this.addDataToChart(this.sites, 0);
+	for (let i = 0; i < sitesList.length; ++i){
+		this.addDataToChart(sitesList[i], i);
+	}
+	this.displayChartData();
+	this.sitesList = sitesList;
+}
+
+AnimatableVoronoi.prototype.render = function() {
+	this.recursiveRender(this.toBeRendered, this.sitesList);
+}
+
+AnimatableVoronoi.prototype.recursiveRender = function(i, sitesList){
+	console.log(this.toBeRendered);
+	if (this.toBeRendered < 0)
+		return;
+	if (i >= sitesList.length)
+		return;
+	setTimeout(()=>{
+		this.toBeRendered++;
+		this.sites = sitesList[i];
+		this.renderDiagram();
+		this.recursiveRender(i+1, sitesList);
+	}, 0)
+}
 
 AnimatableVoronoi.prototype.removeSmallBits = function(path) {
 	//WTF is this used for? TODO: document
@@ -267,7 +285,7 @@ AnimatableVoronoi.prototype.setGen_Count = function(gen_count){
 AnimatableVoronoi.prototype.testNeighborCount = function(){
 	console.log('testing ' + this.sites.length);
 	for (var i = 0; i < this.sites.length; ++i){
-		let neighbors =  this.getNeighbors(this.sites[i], this.diagram);
+		let neighbors = this.getNeighbors(this.sites[i], this.diagram);
 		console.log(neighbors.length);
 		if (neighbors.length == 0)
 			console.log(i);
@@ -333,4 +351,5 @@ AnimatableVoronoi.prototype.setPercentOfDefectingCells = function(value){
 
 AnimatableVoronoi.prototype.setChart = function(chart){
 	this.chart = chart;
+	this.resetChart();
 }
