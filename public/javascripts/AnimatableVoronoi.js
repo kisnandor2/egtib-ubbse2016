@@ -1,3 +1,5 @@
+var progressBar = undefined;
+
 function AnimatableVoronoi(view, context) {
 	this.voronoi = new Voronoi();
 	this.cooperatorColor = new paper.Color(0.95,0.38,0.02); //#f36205
@@ -22,6 +24,7 @@ function AnimatableVoronoi(view, context) {
 
 	this.chart = {};
 	this.sitesList = [];
+	this.toBeRendered = -9999;
 
 	this.context = context;
 
@@ -153,11 +156,36 @@ AnimatableVoronoi.prototype.renderChartData = function(sitesList) {
 }
 
 AnimatableVoronoi.prototype.render = function() {
+	this.progressBar.style.width = '0%';
+	this.recursiveRender(this.toBeRendered, this.sitesList);
+}
+
+function transitionEndEventName () {
+  var i,
+    undefined,
+    el = document.createElement('div'),
+    transitions = {
+      'transition':'transitionend',
+      'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
+      'MozTransition':'transitionend',
+      'WebkitTransition':'webkitTransitionEnd'
+    };
+
+  for (i in transitions) {
+    if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+      return transitions[i];
+    }
+  }
+  //TODO: throw 'TransitionEnd event is not supported in this browser'; 
+}
+var transitionEnd = transitionEndEventName();
+function progressBarEvent(){
+	console.log('ended');
+	progressBar.removeEventListener(transitionEnd, progressBarEvent);
 	this.recursiveRender(this.toBeRendered, this.sitesList);
 }
 
 AnimatableVoronoi.prototype.recursiveRender = function(i, sitesList){
-	console.log(this.toBeRendered);
 	if (this.toBeRendered < 0)
 		return;
 	if (i >= sitesList.length)
@@ -166,8 +194,14 @@ AnimatableVoronoi.prototype.recursiveRender = function(i, sitesList){
 		this.toBeRendered++;
 		this.sites = sitesList[i];
 		this.renderDiagram();
-		this.recursiveRender(i+1, sitesList);
+		progressBar.addEventListener(transitionEnd, progressBarEvent, false);
+		this.updateProgressBar(i);
 	}, 0)
+}
+
+AnimatableVoronoi.prototype.updateProgressBar = function(i){
+	let percent = 100 * (i+1)/this.sitesList.length;
+	this.progressBar.style.width = percent + '%'
 }
 
 AnimatableVoronoi.prototype.removeSmallBits = function(path) {
@@ -352,4 +386,9 @@ AnimatableVoronoi.prototype.setPercentOfDefectingCells = function(value){
 AnimatableVoronoi.prototype.setChart = function(chart){
 	this.chart = chart;
 	this.resetChart();
+}
+
+AnimatableVoronoi.prototype.setProgressBar = function(p){
+	this.progressBar = p;
+	progressBar = p;
 }

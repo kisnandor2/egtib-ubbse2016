@@ -75,12 +75,12 @@
                 </div>
               </div>
             </form>
-            <div class="row">
+            <div class="row" ng-controller="simulationController">
               <div class="col-md-1"></div>
               <input type="button" class="btn btn-default submit col-md-5" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
-              <input type="button" class="btn btn-default submit col-md-5" value="Start the simulation" id="startSimulation" ng-controller="simulationController" ng-click="simulate()">
-              <input type="button" class="btn btn-default submit col-md-5" value="Pause the simulation" id="pauseSimulation" ng-controller="simulationController" ng-click="pause()" style="display:none">
-              <input type="button" class="btn btn-default submit col-md-5" value="Resume the simulation" id="resumeSimulation" ng-controller="simulationController" ng-click="resume()" style="display:none">
+              <input type="button" class="btn btn-default submit col-md-5" value="Start the simulation" id="startSimulation" ng-click="simulate()">
+              <input type="button" class="btn btn-default submit col-md-5" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
+              <input type="button" class="btn btn-default submit col-md-5" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
               <div class="col-md-1"></div>
             </div>
           </div>
@@ -93,7 +93,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="progress">
-              <div class="progress-bar" id="simulation_progress" style="width:80%">
+              <div class="progress-bar" id="progressBar" style="width:50%" ng-controller="progressBarController">
                 <strong>
                   <span id="progressText">5/10</span>
                 </strong>

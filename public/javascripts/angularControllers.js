@@ -6,6 +6,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 	initVoronoi();
 	initAlertBoxes();
 	initWebSocket();
+	initDefaultWatchIfNotSupported();
 
 	//TODO: Get this out of here?!!!!!
 	//DEBUGGING WITH THIS
@@ -94,6 +95,51 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		setTimeout(function() {
     	heartbeat();
 		}, 1000)
+	}
+	function initDefaultWatchIfNotSupported(){
+		if (!Object.prototype.watch) {
+		    Object.defineProperty(Object.prototype, "watch", {
+		          enumerable: false
+		        , configurable: true
+		        , writable: false
+		        , value: function (prop, handler) {
+		            var
+		              oldVal = this[prop]
+		            , newVal = oldVal
+		            , getter = function () {
+		                return newVal;
+		            }
+		            , setter = function (val) {
+		                oldVal = newVal;
+		                return newVal = handler.call(this, prop, oldVal, val);
+		            }
+		            ;
+		            
+		            if (delete this[prop]) { // can't watch constants
+		                Object.defineProperty(this, prop, {
+		                      get: getter
+		                    , set: setter
+		                    , enumerable: true
+		                    , configurable: true
+		                });
+		            }
+		        }
+		    });
+		}
+
+		// object.unwatch
+		if (!Object.prototype.unwatch) {
+		    Object.defineProperty(Object.prototype, "unwatch", {
+		          enumerable: false
+		        , configurable: true
+		        , writable: false
+		        , value: function (prop) {
+		            var val = this[prop];
+		            delete this[prop]; // remove accessors
+		            this[prop] = val;
+		        }
+		    });
+		}
 	}
 
 });
@@ -222,12 +268,16 @@ app.controller('simulationController', function($scope){
 		$scope.voronoi.render();
 	}
 
-	$scope.$watch('voronoi.toBeRendered', function(newVal, oldVal){
-		if (newVal >= $scope.voronoi.gen_count){
+	//$scope.$watch did not work here, so this is some magic
+	$scope.voronoi.watch('toBeRendered', function(property, oldVal, newVal){
+		if (newVal >= this.gen_count){
 			$('#resumeSimulation')[0].style.display = 'none';	
 			$('#pauseSimulation')[0].style.display = 'none';
 			$('#startSimulation')[0].style.display = 'block';
 		}
+		//It has to return the newVal
+		//TODO: take this "feature" out from initDefaultWatchIfNotSupported
+		return newVal;
 	})
 
 	$scope.progressBarChange = function(){
@@ -288,4 +338,8 @@ app.controller('highChartsController', function($rootScope){
 		chart.xAxis[0].setCategories(categories);
 		$rootScope.voronoi.setChart(chart);
 	}
+})
+
+app.controller('progressBarController', function($rootScope){
+	$rootScope.voronoi.setProgressBar($('#progressBar')[0]);
 })
