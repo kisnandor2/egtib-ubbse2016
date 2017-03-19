@@ -89,40 +89,68 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 /**
  * Simulates using the parameters set in the init function 
  */
-SimulateVoronoi.prototype.simulate = function() {
-		var ret = [];
-		for (let j = 0; j < this.generationCount; ++j) {
-				let sitesAfterSplit = [];
-				for (let i = 0; i < this.sites.length; ++i) {
-						//Select a random neighbor and change payoffs if needed
-						actualPoint = this.sites[i];
-						let neighbors = this.getNeighbors(actualPoint);
-						let rand = Math.round(Math.random() * (neighbors.length-1));
-						try {
-								if (neighbors[rand].payoff > actualPoint.payoff) {
-										actualPoint.attrib = neighbors[rand].attrib;
-										actualPoint.cost = neighbors[rand].cost;
-										this.setPayoffs(actualPoint);
-								}
-						} catch (error) {
-								logger.error('No neighbors found at: ', i);
-								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
-								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
-						}
 
-						//Divide the i'th cell
-						this.divideCell(actualPoint, sitesAfterSplit, neighbors);
-				}
-				//Create a copy of this generation and push it to results
-				this.sites = sitesAfterSplit;
-				this.diagram = voronoi.compute(this.sites, this.bbox);
-				this.reCalculateSites();
-				this.initNeighborMatrix();
-				ret.push(JSON.parse(JSON.stringify(this.sites)));
-		}
-		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
-		return ret;
+SimulateVoronoi.prototype.simulate = function() {
+    var ret = [];
+    for (var j = 0; j < this.generationCount; ++j) {
+        // var i = Math.floor(Math.random() * this.sites.length);
+        for (var i = 0; i < this.sites.length; ++i) {
+            //Get 'c' neighbors
+            var neighbors = this.getNeighbors(this.sites[i]);
+            //Select a random neighbor and change payoffs if needed
+            var k = Math.floor(Math.random() * neighbors.length);
+            try {
+                if (neighbors[k].payoff > this.sites[i].payoff) {
+                    this.sites[i].attrib = neighbors[k].attrib;
+                    this.sites[i].cost = neighbors[k].cost;
+                }
+            } catch (error) {
+                logger.error('No neighbors found at: ', i);
+            }
+        }
+        //Create a copy of this generation and push it to results
+        ret.push(JSON.parse(JSON.stringify(this.sites)));
+        this.setPayoffs();
+    }
+    logger.debug('Simulation length(Generations):', ret.length);
+    return ret;
 };
+
+
+// SimulateVoronoi.prototype.simulate = function() {
+// 		var ret = [];
+// 		for (let j = 0; j < this.generationCount; ++j) {
+// 				let sitesAfterSplit = [];
+// 				for (let i = 0; i < this.sites.length; ++i) {
+// 						//Select a random neighbor and change payoffs if needed
+// 						actualPoint = this.sites[i];
+// 						let neighbors = this.getNeighbors(actualPoint);
+// 						let rand = Math.round(Math.random() * (neighbors.length-1));
+// 						try {
+// 								if (neighbors[rand].payoff > actualPoint.payoff) {
+// 										actualPoint.attrib = neighbors[rand].attrib;
+// 										actualPoint.cost = neighbors[rand].cost;
+// 										this.setPayoffs(actualPoint);
+// 								}
+// 						} catch (error) {
+// 								logger.error('No neighbors found at: ', i);
+// 								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
+// 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
+// 						}
+
+// 						//Divide the i'th cell
+// 						this.divideCell(actualPoint, sitesAfterSplit, neighbors);
+// 				}
+// 				//Create a copy of this generation and push it to results
+// 				this.sites = sitesAfterSplit;
+// 				this.diagram = voronoi.compute(this.sites, this.bbox);
+// 				this.reCalculateSites();
+// 				this.initNeighborMatrix();
+// 				ret.push(JSON.parse(JSON.stringify(this.sites)));
+// 		}
+// 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
+// 		return ret;
+// };
 /**
  * Divides a cell in two smaller cells
  *
@@ -215,10 +243,10 @@ SimulateVoronoi.prototype.checkVoronoiID = function() {
 SimulateVoronoi.prototype.setPayoffs = function(point) {
 	var neighbors = this.sites;
 	if (point != undefined){
-		var neighbors = this.getNeighbors(point);
+		neighbors = this.getNeighbors(point);
 		neighbors.push(point);
 	}
-	for (var i = 0; i < neighbors.length; ++i) {
+	for (let i = 0; i < neighbors.length; ++i) {
 		let actualPoint = neighbors[i];
 		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
 		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
