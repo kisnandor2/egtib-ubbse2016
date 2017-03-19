@@ -27,7 +27,12 @@ function AnimatableVoronoi(view, context) {
 
 	this.context = context;
 
-	this.onResize();
+	this.bbox = {
+		xl: this.margin,
+		xr: this.view.bounds.width - this.margin,
+		yt: this.margin,
+		yb: this.view.bounds.height - this.margin
+	};
 }
 
 AnimatableVoronoi.prototype.displayChartData =  function(){
@@ -72,7 +77,8 @@ AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadForma
 }
 
 
-AnimatableVoronoi.prototype.changeColor = function(x,y){
+AnimatableVoronoi.prototype.getPointAtXY = function(x,y){
+	//TODO: Use diagram.getCellBySite
 	let min = 9999;
 	let p = undefined;
 	for (point of this.sites){
@@ -86,19 +92,13 @@ AnimatableVoronoi.prototype.changeColor = function(x,y){
 }
 
 AnimatableVoronoi.prototype.onMouseDown = function(x,y,attrib) {
-	let oldPoint = this.changeColor(x,y);
-	console.log(oldPoint);
-	// let newPoint = new paper.Point(x,y,attrib);
-	// console.log(newPoint);
-	// this.sites.push(newPoint);
-	// this.renderDiagram();
-	// let p = ;
-	// p.attrib = 'd';
-	// this.setSites(this.sites);
-	// this.renderDiagram();
+	let oldPoint = this.getPointAtXY(x,y);
+	oldPoint.attrib = 'd';
+	this.renderDiagram();
 }
 
 AnimatableVoronoi.prototype.onMouseMove = function(x,y,attrib,count) {
+	//TODO: No need for this
 	this.mousePos = new paper.Point(x,y,attrib);;
 	if(count == 0)
 		this.sites.push(new paper.Point(x,y,attrib));
@@ -129,19 +129,10 @@ AnimatableVoronoi.prototype.renderDiagram = function() {
 			}
 		}
 	}
+	//Show the coordinates in the canvas for debugging purpose
 	// for (let i in this.sites){
 	// 	this.context.fillText(Math.floor(this.sites[i].x) + ", " + Math.floor(this.sites[i].y), this.sites[i].x-50, this.sites[i].y);
 	// }
-}
-
-AnimatableVoronoi.prototype.getPointAttribute = function(point) {
-	//Get the color attribute of a point when rendering the diagram
-	for (var i in this.sitesWithColor) {
-		var p = this.sitesWithColor[i];
-		if (p.x == point.x && p.y == point.y) {
-			return p.attrib;
-		}
-	}
 }
 
 AnimatableVoronoi.prototype.renderChartData = function(sitesList) {
@@ -244,17 +235,20 @@ AnimatableVoronoi.prototype.createPath = function(points, center) {
 }
 
 AnimatableVoronoi.prototype.onResize = function() {
-	this.bbox = {
-		xl: this.margin,
-		xr: this.view.bounds.width - this.margin,
-		yt: this.margin,
-		yb: this.view.bounds.height - this.margin
+	v = this.voronoiAccessibleFromOutside;
+	v.bbox = {
+		xl: v.margin,
+		xr: v.view.bounds.width - v.margin,
+		yt: v.margin,
+		yb: v.view.bounds.height - v.margin
 	};
-	for (var i = 0, l = this.sites.length; i < l; i++) {
-		this.sites[i] = this.sites[i].multiply(view.size.divide(oldSize));
+	for (let i = 0; i < v.sites.length; i++) {
+		let attrib = v.sites[i].attrib;
+		v.sites[i] = v.sites[i].multiply(v.view.size.divide(v.oldSize));
+		v.sites[i].attrib = attrib;
 	}
-	oldSize = this.view.size;
-	this.renderDiagram();
+	v.oldSize = v.view.size;
+	v.renderDiagram();
 }
 
 AnimatableVoronoi.prototype.setSites = function(sites) {

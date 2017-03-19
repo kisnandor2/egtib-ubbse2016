@@ -45,6 +45,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 
 		//Makes voronoi visible for highChartsController to set the voronoi chart
 		$rootScope.voronoi = voronoi;
+		$(window).resize(voronoi.onResize);
 	}
 	function initAlertBoxes(){
 		$scope.successMessage = $('<div />', {
