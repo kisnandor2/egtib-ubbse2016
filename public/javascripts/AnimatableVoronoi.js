@@ -106,7 +106,6 @@ AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadForma
 	return ret;
 }
 
-
 /**
  * As the name describes it! USE IT ONLY FOR DEBUGGING!!!
  */
@@ -185,7 +184,7 @@ AnimatableVoronoi.prototype.renderDiagram = function() {
 /**
  * Adds the data to chart and displays it
  * 
- * @param {array of sites} sitesList
+ * @param {array_of_sites} sitesList
  */
 AnimatableVoronoi.prototype.renderChartData = function(sitesList) {
 	this.resetChart();
