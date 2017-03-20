@@ -25,11 +25,11 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		voronoi.setDist($scope.defaultDistanceOfInteraction);
 
 		//GenerationCount
-		$scope.defaultGenerationCount = 1;
+		$scope.defaultGenerationCount = 10;
 		voronoi.setGen_Count($scope.defaultGenerationCount);
 
 		//Number of non_productive cells
-		$scope.defaultNonProductiveCellCount = 50;
+		$scope.defaultNonProductiveCellCount = 2;
 		voronoi.setPercentOfDefectingCells($scope.defaultNonProductiveCellCount);
 
 		//CellCount
