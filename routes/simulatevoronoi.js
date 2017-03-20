@@ -36,8 +36,8 @@ function SimulateVoronoi() {
 	this.dist               = defaultDist;
 
 	this.colorChangeChance	= 0.02;
-	this.dividingChance		= 0.1;
-	this.deathChance		= 0.01;
+	this.dividingChance			= 0.1;
+	this.deathChance				= 0.01;
 
 	this.d = this.dist * shapeOfDif;
 

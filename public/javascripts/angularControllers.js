@@ -8,8 +8,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 	initWebSocket();
 	initDefaultWatchIfNotSupported();
 
-	//TODO: Get this out of here?!!!!!
-	//DEBUGGING WITH THIS
+	//TODO: look for a better way to wait for CSS animation(this is a workaround);
 	voronoiAccessibleFromOutside = $scope.voronoi;
 
 	function initVoronoi(){
@@ -204,6 +203,7 @@ app.controller('parameterController', function($scope, $timeout) {
 			angular.copy([$scope.successMessage], successMessage);
 			$scope.successMessageDiv.appendChild(successMessage[0]);
 		}
+		//TODO: maybe implement a list to check if needs to be closed
 		$timeout(function(){
 			try{
 				$('.close')[0].click();	
