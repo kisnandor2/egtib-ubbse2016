@@ -34,8 +34,10 @@ function SimulateVoronoi() {
 	this.cooperatingCost    = defaultCooperatingCost;
 	this.defectingCost      = defaultDefectingCost;
 	this.dist               = defaultDist;
+
 	this.colorChangeChance	= 0.02;
 	this.dividingChance		= 0.1;
+	this.deathChance		= 0.01;
 
 	this.d = this.dist * shapeOfDif;
 
@@ -112,8 +114,10 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
 
-						//Divide the i'th cell
-						this.divideCell(actualPoint, sitesAfterSplit, neighbors);
+						//Divide the i'th cell if won't die
+						if (!this.killCell(actualPoint)){
+							this.divideCell(actualPoint, sitesAfterSplit, neighbors);
+						}
 				}
 				//Create a copy of this generation and push it to results
 				this.sites = sitesAfterSplit;
@@ -126,6 +130,19 @@ SimulateVoronoi.prototype.simulate = function() {
 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
 		return ret;
 };
+
+/**
+ * Checks if a cell will die(it's random at the moment with a small chance to die)
+ *
+ * @param 	{cell} point
+ * @returns {bool} - true if a cell dies, false if not
+ */
+SimulateVoronoi.prototype.killCell = function(point){
+	if (Math.random() < this.deathChance)
+		return true;
+	return false;
+}
+
 /**
  * Divides a cell in two smaller cells
  *
