@@ -8,9 +8,10 @@ const defaultSteepness = 2,
 	defaultInflexiosPont = 1,
 	defaultDist = 1,
 	shapeOfDif = 1 / 2;
-	d = 0,
-	z = 20,
-	G = [];
+	d = 0,	//??? constant
+	z = 20, //??? constant
+	G = [],	//gradient array
+	alfa = 0.5; //dividing chance constant
 
 const defaultCooperatingCost = 0.5,
 	defaultDefectingCost = 0;
@@ -33,6 +34,8 @@ function SimulateVoronoi() {
 	this.cooperatingCost    = defaultCooperatingCost;
 	this.defectingCost      = defaultDefectingCost;
 	this.dist               = defaultDist;
+	this.colorChangeChance	= 0.02;
+	this.dividingChance		= 0.1;
 
 	this.d = this.dist * shapeOfDif;
 
@@ -110,13 +113,13 @@ SimulateVoronoi.prototype.simulate = function() {
 						}
 
 						//Divide the i'th cell
-						// this.divideCell(actualPoint, sitesAfterSplit, neighbors);
+						this.divideCell(actualPoint, sitesAfterSplit, neighbors);
 				}
 				//Create a copy of this generation and push it to results
-				// this.sites = sitesAfterSplit;
-				// this.diagram = voronoi.compute(this.sites, this.bbox);
-				// this.reCalculateSites();
-				// this.initNeighborMatrix();
+				this.sites = sitesAfterSplit;
+				this.diagram = voronoi.compute(this.sites, this.bbox);
+				this.reCalculateSites();
+				this.initNeighborMatrix();
 				this.setPayoffs();
 				ret.push(JSON.parse(JSON.stringify(this.sites)));
 		}
@@ -132,7 +135,7 @@ SimulateVoronoi.prototype.simulate = function() {
  */
 SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors){
 	//Check if division is needed
-	if (false) {
+	if (alfa * actualPoint.payoff < this.dividingChance) {
 		//Find X coordinate to divide
 		var min = 9999;
 			shiftOnX = 0,
@@ -172,6 +175,13 @@ SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInt
 			y: actualPoint.y + shiftOnY,
 			attrib: actualPoint.attrib
 		}
+		//Change color! Only one of them may change it's color
+		if (Math.random() < this.colorChangeChance){
+			this.changeColor(newPoint1);
+		}
+		else if (Math.random() < this.colorChangeChance){
+			this.changeColor(newPoint2);
+		}
 		listToBeInsertedInto.push(newPoint1);
 		listToBeInsertedInto.push(newPoint2);
 	}
@@ -179,6 +189,18 @@ SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInt
 		//Insert the point as it is
 		listToBeInsertedInto.push(actualPoint);
 	}
+}
+
+/**
+ * Changes the color of a cell
+ *
+ * @param {cell} point
+ */
+SimulateVoronoi.prototype.changeColor = function(point){
+	if (point.attrib = 'c')
+		point.attrib = 'd';
+	else
+		point.attrib = 'c';
 }
 
 /**
