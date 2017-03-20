@@ -421,7 +421,7 @@ app.controller('progressBarController', function($rootScope){
 
 	function waitForCSSAnimation(){
 		v = voronoiAccessibleFromOutside;
-		v.recursiveRender(v.toBeRendered, v.sitesList);
+		v.recursiveRender(v.toBeRendered);
 	}
 	$('#progressBar')[0].waitForCSSAnimation = waitForCSSAnimation;
 

@@ -1,9 +1,16 @@
+/**
+ * AnimatableVoronoi class used for rendering the voronoi graph, it's results to chart, and changing the progressBar
+ * Maybe the chart and progressBar should be moved to a controller...?
+ * @constructor
+ * 
+ * @param {view} 		view		- after paper.install this is accessible
+ * @param {context} context	- canvas.context
+ */
 function AnimatableVoronoi(view, context) {
 	this.voronoi = new Voronoi();
 	this.cooperatorColor = new paper.Color(0.95,0.38,0.02); //#f36205
 	this.defectorColor = new paper.Color(0.18,0.59,0.85); //#2f98da
 	this.sites = [];
-	this.sitesWithColor = [];
 	this.view = view;
 	this.margin = 0;
 
@@ -12,13 +19,12 @@ function AnimatableVoronoi(view, context) {
 
 	this.diagram = undefined;
 
+	this.dist = 0;
+	this.coop_cost = 0;
 	this.totalNumberOfCells = 0;
 	this.percentOfDefectingCells = 0;
+	this.progressBar = 0;
 	this.cooperatingChance = 0.5;
-
-	this.gen_count = 0;
-	this.coop_cost = 0;
-	this.dist = 0;
 
 	this.chart = {};
 	this.sitesList = [];
@@ -35,6 +41,9 @@ function AnimatableVoronoi(view, context) {
 	};
 }
 
+/**
+ * Displays the data which was added to this.chart.series and xAxis
+ */
 AnimatableVoronoi.prototype.displayChartData =  function(){
 	this.chart.series[0].setData(this.chart.productive);
 	this.chart.series[1].setData(this.chart.nonProductive);
@@ -43,6 +52,12 @@ AnimatableVoronoi.prototype.displayChartData =  function(){
 	this.chart.xAxis[0].setCategories(this.categories);
 }
 
+/**
+ * Adds data to chart
+ *
+ * @param {array} sites - the sites where we calculate the chart data
+ * @param {int}		i 		- this sets the categories(bottom part) of the chart
+ */ 
 AnimatableVoronoi.prototype.addDataToChart = function(sites, i){
 	let p = this.getProductiveCount(sites);
 	this.chart.productive.push(p);
@@ -51,6 +66,12 @@ AnimatableVoronoi.prototype.addDataToChart = function(sites, i){
 	this.chart.categories.push(i);
 }
 
+/**
+ * How many 'c' cell are in the current list
+ *
+ * @param 	{array} sites
+ * @returns {int} - count of 'c' cells
+ */
 AnimatableVoronoi.prototype.getProductiveCount = function(sites) {
 	let k = 0;
 	for (let i = 0; i < sites.length; ++i){
@@ -60,12 +81,21 @@ AnimatableVoronoi.prototype.getProductiveCount = function(sites) {
 	return k;
 }
 
+/**
+ * Resets the data in the chart, everything is lost
+ */
 AnimatableVoronoi.prototype.resetChart = function() {
 	this.chart.productive = [];
 	this.chart.nonProductive = [];
 	this.chart.categories = [];
 }
 
+/**
+ * Refactors the sites gotten from the server to paper.Point class
+ *
+ * @param 	{array} badlyFormattedSites - gotten from the server side
+ * @returns {array} sites 							- paper.Point class format siteList
+ */
 AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadFormat) {
 	//Changes the badly formatted sites taken from the server to be able to animate it
 	let ret = [];
@@ -77,6 +107,9 @@ AnimatableVoronoi.prototype.sitesBadFormatToPointFormat = function(sitesBadForma
 }
 
 
+/**
+ * As the name describes it! USE IT ONLY FOR DEBUGGING!!!
+ */
 AnimatableVoronoi.prototype.getPointAtXY = function(x,y){
 	//TODO: Use diagram.getCellBySite
 	let min = 9999;
@@ -91,12 +124,23 @@ AnimatableVoronoi.prototype.getPointAtXY = function(x,y){
 	return p;
 }
 
+/**
+ * Changes the color of a cell that was clicked
+ * Currently not in use
+ * @param {int}	 x
+ * @param {int}	 y
+ * @param {char} attrib
+ */ 
 AnimatableVoronoi.prototype.onMouseDown = function(x,y,attrib) {
 	let oldPoint = this.getPointAtXY(x,y);
 	oldPoint.attrib = 'd';
 	this.renderDiagram();
 }
 
+/**
+ * Makes it able to insert a new point at the desired location, with animated canvas
+ * Slow motion => Don't use it
+ */
 AnimatableVoronoi.prototype.onMouseMove = function(x,y,attrib,count) {
 	//TODO: No need for this
 	this.mousePos = new paper.Point(x,y,attrib);;
@@ -107,6 +151,9 @@ AnimatableVoronoi.prototype.onMouseMove = function(x,y,attrib,count) {
 	this.renderDiagram();
 }
 
+/**
+ * Renders the diagram which is described by this.sites
+ */
 AnimatableVoronoi.prototype.renderDiagram = function() {
 	project.activeLayer.removeChildren();
 	this.diagram = this.voronoi.compute(this.sites, this.bbox);
@@ -135,6 +182,11 @@ AnimatableVoronoi.prototype.renderDiagram = function() {
 	// }
 }
 
+/**
+ * Adds the data to chart and displays it
+ * 
+ * @param {array of sites} sitesList
+ */
 AnimatableVoronoi.prototype.renderChartData = function(sitesList) {
 	this.resetChart();
 	this.addDataToChart(this.sites, 0);
@@ -145,11 +197,18 @@ AnimatableVoronoi.prototype.renderChartData = function(sitesList) {
 	this.sitesList = sitesList;
 }
 
+/**
+ * Renders a whole animation described by this.sitesList
+ */
 AnimatableVoronoi.prototype.render = function() {
-	this.recursiveRender(this.toBeRendered, this.sitesList);
+	this.recursiveRender(this.toBeRendered);
 }
 
-AnimatableVoronoi.prototype.recursiveRender = function(i, sitesList){
+/**
+ * Renders the i'th sitesList = only one generation
+ * @param {int} i
+ */
+AnimatableVoronoi.prototype.recursiveRender = function(i){
 	if (this.toBeRendered < 0)
 		return;
 	if (i >= sitesList.length)
@@ -157,18 +216,25 @@ AnimatableVoronoi.prototype.recursiveRender = function(i, sitesList){
 	setTimeout(()=>{
 		this.toBeRendered++;
 		this.savedToBeRendered = this.toBeRendered;
-		this.sites = sitesList[i];
+		this.sites = this.sitesList[i];
 		this.renderDiagram();
 		this.updateProgressBar(i);
 	}, 0)
 }
 
+/**
+ * Updates the progressbar to match the progress of the animation
+ * @param {int} i
+ */
 AnimatableVoronoi.prototype.updateProgressBar = function(i){
 	let percent = 100 * (i+1)/this.sitesList.length;
 	this.progressBar.style.width = percent + '%'
 	$('#progressText')[0].textContent = Math.ceil(percent) + '%';
 }
 
+/**
+ * Used at the rendering of a single diagram to canvas
+ */
 AnimatableVoronoi.prototype.removeSmallBits = function(path) {
 	//WTF is this used for? TODO: document
 	let averageLength = path.length / path.segments.length;
@@ -184,6 +250,13 @@ AnimatableVoronoi.prototype.removeSmallBits = function(path) {
 	}
 }
 
+/**
+ * Generates a new voronoi diagram which has the shape of a BeeHive
+ *
+ * @param 	{int}	 	size 	- sqrt(how many cells needed)
+ * @param 	{bool} 	loose	- if true, the cells are not so strictly displayed
+ * @returns {array} sites
+ */
 AnimatableVoronoi.prototype.generateBeeHivePoints = function(size, loose) {
 	//used to generate the sites[] for a window
 	let points = [];
@@ -207,6 +280,10 @@ AnimatableVoronoi.prototype.generateBeeHivePoints = function(size, loose) {
 	return points;
 }
 
+/**
+ * Used at the rendering of a single diagram to canvas
+ * The color of a cell that is displayed is decided here
+ */
 AnimatableVoronoi.prototype.createPath = function(points, center) {
 	let path = new Path();
 	if (!this.selected) {
@@ -234,6 +311,9 @@ AnimatableVoronoi.prototype.createPath = function(points, center) {
 	return path;
 }
 
+/**
+ * Resizes the canvas - attached to window resize event in angularController
+ */
 AnimatableVoronoi.prototype.onResize = function() {
 	v = this.voronoiAccessibleFromOutside;
 	v.bbox = {
@@ -251,6 +331,11 @@ AnimatableVoronoi.prototype.onResize = function() {
 	v.renderDiagram();
 }
 
+/**
+ * Sets the sites of this
+ *
+ * @param {array} sites
+ */
 AnimatableVoronoi.prototype.setSites = function(sites) {
 	if (sites.length > 0 && sites[0].constructor.name == 'Array'){
 		sitesGoodFormat = [];
@@ -266,24 +351,43 @@ AnimatableVoronoi.prototype.setSites = function(sites) {
 	this.sitesWithColor = sites.slice(0);
 }
 
+/**
+ * Get the bbox of this
+ * @returns {object}
+ */
 AnimatableVoronoi.prototype.getBbox = function() {
 	return this.bbox;
 }
 
+/**
+ * Get the sites of this
+ * @returns {array}
+ */
 AnimatableVoronoi.prototype.getSites = function(){
 	return this.sites;
 }
 
+/**
+ * Get the generation count of this
+ * @retunrs {int}
+ */
 AnimatableVoronoi.prototype.getGen_Count = function(){
 	return this.gen_count;
 }
 
+/**
+ * Set the generation count
+ * @param {int} gen_count
+ */
 AnimatableVoronoi.prototype.setGen_Count = function(gen_count){
 	if (gen_count <= 0)
 		return;
 	this.gen_count = gen_count;
 }
 
+/**
+ * Checks if each cell has at least one neighbor. Use it only for DEBUGGING!
+ */
 AnimatableVoronoi.prototype.testNeighborCount = function(){
 	console.log('testing ' + this.sites.length);
 	for (var i = 0; i < this.sites.length; ++i){
@@ -294,8 +398,10 @@ AnimatableVoronoi.prototype.testNeighborCount = function(){
 	}
 }
 
+/**
+ * Get the neighbors of a point. Use it only for DEBUGGING!
+ */
 AnimatableVoronoi.prototype.getNeighbors = function(p, diagram) {
-	//find neighbors of cell which has site at p point
 	var neighbors = [];
 	var halfedges = this.getCellBySite(p, diagram.cells).halfedges;
 	for (var i in halfedges) {
@@ -307,6 +413,9 @@ AnimatableVoronoi.prototype.getNeighbors = function(p, diagram) {
 	return neighbors;
 }
 
+/**
+ * Finds a cell by a site coordinate. Use int only for DEBUGGING!
+ */
 AnimatableVoronoi.prototype.getCellBySite = function(point, cells) {
 	//returns the cell which site is equal to point
 	for (var i in cells) {
@@ -314,48 +423,84 @@ AnimatableVoronoi.prototype.getCellBySite = function(point, cells) {
 	}
 }
 
+/**
+ * Checks if two sites are equal. Use it only for DEBUGGING!
+ */
 AnimatableVoronoi.prototype.compareSites = function(s1, s2) {
 	if (s1.x == s2.x && s1.y == s2.y) return true;
 	return false;
 }
 
+/**
+ * Set the distance of interaction of this
+ * @param {int} dist
+ */
 AnimatableVoronoi.prototype.setDist = function(dist){
 	if (dist < 0 || dist > 5)
 		return;
 	this.dist = dist;
 }
 
+/**
+ * Get the distance of interaction of this
+ * @returns {int}
+
+ */
 AnimatableVoronoi.prototype.getDist = function() {
 	return this.dist;
 }
 
+/**
+ * Set the cooperating cost of this
+ * @param {float} coop_cost
+ */
 AnimatableVoronoi.prototype.setCoop_Cost = function(coop_cost){
 	if (coop_cost < 0 || coop_cost > 1)
 		return;
 	this.coop_cost = coop_cost;
 }
 
+/**
+ * Get the cooperating cost of this
+ * @returns {float}
+ */
 AnimatableVoronoi.prototype.getCoop_Cost = function(){
 	return this.coop_cost;
 }
 
+/**
+ * Set the totabl number of cells that are rendered
+ * @param {int} value
+ */
 AnimatableVoronoi.prototype.setTotalNumberOfCells = function(value){
 	if (value <2 || value > 500)
 		return;
 	this.totalNumberOfCells = value;
 }
 
+/**
+ * Set the percent of defecting cells
+ * @param {float} value
+ */
 AnimatableVoronoi.prototype.setPercentOfDefectingCells = function(value){
 	if (value < 0 || value > 100)
 		return;
 	this.percentOfDefectingCells = value;
 }
 
+/**
+ * Set the chart which is used to display the data
+ * @oaram {chart} chart
+ */
 AnimatableVoronoi.prototype.setChart = function(chart){
 	this.chart = chart;
 	this.resetChart();
 }
 
+/**
+ * Set the progressBar whish is used to display rendering progress
+ * @param {progressBar} p
+ */
 AnimatableVoronoi.prototype.setProgressBar = function(p){
 	this.progressBar = p;
 }
