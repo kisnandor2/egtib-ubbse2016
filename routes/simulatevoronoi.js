@@ -81,8 +81,6 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 		this.calculateDiffGradient();
 		this.initNeighborMatrix();
 		this.setPayoffs();
-		for (i in this.sites)
-			console.log(this.sites[i].payoff);
 	} catch (error) {
 		logger.error('Invalid request JSON', error);
 	}
@@ -271,6 +269,20 @@ SimulateVoronoi.prototype.testNeighborCount = function() {
 }
 
 /**
+ * Returns a site by its VoronoiID
+ * 
+ * @param 	{int}  neighborID
+ * @returns {site} site
+ */
+SimulateVoronoi.prototype.getSiteByVoronoiID = function(id){
+	let len = this.sites.length;
+	for (let i = 0; i < len; ++i){
+		if (this.sites[i].voronoiId == id)
+			return this.sites[i];
+	}
+}
+
+/**
  * Builds up the neighbor matrix which is used to speed up finding a cells neighbors
  */
 SimulateVoronoi.prototype.initNeighborMatrix = function() {
@@ -280,7 +292,8 @@ SimulateVoronoi.prototype.initNeighborMatrix = function() {
 		let cell = this.getCellBySite(this.sites[i], this.diagram.cells);
 		let neighborsID = cell.getNeighborIds(cell);
 		for (let j = 0; j < neighborsID.length; ++j){
-			this.neighborMatrix[this.sites[i].voronoiId][neighborsID[j]] = 1;
+			let site = this.getSiteByVoronoiID(neighborsID[j]);
+			this.neighborMatrix[this.sites[i].voronoiId][neighborsID[j]] = site.attrib;
 		}
 	}
 }
