@@ -5,14 +5,13 @@ function Socket(server) {
 	this.ws = new require('ws').Server({
 		server: server
 	});
+	this.connections = [];
 }
 
 Socket.prototype.listen = function() {
-	let server = this;
-
+	var server = this;
 	this.ws.on('connection', function(socket) {
 		logger.info('New socket opened');
-		server.socket = socket;
 		//Get session id for this socket
 		sessionParser.cookieParser(socket.upgradeReq, null, function(error){
 			if (error){
@@ -29,6 +28,8 @@ Socket.prototype.listen = function() {
 				logger.debug(data.heartbeat);
 				return;
 			}
+			//Save the current socket into the queue
+			server.connections.push(socket);
 			//Get session variable
 			sessionParser.store.get(socket.sessionID, function(err, session) {
 				session.sites 		= data.sites;
@@ -51,11 +52,11 @@ Socket.prototype.listen = function() {
 }
 
 Socket.prototype.sendData = function(data) {
-	if (this.socket == null) {
-		logger.error('Client socket is closed');
-		return;
+	let socket = this.connections.shift();
+	if (socket == undefined){
+		logger.error('No open connections');
 	}
-	this.socket.send(data);
+	socket.send(data);
 }
 
 module.exports = Socket;
