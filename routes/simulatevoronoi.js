@@ -98,10 +98,11 @@ SimulateVoronoi.prototype.simulate = function() {
 		var ret = [];
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
+				let sitesBeforeChange = this.sites.slice(0);
 				for (let i = 0; i < this.sites.length; ++i) {
 						//Select a random neighbor and change payoffs if needed
 						actualPoint = this.sites[i];
-						let neighbors = this.getNeighbors(actualPoint, this.diagram);
+						let neighbors = this.getNeighbors(sitesBeforeChange[i]);
 						let rand = Math.round(Math.random() * (neighbors.length-1));
 						try {
 								if (neighbors[rand].payoff > actualPoint.payoff) {
