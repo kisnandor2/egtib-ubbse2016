@@ -6,13 +6,13 @@ const logger = require('./logger');
 const SimulateVoronoi = require('./simulatevoronoi');
 
 var server = undefined;
+var v = new SimulateVoronoi();
 
 var setWebSocket = function(webSocketServer){
 	server = webSocketServer;
 }
 
 router.get('/data', function(req, res) {
-	let v = new SimulateVoronoi();
 	v.init(req.session);	//ES6 parameter destructuring
 	try {
 		server.sendData(JSON.stringify(v.simulate()));
