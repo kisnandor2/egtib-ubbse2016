@@ -301,11 +301,13 @@ app.controller('simulationController', function($scope, $rootScope){
 		$("#progress").unbind('mouseenter');
 		$("#progress").unbind('mouseleave');
 		$("#progress").unbind('mousemove');
+		$('#progressBar')[0].addEventListener('transitionend', $('#progressBar')[0].waitForCSSAnimation);
 	}
 	function turnOnProgressBarClickAndHoverAndMouseMove(){
 		$("#progress").click($rootScope.progressBarOnClick);
 		$("#progress").mousemove($rootScope.progressBarOnMousemove);
 		$("#progress").hover($rootScope.progressBarOnHoverIn, $rootScope.progressBarOnMouseHoverOut);
+		$('#progressBar')[0].removeEventListener('transitionend', $('#progressBar')[0].waitForCSSAnimation);
 	}
 
 });
@@ -366,27 +368,6 @@ app.controller('highChartsController', function($rootScope){
 })
 
 app.controller('progressBarController', function($rootScope){
-	function transitionEndEventName () {
-		var i,
-			undefined,
-			el = document.createElement('div'),
-			transitions = {
-				'transition':'transitionend',
-				'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
-				'MozTransition':'transitionend',
-				'WebkitTransition':'webkitTransitionEnd'
-			};
-
-		for (i in transitions) {
-			if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
-				return transitions[i];
-			}
-		}
-		//TODO: throw 'TransitionEnd event is not supported in this browser'; 
-	}
-	var transitionEnd = transitionEndEventName();
-	$('#progressBar')[0].addEventListener(transitionEnd, waitForCSSAnimation);
-
 	$rootScope.voronoi.setProgressBar($('#progressBar')[0]);
 	$rootScope.progressBarOnClick = function progressBarOnClick(e){
 		let clickedX = e.pageX - $(this).offset().left;
@@ -398,25 +379,29 @@ app.controller('progressBarController', function($rootScope){
 		$rootScope.voronoi.renderDiagram();
 		$('#startSimulation')[0].style.display = 'none';
 		$('#resumeSimulation')[0].style.display = 'block';
+		p = $('#progressBar')[0];
+		percent = Math.floor(percent) + '%';
+		p.style.width = percent;
+		p.savedProgressWidth = percent;
+		$('#progressText')[0].textContent = percent;
+		p.savedProgressText = percent;
 	}
 	$rootScope.progressBarOnMousemove = function progressBarOnMousemove(e){
-		 let clickedX = e.pageX - $(this).offset().left;
-		 let percent = clickedX/$("#progress")[0].clientWidth*100;
-		 let toBeRendered = Math.floor(percent*$rootScope.voronoi.gen_count/100)
-		 $('#progressBar')[0].style.width = percent + '%';
-		 $('#progressText')[0].textContent = toBeRendered + '/' + $rootScope.voronoi.gen_count;
+		let clickedX = e.pageX - $(this).offset().left;
+		let percent = clickedX/$("#progress")[0].clientWidth*100;
+		let toBeRendered = Math.floor(percent*$rootScope.voronoi.gen_count/100)
+		$('#progressBar')[0].style.width = percent + '%';
+		$('#progressText')[0].textContent = toBeRendered + '/' + $rootScope.voronoi.gen_count;
 	}
 	$rootScope.progressBarOnHoverIn = function progressBarOnHoverIn(e){
 		p = $('#progressBar')[0];
 		p.savedProgressWidth = p.style.width;
 		p.savedProgressText = $('#progressText')[0].textContent;
-		p.removeEventListener(transitionEnd, p.waitForCSSAnimation);
 	}
 	$rootScope.progressBarOnMouseHoverOut = function progressBarOnMouseHoverOut(e){
 		p = $('#progressBar')[0];
 		p.style.width = p.savedProgressWidth;
 		$('#progressText')[0].textContent = p.savedProgressText;
-		p.addEventListener(transitionEnd, p.waitForCSSAnimation);
 	}
 
 	function waitForCSSAnimation(){
