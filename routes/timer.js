@@ -1,17 +1,5 @@
 const logger = require('./logger');
 
-//Used to clone a function
-Function.prototype.clone = function() {
-	var that = this;
-	var temp = function temporary() { return that.apply(this, arguments); };
-	for(var key in this) {
-		if (this.hasOwnProperty(key)) {
-			temp[key] = this[key];
-		}
-	}
-	return temp;
-};
-
 /**
  * Timer class - used to measure function execution time
  * @consturctor
@@ -26,13 +14,12 @@ function Timer(obj){
 							executionTime: 0, //in nanoseconds
 							count: 0
 						};
-						func = obj[fname];
+						let func = obj[fname];
 						let argumentList = '';
 						let i = 0;
-						let clonedFunc = func.clone();
 						obj[fname] = function(){
 							let start = process.hrtime();
-							ret = clonedFunc.apply(this, arguments);
+							ret = func.apply(this, arguments);
 							let diff = process.hrtime(start);
 							this.timer.add(fname, diff[0] * 1e9 + diff[1]);
 							return ret;
