@@ -1,4 +1,10 @@
 const logger = require('./logger');
+const Canvas = require('canvas');
+const canvas = new Canvas(800, 800);
+const ctx = canvas.getContext('2d');
+const Chart = require('nchart');
+const fs = require('fs');;
+
 
 Function.prototype.clone = function() {
   var that = this;
@@ -12,6 +18,7 @@ Function.prototype.clone = function() {
 };
 
 function Timer(obj){
+	this.colors = ['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'black', 'indigo'];
 	this.functions = {};
     for(let fname in obj) {
         if(typeof obj[fname] == "function") {
@@ -47,11 +54,16 @@ Timer.prototype.getExecTime = function(fname){
 Timer.prototype.getAllExecTime = function(){
 	let ret = [];
 	for (let i in this.functions){
+		if (isNaN(this.getExecTime(i)))
+			continue;
 		ret.push({
 			functionName: i,
 			execTime: this.getExecTime(i)
 		});
 	}
+	ret.sort(function(a,b){
+		return b.execTime - a.execTime;
+	})
 	return ret;
 }
 
@@ -60,6 +72,32 @@ Timer.prototype.printAllExecTime = function(){
 	for (let i = 0; i < time.length; ++i){
 		logger.debug('Name: ' + time[i].functionName + ' AvgExecTime: ' + time[i].execTime);
 	}
+} 
+
+Timer.prototype.printToPieChart = function(){
+	data = [];
+	time = this.getAllExecTime();
+	for (let i = 0; i < this.colors.length; ++i){
+		if (isNaN(time[i].execTime))
+			continue;
+		let exec = Math.floor(time[i].execTime*10e-6);
+		console.log(this.colors[i] + '\t' + exec + '\t\t' + time[i].functionName);
+		data.push({
+			value: exec,
+			color: this.colors[i]
+		});
+	}
+	new Chart(ctx).Pie(
+		data,
+		{
+			scaleShowValues: true,
+			scaleFontSize: 24
+		}
+	);
+	canvas.toBuffer(function (err, buf) {
+		if (err) throw err;
+		fs.writeFile(__dirname + '/../pie.png', buf);
+	});
 }
 
 module.exports = Timer;
