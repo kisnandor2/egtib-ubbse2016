@@ -1,56 +1,70 @@
 const logger = require('./logger');
-const Canvas = require('canvas');
-const canvas = new Canvas(800, 800);
-const ctx = canvas.getContext('2d');
-const Chart = require('nchart');
-const fs = require('fs');;
 
-
+//Used to clone a function
 Function.prototype.clone = function() {
-  var that = this;
-  var temp = function temporary() { return that.apply(this, arguments); };
-  for(var key in this) {
-    if (this.hasOwnProperty(key)) {
-      temp[key] = this[key];
-    }
-  }
-  return temp;
+	var that = this;
+	var temp = function temporary() { return that.apply(this, arguments); };
+	for(var key in this) {
+		if (this.hasOwnProperty(key)) {
+			temp[key] = this[key];
+		}
+	}
+	return temp;
 };
 
+/**
+ * Timer class - used to measure function execution time
+ * @consturctor
+ * @param {object} obj - any class that has functions
+ */
 function Timer(obj){
 	this.colors = ['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'black', 'indigo'];
 	this.functions = {};
-    for(let fname in obj) {
-        if(typeof obj[fname] == "function") {
-            this.functions[fname] = {
-            	executionTime: 0, //in nanoseconds
-            	count: 0
-            };
-            func = obj[fname];
-            let argumentList = '';
-            let i = 0;
-            let clonedFunc = func.clone();
-            obj[fname] = function(params){
-            	let start = process.hrtime();
-            	ret = clonedFunc.apply(this, arguments);
-            	let diff = process.hrtime(start);
-            	this.timer.add(fname, diff[0] * 1e9 + diff[1]);
-            	return ret;
-            }
-        }
-    }
-    logger.debug('Timer initialized');
+		for(let fname in obj) {
+				if(typeof obj[fname] == "function") {
+						this.functions[fname] = {
+							executionTime: 0, //in nanoseconds
+							count: 0
+						};
+						func = obj[fname];
+						let argumentList = '';
+						let i = 0;
+						let clonedFunc = func.clone();
+						obj[fname] = function(){
+							let start = process.hrtime();
+							ret = clonedFunc.apply(this, arguments);
+							let diff = process.hrtime(start);
+							this.timer.add(fname, diff[0] * 1e9 + diff[1]);
+							return ret;
+						}
+				}
+		}
+		logger.debug('Timer initialized');
 }
 
+/**
+ * Add the measured execution time to correct place
+ * @param {string} fname - name of the function
+ * @param {double} diff	 - the end-start diff that has to be added
+ */ 
 Timer.prototype.add = function(fname, diff) {
 	this.functions[fname].count++;
 	this.functions[fname].executionTime += diff;
 };
 
+/**
+ * Get the execution time of a function
+ * @param 	{string} fname - name of the function
+ * @returns {double}
+ */
 Timer.prototype.getExecTime = function(fname){
-	return this.functions[fname].executionTime / this.functions[fname].count;
+	return this.functions[fname].executionTime;// / this.functions[fname].count;
 }
 
+/**
+ * Get the exec time of all functions in decreasing order
+ * @returns {array}
+ */
 Timer.prototype.getAllExecTime = function(){
 	let ret = [];
 	for (let i in this.functions){
@@ -67,37 +81,63 @@ Timer.prototype.getAllExecTime = function(){
 	return ret;
 }
 
+/**
+ * Print the exec time of all functions in milliseconds
+ */
 Timer.prototype.printAllExecTime = function(){
 	let time = this.getAllExecTime();
 	for (let i = 0; i < time.length; ++i){
-		logger.debug('Name: ' + time[i].functionName + ' AvgExecTime: ' + time[i].execTime);
+		if (this.colors[i] == undefined){
+			this.colors.push('undef');
+		}
+		let exec = Math.floor(time[i].execTime*10e-6);
+		logger.debug(this.colors[i] + '\t' + exec + 'ms\t' + time[i].functionName);
 	}
-} 
+}
 
-Timer.prototype.printToPieChart = function(){
+/**
+ * Print the results to a PieChart
+ * Uses NChart and canvas - can't be used in windows
+ * @param {bool} draw - if true, it will create a drawing. Use false under WIN
+ */
+Timer.prototype.printToPieChart = function(draw){
 	data = [];
 	time = this.getAllExecTime();
-	for (let i = 0; i < this.colors.length; ++i){
+	var len = time.length;
+	if (draw){
+		len = this.colors.length;
+	}
+	this.printAllExecTime();
+	for (let i = 0; i < len; ++i){
 		if (isNaN(time[i].execTime))
 			continue;
+		if (this.colors[i] == undefined){
+			this.colors.push('undef');
+		}
 		let exec = Math.floor(time[i].execTime*10e-6);
-		console.log(this.colors[i] + '\t' + exec + '\t\t' + time[i].functionName);
 		data.push({
 			value: exec,
 			color: this.colors[i]
 		});
 	}
-	new Chart(ctx).Pie(
-		data,
-		{
-			scaleShowValues: true,
-			scaleFontSize: 24
-		}
-	);
-	canvas.toBuffer(function (err, buf) {
-		if (err) throw err;
-		fs.writeFile(__dirname + '/../pie.png', buf);
-	});
+	if (draw){
+		const Canvas = require('canvas');
+		const canvas = new Canvas(800, 800);
+		const ctx = canvas.getContext('2d');
+		const Chart = require('nchart');
+		const fs = require('fs');;
+		new Chart(ctx).Pie(
+			data,
+			{
+				scaleShowValues: true,
+				scaleFontSize: 24
+			}
+		);
+		canvas.toBuffer(function (err, buf) {
+			if (err) throw err;
+			fs.writeFile(__dirname + '/../pie.png', buf);
+		});
+	}
 }
 
 module.exports = Timer;
