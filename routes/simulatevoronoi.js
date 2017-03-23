@@ -2,7 +2,7 @@ const Voronoi = require('../public/javascripts/voronoi_core');
 const voronoi = new Voronoi();
 const logger = require('./logger');
 const e = Math.exp(1);
-const Timer = require('./timer');
+const Timer = require('../public/javascripts/timer');
 
 //TODO: check for better values
 const defaultSteepness = 2,

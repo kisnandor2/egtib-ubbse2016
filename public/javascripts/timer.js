@@ -1,4 +1,17 @@
-const logger = require('./logger');
+var runningInBrowser = true;
+
+if (typeof window === 'undefined') {
+	runningInBrowser = false;
+}
+
+var logger;
+
+try {
+	logger = require('../../routes/logger');
+}
+catch (error){
+	logger = console;
+}
 
 /**
  * Timer class - used to measure function execution time
@@ -6,7 +19,6 @@ const logger = require('./logger');
  * @param {object} obj - any class that has functions
  */
 function Timer(obj){
-	this.colors = ['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'black', 'indigo'];
 	this.functions = {};
 		for(let fname in obj) {
 				if(typeof obj[fname] == "function") {
@@ -17,12 +29,24 @@ function Timer(obj){
 						let func = obj[fname];
 						let argumentList = '';
 						let i = 0;
-						obj[fname] = function(){
-							let start = process.hrtime();
-							ret = func.apply(this, arguments);
-							let diff = process.hrtime(start);
-							this.timer.add(fname, diff[0] * 1e9 + diff[1]);
-							return ret;
+						if (runningInBrowser){
+							obj[fname] = function(){
+								let start = performance.now();
+								ret = func.apply(this, arguments);
+								let end = performance.now();
+								let diff = (end - start) * 1e6; //nanoseconds
+								this.timer.add(fname, diff);
+								return ret;
+							}
+						}
+						else{
+							obj[fname] = function(){
+								let start = process.hrtime();
+								ret = func.apply(this, arguments);
+								let diff = process.hrtime(start);
+								this.timer.add(fname, diff[0] * 1e9 + diff[1]);
+								return ret;
+							}
 						}
 				}
 		}
@@ -70,17 +94,36 @@ Timer.prototype.getAllExecTime = function(){
 
 /**
  * Print the exec time of all functions in milliseconds
+ * Also prints the colors used
  */
-Timer.prototype.printAllExecTime = function(){
+Timer.prototype.printAllExecTimeWithColors = function(){
 	let time = this.getAllExecTime();
 	for (let i = 0; i < time.length; ++i){
 		if (this.colors[i] == undefined){
 			this.colors.push('undef');
 		}
-		let exec = Math.floor(time[i].execTime*10e-6);
+		let exec = Math.floor(time[i].execTime*1e-6);
 		logger.debug(this.colors[i] + '\t' + exec + 'ms\t' + time[i].functionName);
 	}
 }
+
+/**
+ * Print the exec time of all functions in milliseconds
+ */
+Timer.prototype.printAllExecTime = function() {
+	let time = this.getAllExecTime();
+	for (let i = 0; i < time.length; ++i){
+		let exec = Math.floor(time[i].execTime*1e-6);
+		logger.debug(exec + 'ms\t' + time[i].functionName);
+	}
+};
+
+/**
+ * Initializes the colors used for drawing the piechart
+ */
+Timer.prototype.setColors = function() {
+	this.colors = ['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'black', 'indigo'];
+};
 
 /**
  * Print the results to a PieChart
@@ -89,12 +132,13 @@ Timer.prototype.printAllExecTime = function(){
  */
 Timer.prototype.printToPieChart = function(draw){
 	data = [];
+	this.setColors();
 	time = this.getAllExecTime();
 	var len = time.length;
 	if (draw){
 		len = this.colors.length;
 	}
-	this.printAllExecTime();
+	this.printAllExecTimeWithColors();
 	for (let i = 0; i < len; ++i){
 		if (isNaN(time[i].execTime))
 			continue;
@@ -127,4 +171,6 @@ Timer.prototype.printToPieChart = function(draw){
 	}
 }
 
-module.exports = Timer;
+if (!runningInBrowser){
+	module.exports = Timer;
+}
