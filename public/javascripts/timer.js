@@ -151,7 +151,7 @@ Timer.prototype.printToPieChart = function(draw){
 			color: this.colors[i]
 		});
 	}
-	if (draw){
+	if (draw && !runningInBrowser){
 		const Canvas = require('canvas');
 		const canvas = new Canvas(800, 800);
 		const ctx = canvas.getContext('2d');
