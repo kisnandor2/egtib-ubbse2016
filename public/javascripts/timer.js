@@ -83,7 +83,8 @@ Timer.prototype.getAllExecTime = function(){
 			continue;
 		ret.push({
 			functionName: i,
-			execTime: this.getExecTime(i)
+			execTime: this.getExecTime(i),
+			count: this.functions[i].count
 		});
 	}
 	ret.sort(function(a,b){
@@ -114,7 +115,7 @@ Timer.prototype.printAllExecTime = function() {
 	let time = this.getAllExecTime();
 	for (let i = 0; i < time.length; ++i){
 		let exec = Math.floor(time[i].execTime*1e-6);
-		logger.debug(exec + 'ms\t' + time[i].functionName);
+		logger.debug(time[i].count + '\t' + exec + 'ms\t' + time[i].functionName);
 	}
 };
 
