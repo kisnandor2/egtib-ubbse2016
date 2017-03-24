@@ -7,8 +7,8 @@
 
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
-	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
-  <script type="text/javascript" src="/javascripts/angularControllers.js"></script>
+	<script type="text/javascript" src="/javascripts/BaseVoronoi.js"></script>
+  <script type="text/javascript" src="/javascripts/angularSimulateWithoutDiagram.js"></script>
 
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -87,22 +87,6 @@
                 <input type="button" class="btn btn-default submit col-md-10" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
                 <input type="button" class="btn btn-default submit col-md-10" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
                 <div class="col-md-1"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="row">
-          <canvas id="canvas" resize></canvas>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="progress" id="progress">
-              <div class="progress-bar" id="progressBar" style="width:50%" ng-controller="progressBarController">
-                <strong>
-                  <span id="progressText">50%</span>
-                </strong>
               </div>
             </div>
           </div>
