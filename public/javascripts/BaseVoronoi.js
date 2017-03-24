@@ -33,6 +33,7 @@ class BaseVoronoi{
 		let productive = [],
 				nonproductive = [],
 				categories = [];
+		sitesList.unshift(this.sites);
 		for (let i = 0; i < sitesList.length; ++i){
 			categories.push(i);
 			let prod = this.getProductiveCount(sitesList[i]);
@@ -75,7 +76,7 @@ class BaseVoronoi{
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * Takes care of setting the sites, without manually calling the genBeeHive func
 	 */

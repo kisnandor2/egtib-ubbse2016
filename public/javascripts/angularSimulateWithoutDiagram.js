@@ -223,10 +223,13 @@ app.controller('simulationController', function($scope, $rootScope){
 			$scope.showDangerAlert();
 			return;
 		}
-		let generationCount = $('#generationCount')[0].value;
-		if (isNaN(generationCount)){
+		let generationCount;
+		try{
+			generationCount = parseInput($('#generationCount')[0].value);
+		}
+		catch (err){
 			$scope.showDangerAlert();
-			return;
+			return;	
 		}
 		let cooperatingCost;
 		try{
@@ -330,6 +333,10 @@ app.controller('simulationController', function($scope, $rootScope){
 		$("body").addClass("loading");
 		$('#panel').empty();
 		let voronois = getBaseVoronoiList();
+		if (voronois.length == 0){
+			$scope.showDangerAlert();
+			return;
+		}
 		$scope.recursiveSimulate(0, voronois);
 		$("body").removeClass("loading");
 	}
