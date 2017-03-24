@@ -1,5 +1,6 @@
 class AnimatableVoronoi extends BaseVoronoi{
 	/**
+	 * Extends BaseVoronoi
 	 * AnimatableVoronoi class used for rendering the voronoi graph, it's results to chart, and changing the progressBar
 	 * Maybe the chart and progressBar should be moved to a controller...?
 	 * @constructor

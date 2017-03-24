@@ -1,13 +1,8 @@
-/**
- * AnimatableVoronoi class used for rendering the voronoi graph, it's results to chart, and changing the progressBar
- * Maybe the chart and progressBar should be moved to a controller...?
- * @constructor
- * 
- * @param {view} 		view		- after paper.install this is accessible
- * @param {context} context	- canvas.context
- */
-
 class BaseVoronoi{
+	/**
+	 * BaseVoronoi class used for storing data
+	 * @constructor
+	 */
 	constructor(){
 		this.voronoi = new Voronoi();
 		this.sites = [];
