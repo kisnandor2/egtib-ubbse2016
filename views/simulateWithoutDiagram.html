@@ -29,7 +29,7 @@
       <div class="col-md-4"></div>
     </div>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-5">
         <div class="panel panel-default" ng-controller="parameterController">
           <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Set the parameters for the next run here</div>
           <div class="panel-body">
@@ -63,7 +63,7 @@
                   <label for="cooperatingCost" class="control-label">Cost of cooperative cells:</label>
                 </div>
                 <div class="col-sm-4">
-                  <input type="number" class="form-control" id="cooperatingCost" ng-model="cooperatingCost" ng-init="cooperatingCost=defaultCoopCost">
+                  <input type="text" class="form-control" id="cooperatingCost" ng-model="cooperatingCost" ng-init="cooperatingCost=defaultCoopCost">
                 </div>
               </div>
               <div class="form-group">
@@ -93,9 +93,7 @@
     <div class="row">
       <div class="panel panel-default">
         <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Statistics</div>
-        <div class="panel-body text-center" id="panel">
-          <div id="highChartsContainer0"></div>
-        </div>
+        <div class="panel-body text-center" id="panel"></div>
       </div>
     </div>
   </div>

@@ -75,7 +75,10 @@ class BaseVoronoi{
 		}
 		return ret;
 	}
-
+	
+	/**
+	 * Takes care of setting the sites, without manually calling the genBeeHive func
+	 */
 	generateNewSites(){
 		this.sites = this.generateBeeHivePoints(new paper.Size(Math.floor(Math.sqrt(this.totalNumberOfCells)), Math.ceil(Math.sqrt(this.totalNumberOfCells))), true)
 	}

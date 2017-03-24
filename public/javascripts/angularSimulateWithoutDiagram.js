@@ -89,41 +89,31 @@ app.controller('parameterController', function($scope, $timeout) {
 	$scope.successMessageDiv = $('#successMessage')[0];
 	$scope.$watch('totalNumberOfCells', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value <2 || value > 500;
-		}, function(){
-			$scope.voronoi.setTotalNumberOfCells(newVal);
+			return value < 2 || value > 2500;
 		})
 	})
 	$scope.$watch('percentOfDefectingCells', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
 			return value < 0 || value > 100;
-		}, function(value){
-			$scope.voronoi.setPercentOfDefectingCells(newVal);
 		})
 	})
 	$scope.$watch('generationCount', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
 			return value <= 0;
-		}, function(){
-			$scope.voronoi.setGen_Count(newVal);
 		})
 	})
 	$scope.$watch('cooperatingCost', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
 			return value < 0 || value > 1;
-		}, function(){
-			$scope.voronoi.setCoop_Cost(newVal);
 		})
 	})
 	$scope.$watch('distanceOfInteraction', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value < 0 || value > 5;
-		}, function(){
-			$scope.voronoi.setDist(newVal);
+			return value < 0 || value > 10;
 		})
 	})
 
-	function showAlerts(newVal, oldVal, condition, execute){
+	function showAlerts(newVal, oldVal, condition){
 		try{
 			for (let i = 0; i < $scope.successMessageDiv.childNodes.length; ++i)
 			$('.close')[i].click();
@@ -137,7 +127,6 @@ app.controller('parameterController', function($scope, $timeout) {
 			$scope.successMessageDiv.appendChild(dangerMessage[0]);
 		}
 		else if (newVal != oldVal){
-			execute();
 			var successMessage = [];
 			angular.copy([$scope.successMessage], successMessage);
 			$scope.successMessageDiv.appendChild(successMessage[0]);
@@ -156,6 +145,7 @@ app.controller('simulationController', function($scope, $rootScope){
 
 	$scope.addHighChartsWithData = function(i, {numberProductive, numberNonProductive, categories}){
 		let name = 'highChartsContainer' + i;
+		$('#panel').append('<div id="' + name + '"></div>');
 		let chart = Highcharts.chart(name, {
 			chart: {type: 'column'},
 			title: {text: 'Number of cells, over time'},
@@ -194,35 +184,153 @@ app.controller('simulationController', function($scope, $rootScope){
 		chart.xAxis[0].setCategories(categories);
 	}
 
-	$scope.simulate = function(){
+	$scope.showDangerAlert = function(){
+		try{
+			for (let i = 0; i < $scope.successMessageDiv.childNodes.length; ++i)
+			$('.close')[i].click();
+		}catch(error){}
+		var dangerMessage = [];
+		angular.copy([$scope.dangerMessage], dangerMessage);
+		$scope.successMessageDiv.appendChild(dangerMessage[0]);
+	}
+
+	function parseInput(value){
+		if (!isNaN(value))
+			return value;
+		let parsed = value.split(':');
+		if (parsed.length != 3)
+			throw "Incorrect input";
+		let from = parsed[0];
+		let to = parsed[2];
+		let step = parsed[1];
+		if (isNaN(from) || isNaN(to) || isNaN(step))
+			throw "Incorrect input";
+		return {
+			from,
+			to,
+			step
+		}
+	}
+
+	function getParameterValues(){
+		let totalNumberOfCells = $('#totalNumberOfCells')[0].value;
+		if (isNaN(totalNumberOfCells)){
+			$scope.showDangerAlert();
+			return;
+		}
+		let percentOfDefectingCells = $('#percentOfDefectingCells')[0].value;
+		if (isNaN(percentOfDefectingCells)){
+			$scope.showDangerAlert();
+			return;
+		}
+		let generationCount = $('#generationCount')[0].value;
+		if (isNaN(generationCount)){
+			$scope.showDangerAlert();
+			return;
+		}
+		let cooperatingCost;
+		try{
+			cooperatingCost = parseInput($('#cooperatingCost')[0].value);
+		}
+		catch (err){
+			$scope.showDangerAlert();
+			return;	
+		}
+		let distanceOfInteraction;
+		try {
+			distanceOfInteraction = parseInput($('#distanceOfInteraction')[0].value);
+		}
+		catch (err){
+			$scope.showDangerAlert();
+			return;
+		}
+		return {
+			totalNumberOfCells,
+			percentOfDefectingCells,
+			generationCount,
+			cooperatingCost,
+			distanceOfInteraction
+		}
+	}
+
+	function range({from, to, step}){
+		if (to == undefined){
+			return [arguments[0]];
+		}
+		let ret = [];
+		from = parseFloat(from);
+		to = parseFloat(to);
+		step = parseFloat(step);
+		if (to <= from){
+			return from;
+		}
+		for (let i = from; i <= to; i+=step){
+			ret.push(i);
+		}
+		return ret;
+	}
+
+	function getBaseVoronoiList(){
+		let voronois = [];
+		parameters = getParameterValues();
+		if (parameters == undefined)
+			return;
+		generationCount = range(parameters.generationCount);
+		cooperatingCost = range(parameters.cooperatingCost);
+		distanceOfInteraction = range(parameters.distanceOfInteraction);
+		$scope.voronoi.setTotalNumberOfCells(parameters.totalNumberOfCells);
+		$scope.voronoi.setPercentOfDefectingCells(parameters.percentOfDefectingCells);
 		$scope.voronoi.generateNewSites();
+		let sites = $scope.voronoi.getSites();
+		for (let i = 0; i < generationCount.length; ++i)
+			for (let j = 0; j < cooperatingCost.length; ++j)
+				for (let k = 0; k < distanceOfInteraction.length; ++k){
+					let voronoi = new BaseVoronoi();
+					voronoi.setTotalNumberOfCells(parameters.totalNumberOfCells);
+					voronoi.setPercentOfDefectingCells(parameters.percentOfDefectingCells);
+					voronoi.setGen_Count(generationCount[i]);
+					voronoi.setCoop_Cost(cooperatingCost[j]);
+					voronoi.setDist(distanceOfInteraction[k]);
+					voronoi.setSites(sites.slice());
+					voronois.push(voronoi);
+				}
+		return voronois;
+	}
+
+	$scope.recursiveSimulate = function(i, voronois){
+		if (i >= voronois.length)
+			return;
 		message = JSON.stringify({
-				bbox: $scope.voronoi.getBbox(),
-				sites: $scope.voronoi.getSites(),
-				gen_count: $scope.voronoi.getGen_Count(),
-				coop_cost: $scope.voronoi.getCoop_Cost(),
-				dist: $scope.voronoi.getDist(),
-				//send more data here
+			bbox: voronois[i].getBbox(),
+			sites: voronois[i].getSites(),
+			gen_count: voronois[i].getGen_Count(),
+			coop_cost: voronois[i].getCoop_Cost(),
+			dist: voronois[i].getDist(),
 		});
 		$scope.connection.send(message);
 		$scope.connection.onmessage = function(e) {
-			//If the websocket processed the information simulate on the server side
 			$.get("voronoi/data", function(data, textStatus, response){
 				if (response.responseText != 'ok'){
 					alert('error');
 				}
 			});
-			$("body").addClass("loading");
 			$scope.connection.onmessage = function(e) {
-				//Get results via the websocket
 				sitesList = JSON.parse(e.data);
-				for (let i = 0; i < sitesList.length; ++i){
-					sitesList[i] = $scope.voronoi.sitesBadFormatToPointFormat(sitesList[i]);
+				for (let j = 0; j < sitesList.length; ++j){
+					sitesList[j] = voronois[i].sitesBadFormatToPointFormat(sitesList[j]);
 				}
-				let data = $scope.voronoi.getSimulationResults(sitesList);
-				$scope.addHighChartsWithData(0, data);
-				$("body").removeClass("loading");
+				let data = voronois[i].getSimulationResults(sitesList);
+				$scope.addHighChartsWithData(i, data);
+				$scope.recursiveSimulate(i+1, voronois);
 			};
 		}
+	}
+
+	$scope.simulate = function(){
+		$("body").addClass("loading");
+		$('#panel').empty();
+		let voronois = getBaseVoronoiList();
+		$scope.recursiveSimulate(0, voronois);
+		$("body").removeClass("loading");
 	}
 });
