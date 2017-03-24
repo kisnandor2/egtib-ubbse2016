@@ -195,6 +195,7 @@ app.controller('simulationController', function($scope, $rootScope){
 	}
 
 	$scope.simulate = function(){
+		$scope.voronoi.generateNewSites();
 		message = JSON.stringify({
 				bbox: $scope.voronoi.getBbox(),
 				sites: $scope.voronoi.getSites(),

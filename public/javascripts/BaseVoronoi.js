@@ -76,6 +76,10 @@ class BaseVoronoi{
 		return ret;
 	}
 
+	generateNewSites(){
+		this.sites = this.generateBeeHivePoints(new paper.Size(Math.floor(Math.sqrt(this.totalNumberOfCells)), Math.ceil(Math.sqrt(this.totalNumberOfCells))), true)
+	}
+
 	/**
 	 * Generates a new voronoi diagram which has the shape of a BeeHive
 	 * It's a static size
