@@ -35,13 +35,13 @@ class BaseVoronoi{
 				categories = [];
 		for (let i = 0; i < sitesList.length; ++i){
 			categories.push(i);
-			let prod = getProductiveCount(sitesList[i]);
+			let prod = this.getProductiveCount(sitesList[i]);
 			productive.push(prod);
 			nonproductive.push(sitesList[i].length - prod);
 		}
 		return {
-			productive: productive,
-			nonproductive: nonproductive,
+			numberProductive: productive,
+			numberNonProductive: nonproductive,
 			categories: categories
 		}
 	}
@@ -86,8 +86,10 @@ class BaseVoronoi{
 	 */
 	generateBeeHivePoints(size, loose) {
 		//used to generate the sites[] for a window
+		let view = {};
+		view.size = new paper.Size(this.width/size.width, this.height/size.height);
 		let points = [];
-		let col = new paper.Size(this.width/size, this.height/size);
+		let col = view.size.divide(size);
 		for (let i = 0; i < size.width; i++) {
 			for (let j = 0; j < size.height; j++) {
 				let point = new paper.Point(i, j).divide(new paper.Point(size)).multiply(view.size).add(col.divide(2));
