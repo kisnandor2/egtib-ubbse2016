@@ -140,6 +140,36 @@ class AnimatableVoronoi extends BaseVoronoi{
 	}
 
 	/**
+	 * Generates a new voronoi diagram which has the shape of a BeeHive
+	 * It's not static anymore
+	 *
+	 * @param 	{int}	 	size 	- sqrt(how many cells needed)
+	 * @param 	{bool} 	loose	- if true, the cells are not so strictly displayed
+	 * @returns {array} sites
+	 */
+	generateBeeHivePoints(size, loose) {
+		let points = [];
+		let col = view.size.divide(size);
+		for (let i = 0; i < size.width; i++) {
+			for (let j = 0; j < size.height; j++) {
+				let point = new paper.Point(i, j).divide(new paper.Point(size)).multiply(view.size).add(col.divide(2));
+				if (j % 2)
+					point = point.add(new paper.Point(col.width / 2, 0));
+				if (loose)
+					point = point.add((col.divide(4)).multiply(paper.Point.random()).subtract(col.divide(4)));
+				let attrib = undefined;
+				if (Math.random() <= this.percentOfDefectingCells/100)
+					attrib = 'd';
+				else
+					attrib = 'c';
+				point.attrib = attrib;
+				points.push(point);
+			}
+		}
+		return points;
+	}
+
+	/**
 	 * Adds the data to chart and displays it
 	 * 
 	 * @param {array_of_sites} sitesList

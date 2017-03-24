@@ -14,15 +14,36 @@ class BaseVoronoi{
 		this.totalNumberOfCells = 0;
 		this.percentOfDefectingCells = 0;
 		this.cooperatingChance = 0.5;
+		this.height = 1000;
+		this.width = 1000;
 
 		this.chart = {};
 		this.sitesList = [];
 		this.bbox = {
 			xl: 0,
-			xr: 1000,
+			xr: this.height,
 			yt: 0,
-			yb: 1000
+			yb: this.width
 		};
+	}
+	/**
+	 * Get the productive, nonproductive and categories list to be rendered on a chart
+	 */
+	getSimulationResults(sitesList){
+		let productive = [],
+				nonproductive = [],
+				categories = [];
+		for (let i = 0; i < sitesList.length; ++i){
+			categories.push(i);
+			let prod = getProductiveCount(sitesList[i]);
+			productive.push(prod);
+			nonproductive.push(sitesList[i].length - prod);
+		}
+		return {
+			productive: productive,
+			nonproductive: nonproductive,
+			categories: categories
+		}
 	}
 	/**
 	 * How many 'c' cell are in the current list
@@ -57,6 +78,7 @@ class BaseVoronoi{
 
 	/**
 	 * Generates a new voronoi diagram which has the shape of a BeeHive
+	 * It's a static size
 	 *
 	 * @param 	{int}	 	size 	- sqrt(how many cells needed)
 	 * @param 	{bool} 	loose	- if true, the cells are not so strictly displayed
@@ -65,7 +87,7 @@ class BaseVoronoi{
 	generateBeeHivePoints(size, loose) {
 		//used to generate the sites[] for a window
 		let points = [];
-		let col = view.size.divide(size);
+		let col = new paper.Size(this.width/size, this.height/size);
 		for (let i = 0; i < size.width; i++) {
 			for (let j = 0; j < size.height; j++) {
 				let point = new paper.Point(i, j).divide(new paper.Point(size)).multiply(view.size).add(col.divide(2));
