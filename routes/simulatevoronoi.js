@@ -183,15 +183,24 @@ SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInt
 			shiftOnY = 0;
 		}
 		//Acutal dividing
+		let cost;
+		if (actualPoint.attrib == 'c'){
+			cost = this.cooperatingCost;
+		}
+		else{
+			cost = this.defectingCost;
+		}
 		newPoint1 = {
 			x: actualPoint.x - shiftOnX,
 			y: actualPoint.y - shiftOnY,
-			attrib: actualPoint.attrib
+			attrib: actualPoint.attrib,
+			cost: cost
 		}
 		newPoint2 = {
 			x: actualPoint.x + shiftOnX,
 			y: actualPoint.y + shiftOnY,
-			attrib: actualPoint.attrib
+			attrib: actualPoint.attrib,
+			cost: cost
 		}
 		//Change color! Only one of them may change it's color
 		if (Math.random() < this.colorChangeChance){
