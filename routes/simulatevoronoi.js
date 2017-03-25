@@ -1,6 +1,8 @@
 const Voronoi = require('../public/javascripts/voronoi_core');
 const voronoi = new Voronoi();
 const logger = require('./logger');
+const MyRandomGenerator = require('./MyRandomGenerator');
+const myRandomGenerator = new MyRandomGenerator();
 const e = Math.exp(1);
 
 //TODO: check for better values
@@ -11,7 +13,7 @@ const defaultSteepness = 2,
 	d = 0,	//??? constant
 	z = 20, //??? constant
 	G = [],	//gradient array
-	alfa = 0.5; //dividing chance constant
+	alfa = 100; //dividing chance constant
 
 const defaultCooperatingCost = 0.5,
 	defaultDefectingCost = 0;
@@ -36,12 +38,26 @@ function SimulateVoronoi() {
 	this.dist               = defaultDist;
 
 	this.colorChangeChance	= 0.02;
-	this.dividingChance			= 0.1;
+	this.dividingChance			= 0.02;
 	this.deathChance				= 0.01;
 
 	this.d = this.dist * shapeOfDif;
 
 	logger.debug("new SimulateVoronoi created");
+}
+
+/**
+ * Initialize the randomGenerator based on ID
+ * Used for generating the same simulation as many times as needed with different parameters
+ * @param {int} randomGeneratorID
+ * @returns {randomGenerator}
+ */
+SimulateVoronoi.prototype.swtichRandomGenerator = function(randomGeneratorID) {
+	if (randomGeneratorID == 1){
+		myRandomGenerator.lastIndex = 0;
+		return myRandomGenerator;
+	}
+	return Math;
 }
 
 /**
@@ -53,7 +69,7 @@ function SimulateVoronoi() {
  * @param {float} coop_cost - Cost of a cooperating cell(between 0 and 1)
  * @param {int} dist 				- Distance of interaction used in the simulation
  */
-SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, dist }) {
+SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, dist, randomGeneratorID }) {
 	logger.info('Init voronoi from the client data');
 	logger.debug('Client data: ', {sites_count: sites.length, bbox, gen_count, coop_cost, dist});
 
@@ -63,6 +79,7 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.cooperatingCost = coop_cost;
 	this.dist = dist;
 	this.d = this.dist * shapeOfDif;
+	this.randomGenerator = this.swtichRandomGenerator(randomGeneratorID);
 
 	try {
 		for (let i = 0; i < sites.length; ++i) {
@@ -103,7 +120,7 @@ SimulateVoronoi.prototype.simulate = function() {
 						//Select a random neighbor and change payoffs if needed
 						actualPoint = this.sites[i];
 						let neighbors = this.getNeighbors(sitesBeforeChange[i]);
-						let rand = Math.round(Math.random() * (neighbors.length-1));
+						let rand = Math.round(this.randomGenerator.random() * (neighbors.length-1));
 						try {
 								if (neighbors[rand].payoff > actualPoint.payoff) {
 										actualPoint.attrib = neighbors[rand].attrib;
@@ -122,15 +139,32 @@ SimulateVoronoi.prototype.simulate = function() {
 				}
 				//Create a copy of this generation and push it to results
 				this.sites = sitesAfterSplit;
-				this.diagram = voronoi.compute(this.sites, this.bbox);
+				try{
+					this.diagram = voronoi.compute(this.sites, this.bbox);
+				}				
+				catch (err){
+					logger.error(err);
+					break;
+				}
 				this.reCalculateSites();
 				this.initNeighborMatrix();
 				this.setPayoffs();
 				ret.push(JSON.parse(JSON.stringify(this.sites)));
+				// if (this.areAllCellsDefecting()){
+				// 	break;
+				// }
 		}
 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
 		return ret;
 };
+
+SimulateVoronoi.prototype.areAllCellsDefecting = function(){
+	for (let i = 0; i < this.sites.length; ++i){
+		if (this.sites[i].attrib == 'c')
+			return false;
+	}
+	return true;
+}
 
 /**
  * Checks if a cell will die(it's random at the moment with a small chance to die)
@@ -139,7 +173,7 @@ SimulateVoronoi.prototype.simulate = function() {
  * @returns {bool} - true if a cell dies, false if not
  */
 SimulateVoronoi.prototype.killCell = function(point){
-	if (Math.random() < this.deathChance)
+	if (this.randomGenerator.random() < this.deathChance)
 		return true;
 	return false;
 }
@@ -153,6 +187,7 @@ SimulateVoronoi.prototype.killCell = function(point){
  */
 SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors){
 	//Check if division is needed
+	console.log(alfa*actualPoint.payoff);
 	if (alfa * actualPoint.payoff < this.dividingChance) {
 		//Find X coordinate to divide
 		var min = 9999;
@@ -183,15 +218,24 @@ SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInt
 			shiftOnY = 0;
 		}
 		//Acutal dividing
+		let cost;
+		if (actualPoint.attrib == 'c'){
+			cost = this.cooperatingCost;
+		}
+		else{
+			cost = this.defectingCost;
+		}
 		newPoint1 = {
 			x: actualPoint.x - shiftOnX,
 			y: actualPoint.y - shiftOnY,
-			attrib: actualPoint.attrib
+			attrib: actualPoint.attrib,
+			cost: cost
 		}
 		newPoint2 = {
 			x: actualPoint.x + shiftOnX,
 			y: actualPoint.y + shiftOnY,
-			attrib: actualPoint.attrib
+			attrib: actualPoint.attrib,
+			cost: cost
 		}
 		//Change color! Only one of them may change it's color
 		if (Math.random() < this.colorChangeChance){
@@ -256,6 +300,11 @@ SimulateVoronoi.prototype.setPayoffs = function() {
 		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
 		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
 		actualPoint.payoff = this.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
+		if (isNaN(actualPoint.payoff)){
+			console.log(actualPoint);
+			console.log(neighborsCount);
+			console.log(cooperatingNeighbors);
+		}
 	}
 }
 
@@ -455,5 +504,11 @@ SimulateVoronoi.prototype.deathChance = function(time) {
 	//TODO: this should be a function, not random
 	return Math.random();
 }
+
+/**
+ * Export the randomGenerator to be accessed from the route
+ */
+
+SimulateVoronoi.myRandomGenerator = myRandomGenerator;
 
 module.exports = SimulateVoronoi;
