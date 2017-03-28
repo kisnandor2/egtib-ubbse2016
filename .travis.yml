@@ -1,10 +1,6 @@
 # sudo is required for Docker calls
 sudo: required
 
-branches: 
-  only:
-    - master
-
 # mark our language as Python
 language: node_js
 
