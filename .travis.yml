@@ -4,19 +4,19 @@ sudo: required
 # mark our language as Python
 language: node_js
 node_js:
-	- "7"
+  - "7"
 
 # add dependent services
 services:
-	- docker
+  - docker
 
 before_script:
-	- npm install 
+  - npm install 
 
 # run the tests
 script:
-	- ./test.sh
+  - ./test.sh
 
-# if build passed, deploy	
+# if build passed, deploy 
 after_success:
-	- ./deploy.sh
+  - ./deploy.sh
