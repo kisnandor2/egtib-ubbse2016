@@ -15,7 +15,7 @@ catch (error){
 
 /**
  * Timer class - used to measure function execution time
- * @consturctor
+ * @constructor
  * @param {object} obj - any class that has functions
  */
 function Timer(obj){

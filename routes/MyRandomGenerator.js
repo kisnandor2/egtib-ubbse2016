@@ -1,6 +1,6 @@
 /**
  * Saves all the random numbers across multiple simulations in order to be reused
- * @consturctor
+ * @constructor
  */
 function MyRandomGenerator(){
 	this.randomList = [];
