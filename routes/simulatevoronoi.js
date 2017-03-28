@@ -189,7 +189,6 @@ SimulateVoronoi.prototype.killCell = function(point){
  */
 SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors){
 	//Check if division is needed
-	console.log(alfa*actualPoint.payoff);
 	if (alfa * actualPoint.payoff < this.dividingChance) {
 		//Find X coordinate to divide
 		var min = 9999;
@@ -302,11 +301,6 @@ SimulateVoronoi.prototype.setPayoffs = function() {
 		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
 		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
 		actualPoint.payoff = this.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
-		if (isNaN(actualPoint.payoff)){
-			console.log(actualPoint);
-			console.log(neighborsCount);
-			console.log(cooperatingNeighbors);
-		}
 	}
 }
 
