@@ -3,14 +3,20 @@ sudo: required
 
 # mark our language as Python
 language: node_js
+node_js:
+	- "7"
 
 # add dependent services
 services:
-  - docker
+	- docker
 
-# main script
-# for the push to work, the variables below must be set
-# pushes to Heroku registry, app goes live from there
+before_script:
+	- npm install 
+
+# run the tests
 script:
-  - ./test.sh
-  - ./deploy.sh
+	- ./test.sh
+
+# if build passed, deploy	
+after_success:
+	- ./deploy.sh
