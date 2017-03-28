@@ -465,4 +465,6 @@ SimulateVoronoi.prototype.deathChance = function(time) {
 	return Math.random();
 }
 
+SimulateVoronoi.logger = logger;
+
 module.exports = SimulateVoronoi;
