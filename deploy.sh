@@ -7,4 +7,4 @@ if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
 	exit 0
 fi
 
-echo "Not on master branch, no deploy needed"
+echo "Not on master branch, no deploy needed!"
