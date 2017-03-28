@@ -4,6 +4,7 @@
 }
 html, body{
     height: 100%;
+	font-color: #00293c;
 }
 .captionText{
 	font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
@@ -11,3 +12,46 @@ html, body{
 	font-size: 1.5em;
 	letter-spacing: 0.1em;
 }
+
+
+.navbar-fixed-top {
+	background-color: #ffffff;
+	border-bottom: none;
+}
+
+.page-heading { 
+	position: relative;
+	padding: 30px 15px;
+	text-align: center;
+	margin-top: 0px;
+	color: rgba(255, 255, 255, 0.5);
+	background-color: #1e656d; 
+	margin-bottom: 30px;
+	font-size: 20px;
+}
+.page-heading h1 { 
+	margin-top: 0;
+	color: white;
+}
+.page-heading p {
+	margin-bottom: 0;
+	line-height: 1.4;
+}
+.page-heading .container { 
+	position: relative;
+}
+
+
+ul.nav li a, ul.nav li a:visited, a.navbar-brand{
+    color: #00293c !important;
+}
+
+ul.nav li a:hover{
+    color: #f62a00 !important;
+}
+
+ul.nav li.active a {
+    color: #00293c !important;
+    background-color: #ffffff !important;
+}
+
