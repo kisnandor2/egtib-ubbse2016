@@ -13,7 +13,7 @@ const defaultSteepness = 2,
 	d = 0,	//??? constant
 	z = 20, //??? constant
 	G = [],	//gradient array
-	alfa = 100; //dividing chance constant
+	alfa = 0.1; //dividing chance constant
 
 const defaultCooperatingCost = 0.5,
 	defaultDefectingCost = 0;
@@ -60,6 +60,16 @@ SimulateVoronoi.prototype.swtichRandomGenerator = function(randomGeneratorID) {
 	return Math;
 }
 
+SimulateVoronoi.prototype.getDividingChance = function(time){
+	let K = this.x0 * 2;
+	let x0 = this.x0;
+	let numberOfCellsWeWant = Math.ceil(K*(Math.pow(x0/K,Math.pow(e,-alfa*time))));
+	console.log(numberOfCellsWeWant);
+	let chance = numberOfCellsWeWant / this.sites.length - 1;
+	console.log(chance);
+	return chance;
+}
+
 /**
  * Builds up a SimulateVoronoi from client data
  *
@@ -98,6 +108,7 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 			})
 		}
 
+		this.x0 = this.sites.length;
 		this.Vn = this.V(this.sites.length);
 		this.diagram = voronoi.compute(this.sites, this.bbox);
 		this.calculateDiffGradient();
@@ -115,6 +126,7 @@ SimulateVoronoi.prototype.simulate = function() {
 		var ret = [];
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
+				let divChance = this.getDividingChance(j+1);
 				let sitesBeforeChange = this.sites.slice(0);
 				for (let i = 0; i < this.sites.length; ++i) {
 						//Select a random neighbor and change payoffs if needed
@@ -133,9 +145,9 @@ SimulateVoronoi.prototype.simulate = function() {
 						}
 
 						//Divide the i'th cell if won't die
-						if (!this.killCell(actualPoint)){
-							this.divideCell(actualPoint, sitesAfterSplit, neighbors);
-						}
+						// if (!this.killCell(actualPoint)){
+							this.divideCell(actualPoint, sitesAfterSplit, neighbors, divChance);
+						// }
 				}
 				//Create a copy of this generation and push it to results
 				this.sites = sitesAfterSplit;
@@ -185,10 +197,9 @@ SimulateVoronoi.prototype.killCell = function(point){
  * @param {array} listToBeInsertedInto - the new points are inserted in this array
  * @param {array} neighbors 					 - the neighbors of the point(used for calculating the new points)
  */
-SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors){
+SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors, divChance){
 	//Check if division is needed
-	console.log(alfa*actualPoint.payoff);
-	if (alfa * actualPoint.payoff < this.dividingChance) {
+	if (this.randomGenerator.random() < divChance) {
 		//Find X coordinate to divide
 		var min = 9999;
 			shiftOnX = 0,
