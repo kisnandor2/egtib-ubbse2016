@@ -16,10 +16,5 @@ services:
 # for the push to work, the variables below must be set
 # pushes to Heroku registry, app goes live from there
 script:
-  # Put testing here
-  # login to Heroku registry
-  - docker login -u="$DOCKER_USERNAME" -p="$api_key" registry.heroku.com
-  # build Docker image
-  - docker build -t registry.heroku.com/egtib/web .
-  # push Docker image to Heroku registry
-  - docker push registry.heroku.com/egtib/web
+  - ./test.sh
+  - ./deploy.sh
