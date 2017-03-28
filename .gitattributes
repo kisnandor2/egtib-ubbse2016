@@ -1,2 +1,0 @@
-./deploy.sh eol=lf
-./test.sh eol=lf
