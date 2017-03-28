@@ -1,6 +1,6 @@
 var app = angular.module('myApp', []);
 
-app.controller('animatableVoronoiController', function($scope, $rootScope) {
+app.controller('baseVoronoiController', function($scope, $rootScope) {
 	initVoronoi();
 	initAlertBoxes();
 	initWebSocket();
@@ -223,13 +223,10 @@ app.controller('simulationController', function($scope, $rootScope){
 			$scope.showDangerAlert();
 			return;
 		}
-		let generationCount;
-		try{
-			generationCount = parseInput($('#generationCount')[0].value);
-		}
-		catch (err){
+		let generationCount = $('#generationCount')[0].value;
+		if (isNaN(generationCount)){
 			$scope.showDangerAlert();
-			return;	
+			return;
 		}
 		let cooperatingCost;
 		try{
@@ -309,6 +306,7 @@ app.controller('simulationController', function($scope, $rootScope){
 			gen_count: voronois[i].getGen_Count(),
 			coop_cost: voronois[i].getCoop_Cost(),
 			dist: voronois[i].getDist(),
+			randomGeneratorID: 1,
 		});
 		$scope.connection.send(message);
 		$scope.connection.onmessage = function(e) {
@@ -338,6 +336,12 @@ app.controller('simulationController', function($scope, $rootScope){
 			return;
 		}
 		$scope.recursiveSimulate(0, voronois);
+		//reset the randomGenerator
+		$.get("voronoi/reset", function(data, textStatus, response){
+			if (response.responseText != 'ok'){
+				alert('error');
+			}
+		});
 		$("body").removeClass("loading");
 	}
 });
