@@ -43,7 +43,7 @@ function SimulateVoronoi() {
 	this.d = this.dist * shapeOfDif;
 
 	logger.debug("new SimulateVoronoi created");
-	this.timer = new Timer(this);
+	// this.timer = new Timer(this);
 }
 
 /**

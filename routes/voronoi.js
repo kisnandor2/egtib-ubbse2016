@@ -23,7 +23,6 @@ router.get('/data', function(req, res) {
 		server.sendData(JSON.stringify("error"));
 		res.status(200).send('error');
 	}
-	v.timer.printAllExecTime();
 });
 
 module.exports = {

@@ -119,21 +119,16 @@ Timer.prototype.printAllExecTime = function() {
 	}
 };
 
-/**
- * Initializes the colors used for drawing the piechart
- */
-Timer.prototype.setColors = function() {
-	this.colors = ['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'black', 'indigo'];
-};
 
 /**
+ * NOT USED!! No need to check it
  * Print the results to a PieChart
  * Uses NChart and canvas - can't be used in windows
  * @param {bool} draw - if true, it will create a drawing. Use false under WIN
  */
 Timer.prototype.printToPieChart = function(draw){
 	data = [];
-	this.setColors();
+	this.colors = ['red', 'blue', 'yellow', 'green', 'purple', 'pink', 'black', 'indigo'];
 	time = this.getAllExecTime();
 	var len = time.length;
 	if (draw){

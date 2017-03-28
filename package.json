@@ -28,8 +28,4 @@
     "nunjucks": "^3.0.0",
     "ws": "^1.1.1"
   },
-  "devDependencies": {
-    "canvas": "^1.6.5",
-    "nchart": "^1.0.1"
-  }
 }
