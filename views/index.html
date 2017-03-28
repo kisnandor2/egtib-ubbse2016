@@ -1,0 +1,52 @@
+{% extends "basePage.html" %}
+
+{% block head %}
+	<link rel="stylesheet" href="/stylesheets/index2.css"></style>
+	<script type="text/javascript">
+		window.onload = function(){
+			$('.pic').on('mouseenter', function(){
+				this.style.filter = 'none';
+			});
+			$('.pic').on('mouseleave', function(){
+				this.style.filter = 'grayscale(70%)';
+			});
+		}
+	</script>
+
+
+{% endblock %}
+
+{% block body %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-8">
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+			</p>
+		</div>
+		<div class="col-md-4">
+			<div class="thumbnail">
+				<a href="/simulateWithDiagram">
+					<img class="pic img-responsive" src="/images/diagram.jpg">
+				</a>
+				<div class="caption text-center captionText">Simulate using the diagrams, but limited parameters</div>	
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor 
+			</p>
+		</div>
+		<div class="col-md-4">
+			<div class="thumbnail">
+				<a href="/simulateWithoutDiagram">
+					<img class="pic img-responsive" src="/images/chart.jpeg">
+				</a>
+				<div class="caption text-center captionText">Simulate without diagram, but larger parameter choice</div>	
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

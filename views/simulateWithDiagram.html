@@ -1,0 +1,130 @@
+{% extends "basePage.html" %}
+
+{% block head %}
+	<title> Simulation </title>
+	<link rel="stylesheet" href="/stylesheets/loading_clock.css">
+  <link rel="stylesheet" href="/stylesheets/simulateWithDiagram.css">
+
+	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
+	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
+	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
+  <script type="text/javascript" src="/javascripts/angularControllers.js"></script>
+  <script type="text/javascript" src="/javascripts/timer.js"></script>
+
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% block body %}
+<div ng-app="myApp">
+<div class="section" ng-controller="animatableVoronoiController">
+  <div class="container" style="width:95%;">
+    <div class="row" id="successMessageRow">
+      <div class="col-md-4"></div>
+      <strong>
+      <div class="col-md-4" id="successMessage"></div>
+      </strong>
+      <div class="col-md-4"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="panel panel-default" ng-controller="parameterController">
+          <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Set the parameters for the next run here</div>
+          <div class="panel-body">
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="totalNumberOfCells" class="control-label">Total number of cells:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control" id="totalNumberOfCells" min="0" ng-model="totalNumberOfCells" ng-init="totalNumberOfCells=defaultCellCount">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="percentOfDefectingCells" class="control-label">Percent of defecting cells:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control" id="percentOfDefectingCells" min="0" ng-model="percentOfDefectingCells" ng-init="percentOfDefectingCells=defaultNonProductiveCellCount">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="generationCount" class="control-label">Number of generations:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="text" min="0" class="form-control" id="generationCount" ng-model="generationCount" ng-init="generationCount=defaultGenerationCount">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="cooperatingCost" class="control-label">Cost of cooperative cells:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control" id="cooperatingCost" ng-model="cooperatingCost" ng-init="cooperatingCost=defaultCoopCost">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="distanceOfInteraction" class="control-label">Distance of interaction:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="text" min="1" max="4" class="form-control" id="distanceOfInteraction" ng-model="distanceOfInteraction" ng-init="distanceOfInteraction=defaultDistanceOfInteraction">
+                </div>
+              </div>
+            </form>
+            <div class="row" ng-controller="simulationController">
+              <div class="row">
+                <div class="col-md-1"></div>
+                <input type="button" class="btn btn-default submit col-md-10" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
+                <div class="col-md-1"></div>
+              </div>
+              <div class="row">
+                <div class="col-md-1"></div>
+                <input type="button" class="btn btn-default submit col-md-10" value="Start the simulation" id="startSimulation" ng-click="simulate()">
+                <input type="button" class="btn btn-default submit col-md-10" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
+                <input type="button" class="btn btn-default submit col-md-10" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="row">
+          <canvas id="canvas" resize></canvas>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="progress" id="progress">
+              <div class="progress-bar" id="progressBar" style="width:50%" ng-controller="progressBarController">
+                <strong>
+                  <span id="progressText">50%</span>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="section" ng-controller="highChartsController">
+  <div class="container">
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Statistics</div>
+        <div class="panel-body text-center">
+          <div id="highChartsContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="loading_clock"></div>
+{% endblock %}

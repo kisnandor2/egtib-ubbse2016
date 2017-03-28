@@ -3,6 +3,7 @@
 	<title>EGTB - EvolutionAndStuff</title>
 
 	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+	<link rel="stylesheet" href="/stylesheets/index.css">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -23,15 +24,22 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class='navbar-brand' href="/home">EvolutionAndStuff</a>
+					<a class='navbar-brand' href="/index">EvolutionAndStuff</a>
 				</div>
 				<div class='collapse navbar-collapse' id="myNavbar">
 					<ul class='nav navbar-nav'>
-						<li {% if active=='home' %} class='active' {% endif %}>
-							<a href='/home'>Home</a>
-						</li>
 						<li {% if active=='index' %} class='active' {% endif %}>
-							<a href='#'>More to come...</a>
+							<a href='/index'>Home</a>
+						</li>
+						<li {% if active=='simulateWithDiagram' %} class='active' {% endif %} class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Visualize<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href='/simulateWithDiagram'>Voronoi1</a></li>
+								<li><a href='/simulateWithDiagram'>Voronoi2</a></li>
+							</ul>
+						</li>
+						<li {% if active=='simulateWithoutDiagram' %} class='active' {% endif %}>
+							<a href='/simulateWithoutDiagram'>Simulate</a>
 						</li>
 					</ul>
 				</div>
@@ -41,14 +49,16 @@
 
 	{% block body %}
 	{% endblock %}
-	<div class="section">
-		<div class="container">
-			<div class="row">
-				<span class="pull-left">This webpage was created on 2017.03.16.</span>
-				<span class="pull-right">©EvolutionAndStuff</span>
+	<footer class="footer">
+		<div class="section">
+			<div class="container">
+				<div class="row">
+					<span class="pull-left">This webpage was created on 2017.03.16.</span>
+					<span class="pull-right">©EvolutionAndStuff</span>
+				</div>
 			</div>
 		</div>
-	</div>
+	</footer>
 
 </body>
 </html>

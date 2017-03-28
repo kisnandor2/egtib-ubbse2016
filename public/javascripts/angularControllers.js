@@ -19,6 +19,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		$scope.voronoi = new AnimatableVoronoi(view, context);
 
 		var voronoi = $scope.voronoi;
+
 		//Distance of interaction
 		$scope.defaultDistanceOfInteraction = 1;
 		voronoi.setDist($scope.defaultDistanceOfInteraction);

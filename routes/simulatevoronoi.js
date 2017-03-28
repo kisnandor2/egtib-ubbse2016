@@ -2,6 +2,7 @@ const Voronoi = require('../public/javascripts/voronoi_core');
 const voronoi = new Voronoi();
 const logger = require('./logger');
 const e = Math.exp(1);
+const Timer = require('../public/javascripts/timer');
 
 //TODO: check for better values
 const defaultSteepness = 2,
@@ -42,6 +43,7 @@ function SimulateVoronoi() {
 	this.d = this.dist * shapeOfDif;
 
 	logger.debug("new SimulateVoronoi created");
+	// this.timer = new Timer(this);
 }
 
 /**
