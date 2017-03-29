@@ -1,9 +1,13 @@
 # sudo is required for Docker calls
 sudo: required
+# get chrome for E2E tests
 addons:
-  firefox: latest
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable fluxbox
 
-# mark our language as Python
 language: node_js
 node_js:
   - "7"
