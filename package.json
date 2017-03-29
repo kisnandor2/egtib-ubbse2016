@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "mocha || node .\\node_modules\\mocha\\bin\\mocha"
+    "test": "mocha || node .\\node_modules\\mocha\\bin\\mocha",
+    "test_e2e": "testcafe chrome test_e2e/"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "testcafe": "^0.14.0"
   }
 }
