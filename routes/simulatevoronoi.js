@@ -5,6 +5,9 @@ const MyRandomGenerator = require('./MyRandomGenerator');
 const myRandomGenerator = new MyRandomGenerator();
 const e = Math.exp(1);
 const Timer = require('../public/javascripts/timer');
+const fs = require('fs');
+
+
 
 //TODO: check for better values
 const defaultSteepness = 2,
@@ -66,9 +69,7 @@ SimulateVoronoi.prototype.getDividingChance = function(time){
 	let K = this.x0 * 2;
 	let x0 = this.x0;
 	let numberOfCellsWeWant = Math.ceil(K*(Math.pow(x0/K,Math.pow(e,-alfa*time))));
-	console.log(numberOfCellsWeWant);
 	let chance = numberOfCellsWeWant / this.sites.length - 1;
-	console.log(chance);
 	return chance;
 }
 
@@ -146,10 +147,7 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
 
-						//Divide the i'th cell if won't die
-						// if (!this.killCell(actualPoint)){
-							this.divideCell(actualPoint, sitesAfterSplit, neighbors, divChance);
-						// }
+						this.divideCell(actualPoint, sitesAfterSplit, neighbors, divChance);
 				}
 				//Create a copy of this generation and push it to results
 				this.sites = sitesAfterSplit;
@@ -163,12 +161,14 @@ SimulateVoronoi.prototype.simulate = function() {
 				this.reCalculateSites();
 				this.initNeighborMatrix();
 				this.setPayoffs();
-				ret.push(JSON.parse(JSON.stringify(this.sites)));
+				thisGenerationSites = this.sites.map(val => Object.assign({}, val)); //copy the sites list, and push it into the array
+				ret.push(thisGenerationSites);
 				// if (this.areAllCellsDefecting()){
 				// 	break;
 				// }
 		}
 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
+		this.saveSimulationData(ret);
 		return ret;
 };
 
@@ -181,6 +181,7 @@ SimulateVoronoi.prototype.areAllCellsDefecting = function(){
 }
 
 /**
+ * NOT USED!!!
  * Checks if a cell will die(it's random at the moment with a small chance to die)
  *
  * @param 	{cell} point
@@ -435,6 +436,54 @@ SimulateVoronoi.prototype.getNeighborsCount = function(index) {
 }
 
 /**
+ * Returns the count of cooperating cells in sites
+ * @param 	{array} sites
+ * @returns {int}
+ */
+SimulateVoronoi.prototype.getCooperatingCount = function(sites){
+	let cooperatingSites = sites.filter(site => site.attrib == 'c');
+	return cooperatingSites.length;
+}
+
+/**
+ * Saves the current simulation results to the simulation.json file
+ * @param {arrayOfarrays} - the `ret` from the simulation
+ */
+SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
+	let coopAndDef = [];
+	for (let i = 0; i < sitesList.length; ++i){
+		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
+		let defectingCount = sitesList[i].length - cooperatingCount;
+		coopAndDef.push({
+			cooperating: cooperatingCount,
+			defecting: defectingCount
+		})
+	}
+	let params = {
+		generationCount: this.generationCount,
+		cooperating: this.cooperatingCost,
+		dist: this.dist, 
+		results: coopAndDef
+	}
+	fs.readFile('simulation.json', 'utf8', function readFileCallback(err, data){
+		if (err){
+			logger.error(err);
+			return;
+		}
+		try {
+			obj = JSON.parse(data); //now it an object
+		}
+		catch(err){
+			logger.error(err);
+			obj = [];
+		}
+		obj.push(params);
+		json = JSON.stringify(obj); //convert it back to json
+		fs.writeFile('simulation.json', json, 'utf8', ()=>{}); // write it back 
+	});
+}
+
+/**
  * Counts the cooperating neighbors of a point/site/cell
  * Distance is taken in consideration
  * 
@@ -491,26 +540,6 @@ SimulateVoronoi.prototype.calculateDiffGradient = function() {
  */
 SimulateVoronoi.prototype.g = function(i) {
 	return 1 / (1 + Math.pow(e, (-z * (i - this.d) / this.dist)));
-}
-
-/**
- * Calculates the dividing chance
- * @param 	{int} time - as time progresses ahead so does the function value change
- * @returns {float} 	 - value between [0,1]
- */
-SimulateVoronoi.prototype.dividingChance = function(time) {
-	//TODO: this should be a function, not random
-	return Math.random();
-}
-
-/**
- * Calculates the death chance
- * @param {int} time - as time progresses ahead so does the function value change
- * @returns {float}  - value between [0,1]
- */
-SimulateVoronoi.prototype.deathChance = function(time) {
-	//TODO: this should be a function, not random
-	return Math.random();
 }
 
 /**
