@@ -1,51 +1,28 @@
-const Voronoi = require('../public/javascripts/voronoi_core');
-const voronoi = new Voronoi();
+const voronoi = new (require('../public/javascripts/voronoi_core'))();
 const logger = require('./logger');
-const MyRandomGenerator = require('./MyRandomGenerator');
-const myRandomGenerator = new MyRandomGenerator();
-const e = Math.exp(1);
+const myRandomGenerator = new (require('./MyRandomGenerator'))();
 const Timer = require('../public/javascripts/timer');
 const fs = require('fs');
+const constantFunctions = new (require('./ConstantFunctions'))();
+const Cell = require('./Cell')
 
-
-
-//TODO: check for better values
-const defaultSteepness = 2,
-	defaultInflexiosPont = 1,
-	defaultDist = 1,
-	shapeOfDif = 1 / 2;
-	d = 0,	//??? constant
-	z = 20, //??? constant
-	G = [],	//gradient array
-	alfa = 0.1; //dividing chance constant
-
-const defaultCooperatingCost = 0.5,
-	defaultDefectingCost = 0;
-
+const alfa = 0.1; //dividing chance constant
+const e = Math.exp(1);
 
 /**
  * SimulateVoronoi Class - allows us to simulate using voronoi diagram
  * @constructor
  */
 function SimulateVoronoi() {
+	this.diagram 						= undefined;
+	this.dist               = undefined;
+	this.cooperatingCost    = undefined;
+	this.defectingCost      = 0;
+
+	constantFunctions.dist = 1;
 	this.sites = [];
 	this.bbox = {};
-	this.diagram = undefined;
-	this.Vn = 0;
-	this.V0 = this.V(0);
 	this.neighborMatrix = [];
-
-	this.inflexiosPontHelye = defaultInflexiosPont;
-	this.steepness          = defaultSteepness;
-	this.cooperatingCost    = defaultCooperatingCost;
-	this.defectingCost      = defaultDefectingCost;
-	this.dist               = defaultDist;
-
-	this.colorChangeChance	= 0.02;
-	this.dividingChance			= 0.02;
-	this.deathChance				= 0.01;
-
-	this.d = this.dist * shapeOfDif;
 
 	logger.debug("new SimulateVoronoi created");
 	// this.timer = new Timer(this);
@@ -65,6 +42,11 @@ SimulateVoronoi.prototype.swtichRandomGenerator = function(randomGeneratorID) {
 	return Math;
 }
 
+/**
+ * Returns the dividing chance for a generation, value between [0,1]
+ * @param 	{int} time
+ * @returns {double}
+ */
 SimulateVoronoi.prototype.getDividingChance = function(time){
 	let K = this.x0 * 2;
 	let x0 = this.x0;
@@ -91,7 +73,7 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.generationCount = gen_count;
 	this.cooperatingCost = coop_cost;
 	this.dist = dist;
-	this.d = this.dist * shapeOfDif;
+	constantFunctions.dist = dist;
 	this.randomGenerator = this.swtichRandomGenerator(randomGeneratorID);
 
 	try {
@@ -102,19 +84,17 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 				cost = this.cooperatingCost;
 			else
 				cost = this.defectingCost;
-			this.sites.push({
+			this.sites.push(new Cell({
 				x: site[1],
 				y: site[2],
 				attrib: site[3],
 				cost: cost,
-				payoff: undefined
-			})
+				bbox: this.bbox
+			}))
 		}
 
 		this.x0 = this.sites.length;
-		this.Vn = this.V(this.sites.length);
 		this.diagram = voronoi.compute(this.sites, this.bbox);
-		this.calculateDiffGradient();
 		this.initNeighborMatrix();
 		this.setPayoffs();
 	} catch (error) {
@@ -146,8 +126,7 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
-
-						this.divideCell(actualPoint, sitesAfterSplit, neighbors, divChance);
+						sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
 				}
 				//Create a copy of this generation and push it to results
 				this.sites = sitesAfterSplit;
@@ -163,120 +142,22 @@ SimulateVoronoi.prototype.simulate = function() {
 				this.setPayoffs();
 				thisGenerationSites = this.sites.map(val => Object.assign({}, val)); //copy the sites list, and push it into the array
 				ret.push(thisGenerationSites);
-				// if (this.areAllCellsDefecting()){
-				// 	break;
-				// }
 		}
 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
 		this.saveSimulationData(ret);
 		return ret;
 };
 
+/**
+ * NOT USED!!!
+ * Checks if all cells are defecting in the current generation
+ */
 SimulateVoronoi.prototype.areAllCellsDefecting = function(){
 	for (let i = 0; i < this.sites.length; ++i){
 		if (this.sites[i].attrib == 'c')
 			return false;
 	}
 	return true;
-}
-
-/**
- * NOT USED!!!
- * Checks if a cell will die(it's random at the moment with a small chance to die)
- *
- * @param 	{cell} point
- * @returns {bool} - true if a cell dies, false if not
- */
-SimulateVoronoi.prototype.killCell = function(point){
-	if (this.randomGenerator.random() < this.deathChance)
-		return true;
-	return false;
-}
-
-/**
- * Divides a cell in two smaller cells
- *
- * @param {point} actualPoint 				 - the point which has to be divided(same format as in sites)
- * @param {array} listToBeInsertedInto - the new points are inserted in this array
- * @param {array} neighbors 					 - the neighbors of the point(used for calculating the new points)
- */
-SimulateVoronoi.prototype.divideCell = function(actualPoint, listToBeInsertedInto, neighbors, divChance){
-	//Check if division is needed
-	if (this.randomGenerator.random() < divChance) {
-		//Find X coordinate to divide
-		var min = 9999;
-			shiftOnX = 0,
-			shiftOnY = 0;
-		for (let i in neighbors){
-			if (Math.abs(neighbors[i].y - actualPoint.y) < min){
-				shiftOnX = Math.abs(neighbors[i].x - actualPoint.x)/4;
-				min = Math.abs(neighbors[i].y - actualPoint.y);
-			}
-		}
-		//Check if X is valid
-		if (shiftOnX + actualPoint.x > this.bbox.xr)
-			shiftOnX = (this.bbox.xr - actualPoint.x)/2
-		if (actualPoint.x - shiftOnX < 0){
-			shiftOnX = actualPoint.x/2;
-		}
-		//Generate Y coordinate
-		shiftOnY = Math.random() * 50;
-		if (Math.random() < 0.5){
-			shiftOnY = -shiftOnY;
-		}
-		//Check if Y is valid
-		if (actualPoint.y - shiftOnY < 0 ||
-				actualPoint.y + shiftOnY < 0 ||
-				actualPoint.y - shiftOnY > this.bbox.yb ||
-				actualPoint.y + shiftOnY > this.bbox.yb){
-			shiftOnY = 0;
-		}
-		//Acutal dividing
-		let cost;
-		if (actualPoint.attrib == 'c'){
-			cost = this.cooperatingCost;
-		}
-		else{
-			cost = this.defectingCost;
-		}
-		newPoint1 = {
-			x: actualPoint.x - shiftOnX,
-			y: actualPoint.y - shiftOnY,
-			attrib: actualPoint.attrib,
-			cost: cost
-		}
-		newPoint2 = {
-			x: actualPoint.x + shiftOnX,
-			y: actualPoint.y + shiftOnY,
-			attrib: actualPoint.attrib,
-			cost: cost
-		}
-		//Change color! Only one of them may change it's color
-		if (Math.random() < this.colorChangeChance){
-			this.changeColor(newPoint1);
-		}
-		else if (Math.random() < this.colorChangeChance){
-			this.changeColor(newPoint2);
-		}
-		listToBeInsertedInto.push(newPoint1);
-		listToBeInsertedInto.push(newPoint2);
-	}
-	else {
-		//Insert the point as it is
-		listToBeInsertedInto.push(actualPoint);
-	}
-}
-
-/**
- * Changes the color of a cell
- *
- * @param {cell} point
- */
-SimulateVoronoi.prototype.changeColor = function(point){
-	if (point.attrib = 'c')
-		point.attrib = 'd';
-	else
-		point.attrib = 'c';
 }
 
 /**
@@ -287,7 +168,7 @@ SimulateVoronoi.prototype.reCalculateSites = function(){
 	//It takes out the duplicates from this.sites
 	this.sites = [];
 	for (let i = 0; i < this.diagram.cells.length; ++i){
-		this.sites.push(this.diagram.cells[i].site);
+		this.sites.push(new Cell(this.diagram.cells[i].site));
 	}
 }
 
@@ -313,26 +194,8 @@ SimulateVoronoi.prototype.setPayoffs = function() {
 		let actualPoint = this.sites[i];
 		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
 		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
-		actualPoint.payoff = this.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
+		actualPoint.payoff = constantFunctions.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
 	}
-}
-
-/**
- * Function used for calculating the actual payoff value
- *
- * @param {int} 	cooperatingNeighborsCount
- * @param {float} cost
- * @param {int} 	neighborsCount
- */
-SimulateVoronoi.prototype.payoff = function(cooperatingNeighborsCount, cost, neighborsCount) {
-	return (this.V(cooperatingNeighborsCount, neighborsCount) - this.V(0, neighborsCount)) / (this.V(neighborsCount, neighborsCount) - this.V(0, neighborsCount)) - cost;
-}
-
-/**
- * Sigmoid function used here - see Cooperation among cancer cells as public goods games on Voronoi networks - Marco Archetti
- */
-SimulateVoronoi.prototype.V = function(i, neighborsCount) {
-	return 1 / (1 + Math.pow(e, (-this.steepness * (i - this.inflexiosPontHelye)) / neighborsCount));
 }
 
 /**
@@ -520,26 +383,9 @@ SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
 			}
 		}
 		neighbors = newneighbors.slice();
-		coops = coops + G[d] * gradcoops;
+		coops = coops + constantFunctions.G[d] * gradcoops;
 	}
 	return coops;
-}
-
-/**
- * Builds a up an array that is used at the distance calculation
- */
-SimulateVoronoi.prototype.calculateDiffGradient = function() {
-	G[0] = 1;
-	for (var i = 1; i <= this.dist; ++i) {
-		G[i] = 1 - ((this.g(i) - this.g(0) / this.g(this.dist) - this.g(0)));
-	}
-}
-
-/**
- * Sigmoid function - see SimulateVoronoi.prototype.V function
- */
-SimulateVoronoi.prototype.g = function(i) {
-	return 1 / (1 + Math.pow(e, (-z * (i - this.d) / this.dist)));
 }
 
 /**
