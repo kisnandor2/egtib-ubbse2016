@@ -33,7 +33,7 @@ Socket.prototype.listen = function() {
 		socket.on('message', function(msg) {
 			data = JSON.parse(msg);
 			if (data.heartbeat){
-				logger.debug(data.heartbeat);
+				logger.debug(`heartbeat ${socket.upgradeReq.connection.remoteAddress}`);
 				return;
 			}
 			//Save the current socket into the queue
