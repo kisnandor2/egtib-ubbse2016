@@ -1,7 +1,7 @@
 /**
- * Created by kisna on 2016-11-04.
+ * Handles the greet screen
  */
-var router = require('express').Router();
+const router = require('express').Router();
 
 router.get('/', function(req, res){
 	res.render('greet');

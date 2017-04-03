@@ -1,6 +1,11 @@
 const e = Math.exp(1);
 
 class ConstantFunctions {
+	/**
+	 * Creates an instace of the constant functions
+	 * that will be used during simulation and setting payoffs
+	 * @constructor
+	 */
 	constructor(){
 		this.G = undefined;
 		this.d = undefined;
@@ -21,7 +26,8 @@ class ConstantFunctions {
 	}
 
 	/**
-	 * Sigmoid function - see SimulateVoronoi.prototype.V function
+	 * Sigmoid function - see ConstantFunctions.V function
+	 * @returns {float}
 	 */
 	g(i) {
 		return 1 / (1 + Math.pow(e, (-this.z * (i - this.d) / this.dist)));
@@ -29,6 +35,7 @@ class ConstantFunctions {
 
 	/**
 	 * Builds a up an array that is used at the distance calculation
+	 * @param {int} dist - distance that will be used during this simulation
 	 */
 	calculateDiffGradient(dist) {
 		this.G = new Array(dist);
@@ -40,6 +47,7 @@ class ConstantFunctions {
 
 	/**
 	 * Sigmoid function used here - see Cooperation among cancer cells as public goods games on Voronoi networks - Marco Archetti
+	 * @returns {float}
 	 */
 	V(i, neighborsCount) {
 		return 1 / (1 + Math.pow(e, (-this.steepness * (i - this.inflexiosPontHelye)) / neighborsCount));
@@ -51,6 +59,7 @@ class ConstantFunctions {
 	 * @param {int} 	cooperatingNeighborsCount
 	 * @param {float} cost
 	 * @param {int} 	neighborsCount
+	 * @returns {float} payoff
 	 */
 	payoff(cooperatingNeighborsCount, cost, neighborsCount) {
 		return (this.V(cooperatingNeighborsCount, neighborsCount) - this.V(0, neighborsCount)) / (this.V(neighborsCount, neighborsCount) - this.V(0, neighborsCount)) - cost;

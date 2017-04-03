@@ -1,3 +1,6 @@
+/**
+ * Returns the 404 error handling route
+ */
 module.exports = function(req, res, next){
 	res.status(404);
 
