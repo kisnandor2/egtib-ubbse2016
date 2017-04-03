@@ -10,8 +10,6 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 */
 	constructor(view, context){
 		super();
-		this.cooperatorColor = new paper.Color(0.95,0.38,0.02); //#f36205
-		this.defectorColor = new paper.Color(0.18,0.59,0.85); //#2f98da
 		this.view = view;
 		this.margin = 0;
 		this.oldSize = view.size;
@@ -21,6 +19,8 @@ class AnimatableVoronoi extends BaseVoronoi{
 		this.toBeRendered = -9999;
 		this.savedToBeRendered = -9999;
 
+		var provider = new ColorProvider();
+		this.colors = provider.getColorlist();
 		this.context = context;
 
 		this.bbox = {
@@ -244,8 +244,7 @@ class AnimatableVoronoi extends BaseVoronoi{
 	createPath(points, center) {
 		let path = new Path();
 		if (!this.selected) {
-			let color = points[0].attrib == 'c' ? this.cooperatorColor : this.defectorColor;
-			path.fillColor = color;
+			path.fillColor = this.colors[points[0].attrib];
 		} else {
 			path.fullySelected = selected;
 		}
