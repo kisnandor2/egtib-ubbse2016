@@ -246,7 +246,7 @@ class BaseVoronoi{
 	 * @param {int} value
 	 */
 	setTotalNumberOfCells(value){
-		if (value <2 || value > 500)
+		if (value <2 || value > 2500)
 			return;
 		this.totalNumberOfCells = value;
 	}

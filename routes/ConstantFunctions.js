@@ -10,8 +10,8 @@ class ConstantFunctions {
 		this.G = undefined;
 		this.d = undefined;
 		this.dist = undefined;
-		this.steepness = 2;
-		this.inflexiosPontHelye = 1;
+		this.steepness = 20;
+		this.inflexiosPontHelye = 0.6;
 		this.shapeOfDif = 1/2;
 		this.z = 20;
 	}
@@ -20,9 +20,10 @@ class ConstantFunctions {
 	 * On value change of `dist`, d is recalculated
 	 * `G` is also recalculated
 	 */
-	set dist(val){
+	set ['distance'](val){
 		this.d = val * this.shapeOfDif;
-		this.calculateDiffGradient(val);
+		this.dist = val;
+		this.calculateDiffGradient();
 	}
 
 	/**
@@ -37,11 +38,11 @@ class ConstantFunctions {
 	 * Builds a up an array that is used at the distance calculation
 	 * @param {int} dist - distance that will be used during this simulation
 	 */
-	calculateDiffGradient(dist) {
-		this.G = new Array(dist);
+	calculateDiffGradient() {
+		this.G = new Array(this.dist);
 		this.G[0] = 1;
-		for (var i = 1; i <= dist; ++i) {
-			this.G[i] = 1 - ((this.g(i) - this.g(0) / this.g(dist) - this.g(0)));
+		for (var i = 1; i < this.dist; ++i) {
+			this.G[i] = 1 - ((this.g(i) - this.g(0) / this.g(this.dist) - this.g(0)));
 		}
 	}
 

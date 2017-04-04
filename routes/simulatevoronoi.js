@@ -73,7 +73,7 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.generationCount = gen_count;
 	this.cooperatingCost = coop_cost;
 	this.dist = dist;
-	constantFunctions.dist = dist;
+	constantFunctions.distance = dist;
 	this.randomGenerator = this.swtichRandomGenerator(randomGeneratorID);
 
 	try {
@@ -117,6 +117,7 @@ SimulateVoronoi.prototype.simulate = function() {
 						let neighbors = this.getNeighbors(sitesBeforeChange[i]);
 						let rand = Math.round(this.randomGenerator.random() * (neighbors.length-1));
 						try {
+								// console.log(neighbors[rand].payoff, actualPoint.payoff)
 								if (neighbors[rand].payoff > actualPoint.payoff) {
 										actualPoint.attrib = neighbors[rand].attrib;
 										actualPoint.cost = neighbors[rand].cost;
@@ -126,7 +127,7 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
-						sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
+						sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, 0, this.randomGenerator));
 				}
 				//Create a copy of this generation and push it to results
 				this.sites = sitesAfterSplit;
