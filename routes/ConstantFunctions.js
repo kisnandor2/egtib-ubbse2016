@@ -42,7 +42,7 @@ class ConstantFunctions {
 		this.G = new Array(this.dist);
 		this.G[0] = 1;
 		for (var i = 1; i < this.dist; ++i) {
-			this.G[i] = 1 - ((this.g(i) - this.g(0) / this.g(this.dist) - this.g(0)));
+			this.G[i] = 1 - ( ( this.g(i) - this.g(0) ) / ( this.g(this.dist) - this.g(0) ) );
 		}
 	}
 

@@ -118,7 +118,8 @@ SimulateVoronoi.prototype.simulate = function() {
 						let rand = Math.round(this.randomGenerator.random() * (neighbors.length-1));
 						try {
 								// console.log(neighbors[rand].payoff, actualPoint.payoff)
-								if (neighbors[rand].payoff > actualPoint.payoff) {
+								if (neighbors[rand].attrib != actualPoint.attrib && neighbors[rand].payoff > actualPoint.payoff) {
+										console.log(neighbors[rand].payoff, actualPoint.payoff)
 										actualPoint.attrib = neighbors[rand].attrib;
 										actualPoint.cost = neighbors[rand].cost;
 								}
@@ -196,6 +197,9 @@ SimulateVoronoi.prototype.setPayoffs = function() {
 		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
 		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
 		actualPoint.payoff = constantFunctions.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
+		console.log(actualPoint);
+		console.log(neighborsCount);
+		console.log(cooperatingNeighbors);
 	}
 }
 
