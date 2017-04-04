@@ -4,3 +4,4 @@ logs/*
 .project
 .ssh/*
 logs/serverLog.log
+simulation.json

@@ -1,3 +1,7 @@
+/**
+ * Initiates the database connection where the session data will be stored
+ */
+
 const session = require('express-session');
 const secret = 'secretEGTIB';
 var store = undefined;

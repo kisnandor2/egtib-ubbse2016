@@ -1,5 +1,6 @@
 /**
- * Created by rekaszilagyi on 2016-11-13.
+ * Handles the voronoi route get and post requests.
+ * Intermediate interface between the UI and Simulation
  */
 const router = require('express').Router();
 const logger = require('./logger');

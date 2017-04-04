@@ -1,6 +1,11 @@
 const logger = require('./logger');
 const sessionParser = require('./sessionParser');
 
+/**
+ * Websocket constructor, express server must be passed
+ * @constructor
+ * @param {ExpressServer} server
+ */
 function Socket(server) {
 	this.ws = new require('ws').Server({
 		server: server
@@ -8,6 +13,9 @@ function Socket(server) {
 	this.connections = [];
 }
 
+/**
+ * Start the websocket to listen for incoming messages
+ */
 Socket.prototype.listen = function() {
 	var server = this;
 	this.ws.on('connection', function(socket) {
@@ -25,7 +33,7 @@ Socket.prototype.listen = function() {
 		socket.on('message', function(msg) {
 			data = JSON.parse(msg);
 			if (data.heartbeat){
-				logger.debug(data.heartbeat);
+				logger.debug(`heartbeat ${socket.upgradeReq.connection.remoteAddress}`);
 				return;
 			}
 			//Save the current socket into the queue
@@ -52,6 +60,10 @@ Socket.prototype.listen = function() {
 	});
 }
 
+/**
+ * Responds to the requests in order
+ * @param {AnyData} data - data to be sent
+ */
 Socket.prototype.sendData = function(data) {
 	let socket = this.connections.shift();
 	if (socket == undefined){

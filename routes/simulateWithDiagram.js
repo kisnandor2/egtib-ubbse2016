@@ -1,7 +1,7 @@
 /**
- * Created by rekaszilagyi on 2016-11-13.
+ * Handles the simulation with diagram page
  */
-var router = require('express').Router();
+const router = require('express').Router();
 
 router.get('/', function(req, res) {
 	webSocketUri = req.get('host').split(':')[0];
