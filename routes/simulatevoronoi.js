@@ -119,7 +119,7 @@ SimulateVoronoi.prototype.simulate = function() {
 						try {
 								// console.log(neighbors[rand].payoff, actualPoint.payoff)
 								if (neighbors[rand].attrib != actualPoint.attrib && neighbors[rand].payoff > actualPoint.payoff) {
-										console.log(neighbors[rand].payoff, actualPoint.payoff)
+										// console.log(neighbors[rand].payoff, actualPoint.payoff)
 										actualPoint.attrib = neighbors[rand].attrib;
 										actualPoint.cost = neighbors[rand].cost;
 								}
@@ -128,7 +128,7 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
-						sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, 0, this.randomGenerator));
+						sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
 				}
 				//Create a copy of this generation and push it to results
 				this.sites = sitesAfterSplit;
@@ -197,9 +197,9 @@ SimulateVoronoi.prototype.setPayoffs = function() {
 		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
 		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
 		actualPoint.payoff = constantFunctions.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
-		console.log(actualPoint);
-		console.log(neighborsCount);
-		console.log(cooperatingNeighbors);
+		// console.log(actualPoint);
+		// console.log(neighborsCount);
+		// console.log(cooperatingNeighbors);
 	}
 }
 
