@@ -31,7 +31,7 @@
     <div class="row">
       <div class="col-md-5">
         <div class="panel panel-default" ng-controller="parameterController">
-          <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Set the parameters for the next run here</div>
+          <div class="panel-heading text-center" color: rgb(255,255,255);">Set the parameters for the next run here</div>
           <div class="panel-body">
             <form class="form-horizontal" role="form">
               <div class="form-group">
@@ -91,8 +91,8 @@
 <div class="section">
   <div class="container">
     <div class="row">
-      <div class="panel panel-default">
-        <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Statistics</div>
+      <div class="panel panel-default" ng-hide="$root.hideStatistics" class="ng-hide">
+        <div class="panel-heading text-center" color: rgb(255,255,255);">Statistics</div>
         <div class="panel-body text-center" id="panel"></div>
       </div>
     </div>
