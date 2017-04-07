@@ -76,8 +76,19 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		$scope.dangerMessage.appendChild(successMessageX2[0]);
 	}
 	function initWebSocket(){
-		let HOST = location.origin.replace(/^http/, 'ws');
-		$scope.connection = new WebSocket(HOST);
+		try {
+			let HOST = location.origin.replace(/^http/, 'ws');
+			$scope.connection = new WebSocket(HOST);
+		}
+		catch (err) {
+			try {
+				$scope.connection = new WebSocket("localhost:3001");
+			}
+			catch (err) {
+				alert("The Server is not working!");
+				return;
+			}
+		}
 
 		function sleep(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));
