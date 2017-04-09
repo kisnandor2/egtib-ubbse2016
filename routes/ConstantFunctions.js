@@ -11,9 +11,9 @@ class ConstantFunctions {
 		this.d = undefined;
 		this.dist = undefined;
 		this.steepness = 20;
-		this.inflexiosPontHelye = 0.6;
+		this.inflexiosPontHelye = 0.5;
 		this.shapeOfDif = 1/2;
-		this.z = 20;
+		this.z = 3;
 	}
 
 	/**

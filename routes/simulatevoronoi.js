@@ -35,6 +35,7 @@ function SimulateVoronoi() {
  * @returns {randomGenerator}
  */
 SimulateVoronoi.prototype.swtichRandomGenerator = function(randomGeneratorID) {
+	return Math;
 	if (randomGeneratorID == 1){
 		myRandomGenerator.lastIndex = 0;
 		return myRandomGenerator;
@@ -107,6 +108,7 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
  */
 SimulateVoronoi.prototype.simulate = function() {
 		var ret = [];
+		ret.push(this.sites);
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
 				let divChance = this.getDividingChance(j+1);
@@ -146,7 +148,6 @@ SimulateVoronoi.prototype.simulate = function() {
 				ret.push(thisGenerationSites);
 		}
 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
-		this.saveSimulationData(ret);
 		return ret;
 };
 
@@ -317,7 +318,7 @@ SimulateVoronoi.prototype.getCooperatingCount = function(sites){
  * Saves the current simulation results to the simulation.json file
  * @param {arrayOfarrays} - the `ret` from the simulation
  */
-SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
+SimulateVoronoi.prototype.saveSimulationData = function(sitesList, callback,i, data2){
 	let coopAndDef = [];
 	for (let i = 0; i < sitesList.length; ++i){
 		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
@@ -334,6 +335,7 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 		results: coopAndDef
 	}
 	fs.readFile('simulation.json', 'utf8', function readFileCallback(err, data){
+		let obj = [];
 		if (err){
 			logger.error(err);
 			return;
@@ -347,7 +349,8 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 		}
 		obj.push(params);
 		json = JSON.stringify(obj); //convert it back to json
-		fs.writeFile('simulation.json', json, 'utf8', ()=>{}); // write it back 
+		console.log('write');
+		fs.writeFile('simulation.json', json, 'utf8', () => {callback(i, data2)}); // write it back 
 	});
 }
 
