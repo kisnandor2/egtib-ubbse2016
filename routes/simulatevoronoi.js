@@ -112,7 +112,7 @@ SimulateVoronoi.prototype.simulate = function() {
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
 				let divChance = this.getDividingChance(j+1);
-				let sitesBeforeChange = this.sites.slice(0);
+				let sitesBeforeChange = this.sites.map(val => Object.assign({}, val));
 				for (let i = 0; i < this.sites.length; ++i) {
 						//Select a random neighbor and change payoffs if needed
 						actualPoint = this.sites[i];
@@ -176,7 +176,7 @@ SimulateVoronoi.prototype.reCalculateSites = function(){
 }
 
 /**
- * Tests if every site has a voronoiID
+ * Tests if every site has a voronoiId
  */
 SimulateVoronoi.prototype.checkVoronoiID = function() {
 	//Error handling function, checks if each site after compute has a VoronoiID
@@ -198,9 +198,6 @@ SimulateVoronoi.prototype.setPayoffs = function() {
 		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
 		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
 		actualPoint.payoff = constantFunctions.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
-		// console.log(actualPoint);
-		// console.log(neighborsCount);
-		// console.log(cooperatingNeighbors);
 	}
 }
 
@@ -273,17 +270,12 @@ SimulateVoronoi.prototype.initNeighborMatrix = function() {
  */
 SimulateVoronoi.prototype.getNeighbors = function(p) {
 	//Find neighbors of cell which has site at p point
-	var neighbors = [];
-	let halfedges = this.getCellBySite(p, this.diagram.cells).halfedges;
-	for (let i = 0; i < halfedges.length; ++i) {
-		let lsite = halfedges[i].edge.lSite
-		if (lsite != null && !this.compareSites(lsite, p)) {
-			neighbors.push(lsite);
+	let neighbors = [];
+	let voronoiId = p.voronoiId;
+	for (let i = 0; i < this.neighborMatrix.length; ++i){
+		if (this.neighborMatrix[voronoiId][i] != 0){
+			neighbors.push(this.getSiteByVoronoiID(i));
 		}
-		let rsite = halfedges[i].edge.rSite
-		if (rsite != null && !this.compareSites(rsite, p)){
-		neighbors.push(rsite);
-		} 
 	}
 	return neighbors;
 }
@@ -291,11 +283,11 @@ SimulateVoronoi.prototype.getNeighbors = function(p) {
 /**
  * Counts the neighbors of a point/site/cell
  * 
- * @param 	{int} index	 - the index(voronoiID) of a point/site/cell
+ * @param 	{int} index	 - the index(voronoiId) of a point/site/cell
  * @returns {int}			 - total number of neighbors
  */
 SimulateVoronoi.prototype.getNeighborsCount = function(index) {
-	var count = 0;
+	let count = 0;
 	for (let i = 0; i < this.neighborMatrix[index].length; ++i) {
 		if (this.neighborMatrix[index][i] != 0) {
 			count++;
@@ -358,7 +350,7 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList, callback,i, d
  * Counts the cooperating neighbors of a point/site/cell
  * Distance is taken in consideration
  * 
- * @param 	{int} k	- the index(voronoiID) of a point/site/cell
+ * @param 	{int} k	- the index(voronoiId) of a point/site/cell
  * @returns {int} 	- total number of cooperating neighbors
  */
 SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
