@@ -18,11 +18,11 @@ function test(i, data){
 		return;
 	v.init(JSON.parse(data));
 	let ret = v.simulate();
-	v.saveSimulationData(ret, test, i+1, data);
+	v.saveSimulationData('simulation.json', ret, test, i+1, data);
 }
 
 router.get('/data', function(req, res) {
-	// test(0, JSON.stringify(req.session));
+	test(0, JSON.stringify(req.session));
 	v.init(req.session);	//ES6 parameter destructuring
 	try {
 		server.sendData(JSON.stringify(v.simulate()));

@@ -310,7 +310,7 @@ SimulateVoronoi.prototype.getCooperatingCount = function(sites){
  * Saves the current simulation results to the simulation.json file
  * @param {arrayOfarrays} - the `ret` from the simulation
  */
-SimulateVoronoi.prototype.saveSimulationData = function(sitesList, callback,i, data2){
+SimulateVoronoi.prototype.saveSimulationData = function(filename, sitesList, callback,i, data2){
 	let coopAndDef = [];
 	for (let i = 0; i < sitesList.length; ++i){
 		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
@@ -326,7 +326,7 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList, callback,i, d
 		dist: this.dist, 
 		results: coopAndDef
 	}
-	fs.readFile('simulation.json', 'utf8', function readFileCallback(err, data){
+	fs.readFile(filename, 'utf8', function readFileCallback(err, data){
 		let obj = [];
 		if (err){
 			logger.error(err);
@@ -342,7 +342,7 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList, callback,i, d
 		obj.push(params);
 		json = JSON.stringify(obj); //convert it back to json
 		console.log('write');
-		fs.writeFile('simulation.json', json, 'utf8', () => {callback(i, data2)}); // write it back 
+		fs.writeFile(filename, json, 'utf8', () => {callback(i, data2)}); // write it back 
 	});
 }
 

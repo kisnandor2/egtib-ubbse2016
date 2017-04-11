@@ -5,6 +5,8 @@ app.controller('fillWithData', function($scope, $rootScope) {
 		let dataJSON = JSON.parse(data);
 		for (let i = 0; i < dataJSON.length; ++i){
 			let current = dataJSON[i];
+			if (current == null || current == undefined)
+				continue;
 			let gen_count = Array.from(Array(current.length).keys());
 			let mean = current.map((element) => {return (element.mean).toFixed(2)});
 			let min = current.map((element) => {return (element.mean - element.min).toFixed(2)});

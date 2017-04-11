@@ -47,7 +47,7 @@ router.get('/data', function(req, res){
 				ret[dist][j].count++;
 			}
 		}
-		for (let i = 1; i < ret.length; ++i){
+		for (let i in ret){
 			for (let j = 0; j < ret[i].length; ++j){
 				ret[i][j].mean /= ret[i][j].count;
 			}
