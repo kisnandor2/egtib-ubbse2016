@@ -112,11 +112,11 @@ SimulateVoronoi.prototype.simulate = function() {
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
 				let divChance = this.getDividingChance(j+1);
-				let sitesBeforeChange = this.sites.map(val => Object.assign({}, val));
+				// let sitesBeforeChange = this.sites.map(val => Object.assign({}, val));
 				for (let i = 0; i < this.sites.length; ++i) {
 						//Select a random neighbor and change payoffs if needed
-						actualPoint = this.sites[i];
-						let neighbors = this.getNeighbors(sitesBeforeChange[i]);
+						actualPoint = this.sites[i]
+						let neighbors = this.getNeighbors(actualPoint);
 						let rand = Math.round(this.randomGenerator.random() * (neighbors.length-1));
 						try {
 								// console.log(neighbors[rand].payoff, actualPoint.payoff)
@@ -130,10 +130,10 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
-						sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
+						// sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
 				}
 				//Create a copy of this generation and push it to results
-				this.sites = sitesAfterSplit;
+				// this.sites = sitesAfterSplit;
 				try{
 					this.diagram = voronoi.compute(this.sites, this.bbox);
 				}				
@@ -195,9 +195,8 @@ SimulateVoronoi.prototype.checkVoronoiID = function() {
 SimulateVoronoi.prototype.setPayoffs = function() {
 	for (var i = 0; i < this.sites.length; ++i) {
 		let actualPoint = this.sites[i];
-		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
-		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
-		actualPoint.payoff = constantFunctions.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
+		let neighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
+		actualPoint.payoff = constantFunctions.payoff(neighbors.coops/neighbors.neighborsCount, actualPoint.cost, 1);
 	}
 }
 
@@ -357,6 +356,8 @@ SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
 	var neighbors = [];
 	neighbors.push(k);
 
+	let allNeighborsCount = 0;
+
 	var newneighbors = [];
 	var coops = 0;
 	var newtable = [];
@@ -383,9 +384,13 @@ SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
 			}
 		}
 		neighbors = newneighbors.slice();
+		allNeighborsCount += neighbors.length * constantFunctions.G[d];
 		coops = coops + constantFunctions.G[d] * gradcoops;
 	}
-	return coops;
+	return {
+				coops,
+				neighborsCount: allNeighborsCount
+			};
 }
 
 /**

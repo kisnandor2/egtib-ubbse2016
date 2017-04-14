@@ -5,6 +5,7 @@
 const router = require('express').Router();
 const logger = require('./logger');
 const SimulateVoronoi = require('./simulatevoronoi');
+const eventEmitter = require('./EventEmitter');
 
 var server = undefined;
 var v = new SimulateVoronoi();
@@ -13,9 +14,13 @@ var setWebSocket = function(webSocketServer){
 	server = webSocketServer;
 }
 
+var response;
+
 function test(i, data){
-	if (i > 100)
+	if (i > 2){
+		eventEmitter.emit('send', response)
 		return;
+	}
 	v.init(JSON.parse(data));
 	let ret = v.simulate();
 	v.saveSimulationData('simulation.json', ret, test, i+1, data);
@@ -23,10 +28,11 @@ function test(i, data){
 
 router.get('/data', function(req, res) {
 	test(0, JSON.stringify(req.session));
+	response = res;
 	v.init(req.session);	//ES6 parameter destructuring
 	try {
 		server.sendData(JSON.stringify(v.simulate()));
-		res.status(200).send('ok');
+		// res.status(200).send('ok');
 	}
 	catch (error) {
 		logger.error(error);
