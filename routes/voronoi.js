@@ -14,11 +14,8 @@ var setWebSocket = function(webSocketServer){
 	server = webSocketServer;
 }
 
-var response;
-
 function test(i, data){
-	if (i > 2){
-		eventEmitter.emit('send', response)
+	if (i > 100){
 		return;
 	}
 	v.init(JSON.parse(data));
@@ -28,11 +25,10 @@ function test(i, data){
 
 router.get('/data', function(req, res) {
 	test(0, JSON.stringify(req.session));
-	response = res;
 	v.init(req.session);	//ES6 parameter destructuring
 	try {
 		server.sendData(JSON.stringify(v.simulate()));
-		// res.status(200).send('ok');
+		res.status(200).send('ok');
 	}
 	catch (error) {
 		logger.error(error);

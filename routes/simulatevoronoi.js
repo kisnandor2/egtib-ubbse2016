@@ -335,12 +335,13 @@ SimulateVoronoi.prototype.saveSimulationData = function(filename, sitesList, cal
 			obj = JSON.parse(data); //now it an object
 		}
 		catch(err){
+			logger.error(data);
 			logger.error(err);
 			obj = [];
 		}
 		obj.push(params);
 		json = JSON.stringify(obj); //convert it back to json
-		console.log('write');
+		console.log('write' + i);
 		fs.writeFile(filename, json, 'utf8', () => {callback(i, data2)}); // write it back 
 	});
 }

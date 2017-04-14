@@ -3,8 +3,8 @@ const EventEmitter = require('events');
 class MyEmitter extends EventEmitter {}
 
 const myEmitter = new MyEmitter();
-myEmitter.on('send', function(res) {
-  res.status(200).send('ok');
+myEmitter.on('next', function(func, i, data) {
+  func(i, data);
 });
 
 module.exports = myEmitter;
