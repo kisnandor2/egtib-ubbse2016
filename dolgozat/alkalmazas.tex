@@ -1,3 +1,40 @@
-\section{Az alkalmazás neve}
-\subsection{Felhasznált technológiák}
+\newcommand{\projectName}{Az EGTIB}
+
+\section{\projectName{} bemutatása}
+
+\projectName{} projekt célja egy olyan felhasználóbarát felület, mely lehetőséget teremt a daganatos sejtek játékelméleti modellezésére és szimulációjára, valamint a szimulációs eredmények megjelenítésére. Ezért született meg, a mai trendeket figyelembe véve, egy kliens-szerver architektúrán alapuló webalkalmazás.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=90mm]{EGTIB.jpg}
+	\caption{Megjelenítésre alkalmas oldal \label{fig:SimulateWithDiagram}}
+\end{figure}
+
 \subsection{Funkcionalitások}
+
+Megfelelve a követelményeknek melyeket a "megrendelő" állított fel, a felhasználónak lehetősége van bizonyos paramétereket megválasztani még a szimulálási fázis előtt:
+\begin{itemize}[noitemsep]
+	\item kezdeti populáció mérete
+	\item defektálók aránya 
+	\item generáció szám(szimuláció hossza)
+	\item kooperáló sejtek termelési költsége 
+	\item interakció táv mérete
+\end{itemize}
+
+Az alkalmazásunkat két nagyobb részre osztottuk:
+
+\paragraph{Vizualizáció}- képes szimulálni kevés sejtből(max. 500) álló populációkat és ezeket generációnként meg is tudja jeleníteni. A megjelenítés interaktív, ami azt jelenti, hogy bármikor meg lehet állítani, folytatni vagy akár tekergetni mint egy filmet. Továbbá mindehhez tartozik egy grafikon is, mely a populációnak változását ábrázolja generációnként.
+
+\paragraph{Szimuláció}- alkalmas nagyobb(max. 2000) populációval dolgozni, viszont ezek megjelenítése már túl sok időt venne igénybe, így csak a fentebb említett grafikon segítségével ábrázolja azt, hogy mi is történik a sejtek között. Előnye a vizualizációs részhez képest elsősorban az, hogy sokkal nagyobb populációval tud dolgozni, de a paraméterlista is változatosabb(a szimuláció során használt függvények viselkedésébe is bele tud szólni a felhasználó) és hatalmas kényelmi faktornak számít az, hogy több, különböző paraméterezésű szimulációt is képes egy gombnyomással lekérni.
+
+\subsection{Felhasznált technológiák}
+
+A software egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP mellett, websocketen keresztül is folyik. Az utóbbira azért van szükség, mert gyorsítja az adatok áramlását, és alkalmas nagyobb mennyiségű adat átvitelére, mely a szimuláció során keletkezik.
+
+A szerverünk NodeJS alapú, az Express framework segítségével íródott.
+
+Kliens oldali technológiák közé sorolandó a Bootstrap, mely segítségével nem csak desktopon de mobil platformon is elegáns az oldal kinézete, valamint az AngularJS, ami biztosítja az oldal dinamikusságát. A Paper.js a rajzok megjelenítéséért felelős, és ennek egy segédkönyvtára pedig kifejezetten a voronoi diagram ábrázolásáért, úgy vizuálisan mint adatszerkezeti szinten is. 
+
+Mindezt összefogva és belerakva egy Dockerbe, már mehet is egy felhőbe, a mi esetünkben ez a Heroku. A fejlesztési és tesztelési folyamatot amennyire csak lehetett megpróbáltuk automatizálni, így a Travis CI az, ami a projektünket teszteli és amennyiben szükséges kitelepíti a legújabb verziót a felhőbe.
+
+Az alkalmazásunk minőségét unit és E2E tesztekkel próbáltuk meg biztosítani, ezekhez a Mocha és TestCafe keretrendszereket használtuk. 
