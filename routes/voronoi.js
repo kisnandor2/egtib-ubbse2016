@@ -24,7 +24,7 @@ function test(i, data){
 }
 
 router.get('/data', function(req, res) {
-	test(0, JSON.stringify(req.session));
+	// test(0, JSON.stringify(req.session));
 	v.init(req.session);	//ES6 parameter destructuring
 	try {
 		server.sendData(JSON.stringify(v.simulate()));

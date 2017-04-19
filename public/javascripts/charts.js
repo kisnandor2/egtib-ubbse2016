@@ -39,7 +39,8 @@ app.controller('fillWithData', function($scope, $rootScope) {
     		title: 'Generation count'
     	},
     	yaxis: {
-    		title: 'Fraction of producers'
+    		title: 'Fraction of producers',
+    		range: [0, 1]
     	}
 		}
 		Plotly.newPlot(id, data, layout);
