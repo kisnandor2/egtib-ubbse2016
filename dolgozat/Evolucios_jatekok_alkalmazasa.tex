@@ -1,0 +1,29 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\title{Evolúciós játékok alkalmazása daganatos sejtek modellezésében}
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	Dolgozatunkban az evolúciós játékok alkalmazását mutatjuk be a sejtbiológiában. Már a sejtek szintjén megfigyelhetőek kooperatív illetve kompetitív viszonyok, amelyek játékelmélettel modellezhetőek. Ezeket, az alkalmazásunk elméleti háttereként is szolgáló matematikai modelleket használják a rákkutatásban is, ahol a sejtek mint játékosok vannak jelen. Fő célunk játékelméleti modellek kiterjesztése a sejtek interakcióinak vizsgálatára. A projekt gyakorlati részét egy webes felület képezi, amin megjeleníthető a különböző sejtpopulációk viselkedése, időbeni alakulása. A szimuláció paramétereit, a generációk számát a felhasználó módosíthatja, ezáltal valós időben betekintést nyerve a daganatok dinamikájába.
+\end{abstract} 
+
+{ \baselineskip 1ex
+	\parskip 1ex
+	\tableofcontents
+}
+
+\include{bevezeto}
+\include{ev_jatekok}
+\include{ev_jatekok_daganat}
+\include{alkalmazas}
+\include{szim_eredmenyek}
+
+\bibliography{articles}
+\bibliographystyle{ieeetr}
+\end{document}
