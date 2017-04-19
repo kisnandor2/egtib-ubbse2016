@@ -7,7 +7,7 @@
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=90mm]{EGTIB.jpg}
-	\caption{Megjelenítésre alkalmas oldal \label{fig:SimulateWithDiagram}}
+	\caption{Pillanatkép az alkalmazásról \label{fig:SimulateWithDiagram}}
 \end{figure}
 
 \subsection{Funkcionalitások}
@@ -19,9 +19,10 @@ Megfelelve a követelményeknek melyeket a "megrendelő" állított fel, a felha
 	\item generáció szám(szimuláció hossza)
 	\item kooperáló sejtek termelési költsége 
 	\item interakció táv mérete
+	\item akarja-e a felhasználó, hogy a sejtek osztódásra legyenek képesek
 \end{itemize}
 
-Az alkalmazásunkat két nagyobb részre osztottuk:
+Az alkalmazásunkat felhasználási szempontból két fő komponensre oszthatjuk:
 
 \paragraph{Vizualizáció}- képes szimulálni kevés sejtből(max. 500) álló populációkat és ezeket generációnként meg is tudja jeleníteni. A megjelenítés interaktív, ami azt jelenti, hogy bármikor meg lehet állítani, folytatni vagy akár tekergetni mint egy filmet. Továbbá mindehhez tartozik egy grafikon is, mely a populációnak változását ábrázolja generációnként.
 
@@ -29,11 +30,11 @@ Az alkalmazásunkat két nagyobb részre osztottuk:
 
 \subsection{Felhasznált technológiák}
 
-A software egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP mellett, websocketen keresztül is folyik. Az utóbbira azért van szükség, mert gyorsítja az adatok áramlását, és alkalmas nagyobb mennyiségű adat átvitelére, mely a szimuláció során keletkezik.
+A software egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP mellett, websocketen keresztül is folyik. Az utóbbira azért van szükség, mert gyorsítja az adatok áramlását, és alkalmas nagyobb mennyiségű adat átvitelére, mely a szimuláció során keletkezik. 
 
-A szerverünk NodeJS alapú, az Express framework segítségével íródott.
+Kliens oldali technológiák közé sorolandó a Bootstrap, mely segítségével nem csak desktopon de mobil platformon is elegáns az oldal kinézete, valamint az AngularJS, ami biztosítja az oldal dinamikusságát. A Paper.js a rajzok megjelenítéséért felelős, és ennek egy segédkönyvtára pedig kifejezetten a voronoi diagram ábrázolásáért, úgy vizuálisan mint adatszerkezeti szinten is. A grafikonok kirajzolását kezdetben a Highchartsra míg a későbbiekben a könnyebben használható Plotly.js-re bíztuk.
 
-Kliens oldali technológiák közé sorolandó a Bootstrap, mely segítségével nem csak desktopon de mobil platformon is elegáns az oldal kinézete, valamint az AngularJS, ami biztosítja az oldal dinamikusságát. A Paper.js a rajzok megjelenítéséért felelős, és ennek egy segédkönyvtára pedig kifejezetten a voronoi diagram ábrázolásáért, úgy vizuálisan mint adatszerkezeti szinten is. 
+A szerverünk NodeJS alapú, az Express keretrendszert használja fel. A szerver oldalon folyik az erőforrás igényes számítások nagy része, így itt is jelen van a Paper.js voronoi modulja.
 
 Mindezt összefogva és belerakva egy Dockerbe, már mehet is egy felhőbe, a mi esetünkben ez a Heroku. A fejlesztési és tesztelési folyamatot amennyire csak lehetett megpróbáltuk automatizálni, így a Travis CI az, ami a projektünket teszteli és amennyiben szükséges kitelepíti a legújabb verziót a felhőbe.
 
