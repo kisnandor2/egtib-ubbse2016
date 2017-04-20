@@ -1,6 +1,7 @@
+
 \section{A szimuláció eredményei}
 
-Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre(melyeket Archetti is használt\cite{archetti2013evolutionary}) elvégeztünk 100-100 szimulációt, minden egyes távolságra 1-től 5-ig.
+Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre (melyeket Archetti is használt\cite{archetti2013evolutionary}) elvégeztünk 100-100 szimulációt, minden egyes távolságra 1-től 5-ig.
 
 \begin{multicols}{2}
 	A bemeneti paraméterek a következőek voltak:
@@ -20,11 +21,34 @@ Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rend
 	\end{itemize}	
 \end{multicols}
 
-Megállapítottuk, hogy ugyanarra az eredményre jutottunk mi is mint Archetti\cite{archetti2013evolutionary}, igaz kisebb eltérések ugyan mutatkoztak. Míg mi minden esetben 100 szimulálást végeztünk, addig Archetti csak 10-et, így a kis eltéréseket ennek tulajdoníthatjuk.
+Megállapítottuk, hogy ugyanarra az eredményre jutottunk mi is mint Archetti\cite{archetti2013evolutionary}, igaz kisebb eltérések ugyan mutatkoztak. Míg mi minden esetben 100 szimulálást végeztünk, addig ő csak 10-et, így a kis eltéréseket ennek tulajdoníthatjuk.
 
 Ezzel projektünk első mérföldkövét leraktuk, így most már kísérletezhetünk különböző paraméterekkel, hogy megvizsgáljuk a populáció viselkedését. Egy pár esetet a következő fejezetekben illusztráltunk.
 
 \subsection{A költség és nyereség hatása}
+
+Mint ahogyan azt már láttuk, a kooperáló sejtek termelési költsége nagyban befolyásolja a játék végkimenetelét (Ábra \ref{fig:CoopCostChange}), ami nem nagy meglepetés, hisz minél többe kerül a termelés annál jobban megéri élősködni. Az esetek többségében a defektálás a legkifizetődőbb, de alacsony költségek mellett fenntartható egy bizonyos egyensúly is a két fél között, sőt, extrém körülmények (paraméterek) mellett az is elérhető, hogy a teljes populáció a kooperálás mellett döntsön.
+
+\begin{minipage}{\linewidth}
+	\centering
+	\begin{multicols}{3}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/chart001.jpeg}
+		\end{Figure}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/chart01.jpeg}
+		\end{Figure}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/chart08.jpeg}
+		\end{Figure}
+	\end{multicols}
+	\captionof{figure}{A játék végkimenetele mikor a költségek rendre 0.01, 0.1 és 0.8\label{fig:CoopCostChange}}
+\end{minipage}
+
+
 \subsection{Diffusion gradient hatása}
 \subsection{Összegzés}
 
