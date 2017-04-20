@@ -1,7 +1,7 @@
 
 \section{A szimuláció eredményei}
 
-Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre (melyeket Archetti is használt\cite{archetti2013evolutionary}) elvégeztünk 100-100 szimulációt, minden egyes távolságra 1-től 5-ig.
+Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre (melyeket Archetti is használt\cite{archetti2013evolutionary}) elvégeztünk 100-100 szimulációt, minden egyes diffúziós távolságra 1-től 5-ig.
 
 \begin{multicols}{2}
 	A bemeneti paraméterek a következőek voltak:
@@ -12,7 +12,7 @@ Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rend
 		\item kooperálók költsége: 0.01
 		\item osztódás: nincs
 	\end{itemize}
-	A konstans függvények paraméterei:
+	A konstans függvények paraméterei, melyeket az elkövetkezendő szimulációk során használtunk:
 	\begin{itemize}[noitemsep]
 		\item $s = 2$
 		\item $h = 1$
@@ -21,9 +21,32 @@ Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rend
 	\end{itemize}	
 \end{multicols}
 
-Megállapítottuk, hogy ugyanarra az eredményre jutottunk mi is mint Archetti\cite{archetti2013evolutionary}, igaz kisebb eltérések ugyan mutatkoztak. Míg mi minden esetben 100 szimulálást végeztünk, addig ő csak 10-et, így a kis eltéréseket ennek tulajdoníthatjuk.
+Megállapítottuk, hogy ugyanarra az eredményre (Ábra \ref{fig:DistChange}) jutottunk mi is mint Archetti\cite{archetti2013evolutionary}, igaz kisebb eltérések ugyan mutatkoztak. Míg mi minden esetben 100 szimulálást végeztünk, addig ő csak 10-et, így a kis eltéréseket ennek tulajdoníthatjuk.
 
-Ezzel projektünk első mérföldkövét leraktuk, így most már kísérletezhetünk különböző paraméterekkel, hogy megvizsgáljuk a populáció viselkedését. Egy pár esetet a következő fejezetekben illusztráltunk.
+\begin{minipage}{\linewidth}
+	\centering
+	\begin{multicols}{2}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/dist2}
+		\end{Figure}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/dist4}
+		\end{Figure}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/dist3}
+		\end{Figure}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/dist5}
+		\end{Figure}
+	\end{multicols}
+	\captionof{figure}{Szimulációs eredmények a fenti paraméterekre\label{fig:DistChange}}
+\end{minipage}\\
+
+Ezzel projektünk első mérföldkövét leraktuk, így most már kísérletezhetünk különböző paraméterekkel, hogy megvizsgáljuk a populáció viselkedését. Egy pár esetet a következő fejezetekben tárgyalunk.
 
 \subsection{A költség és nyereség hatása}
 
@@ -49,7 +72,32 @@ Mint ahogyan azt már láttuk, a kooperáló sejtek termelési költsége nagyba
 \end{minipage}
 
 
-\subsection{Diffusion gradient hatása}
+\subsection{Diffúziós távolság hatása}
+
+Egyik legkényesebb paraméterünk amelyet változtatni lehet, az a diffúziós távolság, amely növelésével valósághűbb adatokat kaphatunk. Sajnos nem állnak rendelkezésünkre erre vonatkozó adatok a biológiából, így csak egy pár, már más által is használt értékekre végeztünk kísérleteket (Ábra \ref{fig:DiffDist}).
+
+\begin{minipage}{\linewidth}
+	\centering
+	\begin{multicols}{2}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/chart001.jpeg}
+		\end{Figure}
+		\begin{Figure}
+			\centering
+			\includegraphics[width=\linewidth]{images/chart01.jpeg}
+		\end{Figure}
+	\end{multicols}
+	\captionof{figure}{A játék végkimenetele két diffúziós távolságra\label{fig:DiffDist}}
+\end{minipage}\\
+
+
+Megfigyelhető, hogy a távolság növekedésével a defektáló sejtek is könnyebben terjednek, 
+
+\subsection{Osztódni képes populációk}
+
+
+
 \subsection{Összegzés}
 
 Összességében azt állíthatjuk, hogy sikerült egy olyan terméket létrehoznunk, mely megállja helyét
