@@ -1,7 +1,39 @@
 \section{Daganatos sejtek modellezése}
+A rosszindulatú daganatok sokszoros mutáció következtében létrejött szabályozatlan, elburjánzó sejttömörülések, amelyek az egészséges szövetbe betörve versenyeznek az erőforrásokért. Egy daganaton belül többféle daganatos sejt is megtalálható, mindegyik különböző módon hatva a környezetében található sejtekre. Ez a heterogenitás segíti a burjánzást, az egyre agresszívabb sejttípusok megjelenését és az erősebb ellenállást a kezelésekre. A játékelmélet egy lehetséges eszköz lehet a különböző típusok közötti versengés valamint az alkalmazott stratégiák modellezésére.
+
 \subsection{Lehetséges modellek}
+(pontos ref. és konkrét példák következik)
+A játékelméleti modellek segítségével többféleképpen is megközelíthető a probléma. Játékosok lehetnek csak a daganatos sejtek és a játékot az erőforrásokért folytatott \textit{verseny} jelenti. Ez a verseny átalakulhat \textit{parazitizmussá} ha a bizonyos növekedési faktorokat termelő egészséges sejteket tekintjük az egyik félnek, és az ezt kihasználó daganatos sejteket a másiknak. Az immunsejtek játszhatják a \textit{regadozó} szerepét de felléphet \textit{mutualizmus} is például az erek belső rétegének sejtjei és a daganatos sejtek között. 
+(Ide jön több példa, cikkekből idézések stb.)
 \subsubsection{...}
 \subsubsection{Public goods game}
-\subsection{Public goods game és voronoi}
+A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet játszanak az általuk termelt növekedési faktorok és jelzőmolekulák. Ezek segítenek többek között abban, hogy a rákos sejtek a saját növekedésüket ösztönözzék, hogy képesek legyenek kijátszani a szervezet védekezési rendszerét és hogy szétterjedjenek távoli szövetekbe (metasztázis). Mivel ezek az anyagok kikerülnek a sejtek közötti térbe, nem csak az őket termelő sejtekre vannak hatással, hanem az ezeket körülvevőkre is. Így a növekedési faktor felfogható mint egy "közös jó" (\textit{public good}). A evolúciós játékelmélet megfelelő keretet biztosít, mivel nem feltételez racionális viselkedést és egy stratégia sikerességét megadja a populáción belüli gyakorisága. \cite{archetti2016cooperation}
+
+\subsection{A játék felépítése}
 \subsubsection{Voronoi diagram}
-\subsubsection{A játék felépítése}
+Az általunk vizsgált modell eltér a megszokottól abban, hogy a sejtek ábrázolására voronoi hálózatokat használ. Térbeli játékok esetén általában szabályos pontrácsokkal (??) vagy skála-független hálózatokkal dolgoznak. Míg az előbbi figyelmen kívül hagyja a kapcsolatok sokféleségét, az utóbbi nem megfelelő, ha az egyedek egy síkban helyezkednek el. (?? kérdéses rész)
+
+Voronoi meghatározás  
+
+\subsubsection{A játék szereplői és a stratégiák}
+A játékban résztvevő sejtek két stratégia közül választhatnak: \textit{kooperálnak}, azaz termelnek növekedési faktorokat, vagy \textit{defektálnak}, azaz nem vesznek részt a faktorok termelésében. A stratégiák \textit{nyereségének (payoff)} kiszámítására a következő képletet használtuk: \(p = b(j) - c\) ahol a \textit{c} a növekedési faktor előállításának költsége, \textit{j} a csoportban résztvevő kooperatív sejtek száma és
+\begin{equation}
+b(j) = [V(j) - V(0)]/[V(n) - V(0)]
+\end{equation}
+a
+\begin{equation}
+V(j) = 1/[1 + e^{(-s(j-k)/n)}]
+\end{equation}
+függvény normalizált alakja. A \textit{k} befolyásolja az áthajlási pont helyét, az \textit{s} irányítja a függvény meredekségét az áthajlási pontban. A vizsgált csoport méretét az \textit{n} jelöli. 
+
+A kezdeti populációban véletlenszerűen elhelyezünk defektáló sejteket (alapértelmezetten az arányuk 0.05). Ezután minden körben véletlenszerűen kiválasztunk egy sejtet és annak egy szomszédját és megvizsgáljuk a nyereségeket. Amennyiben a szomszéd stratégiája kifizetődőbb, a kiválasztott sejt átveszi azt. Minden kör végén aktualizáljuk a nyereségeket (hiszen a stratégiák változtatásával változik a \textit{j} értéke és azzal a nyereségek is). 
+
+\subsubsection{Diffúziós távolság}
+Az dolgozatunkban vizsgált modell másik újítása, hogy nem csak az elsőfokú szomszédokat veszi figyelembe, hanem egy bizonyos diffúziós távolságon belül található összes sejtet. A szomszédos termelő sejtek befolyásának súlyozására egy diffúziós gradienst vezetünk be. 
+\begin{equation}
+G(i) = [g(i) - g(0)]/[g(D) - g(0)] 
+\end{equation}
+\begin{equation}
+g(i) = 1/[1 + e^{(-z(i-d)/D)}]
+\end{equation}
+függvények segítségével kiszámolhatjuk az \textit{i} távolságra található kooperatív sejtek befolyásának mértékét. Így a termelők száma nem a fent említett \textit{j} lesz, hanem a \textit{G}-vel kiszámított súlyozott összeg. A képletben szereplő \textit{d} és \textit{D} a diffúziós gradiens alakját határozzák meg, a \textit{z} a gradiens meredekségét a áthajlási pontban. \cite{archetti2016cooperation}
