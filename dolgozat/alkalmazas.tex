@@ -2,7 +2,7 @@
 
 \section{\projectName{} bemutatása}
 
-\projectName{} projekt célja egy olyan felhasználóbarát felület, mely lehetőséget teremt a daganatos sejtek játékelméleti modellezésére és szimulációjára, valamint a szimulációs eredmények megjelenítésére. Ezért született meg, a mai trendeket figyelembe véve, egy kliens-szerver architektúrán alapuló webalkalmazás, mely részben az Archetti\cite{archetti2013evolutionary} cikkbeli modellt implementálja, és ahhoz új funkcionalitásokat is hozzáad.
+\projectName{} projekt célja egy olyan felhasználóbarát felület, mely lehetőséget teremt a daganatos sejtek játékelméleti modellezésére és szimulációjára, valamint a szimulációs eredmények megjelenítésére. Ezért született meg, a mai trendeket figyelembe véve, egy kliens-szerver architektúrán alapuló webalkalmazás, mely részben az Archetti\cite{archetti2016cooperation} cikkbeli modellt implementálja, és ahhoz új funkcionalitásokat is hozzáad.
 
 \begin{figure}[ht!]
 	\centering
@@ -34,8 +34,8 @@ A software egy szerverből és egy kliensből áll, melyek közötti kommunikác
 
 Kliens oldali technológiák közé sorolandó a Bootstrap, mely segítségével nem csak desktopon de mobil platformon is elegáns az oldal kinézete, valamint az AngularJS, ami biztosítja az oldal dinamikusságát. A Paper.js a rajzok megjelenítéséért felelős, és ennek egy segédkönyvtára pedig kifejezetten a voronoi diagram ábrázolásáért, úgy vizuálisan mint adatszerkezeti szinten is. A grafikonok kirajzolását kezdetben a Highchartsra míg a későbbiekben a könnyebben használható Plotly.js-re bíztuk.
 
-A szerverünk NodeJS alapú, az Express keretrendszert használja fel. A szerver oldalon folyik az erőforrás igényes számítások nagy része, így itt is jelen van a Paper.js voronoi modulja.
+A szerverünk NodeJS alapú, az Express keretrendszert használja fel.Itt folyik az erőforrás igényes számítások nagy része, így itt is jelen van a Paper.js voronoi modulja.
 
-Mindezt összefogva és belerakva egy Dockerbe, már mehet is egy felhőbe, a mi esetünkben ez a Heroku. A fejlesztési és tesztelési folyamatot amennyire csak lehetett megpróbáltuk automatizálni, így a Travis CI az, ami a projektünket teszteli és amennyiben szükséges kitelepíti a legújabb verziót a felhőbe.
+Mindezt összefogva és belerakva egy Dockerbe, már mehet is egy felhőbe, a mi esetünkben ez a Heroku (https://egtib.herokuapp.com/). A fejlesztési és tesztelési folyamatot amennyire csak lehetett megpróbáltuk automatizálni, így a Travis CI az, ami a projektünket teszteli és amennyiben szükséges kitelepíti a legújabb verziót a felhőbe.
 
 Az alkalmazásunk minőségét unit és E2E tesztekkel próbáltuk meg biztosítani, ezekhez a Mocha és TestCafe keretrendszereket használtuk. 

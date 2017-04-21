@@ -1,7 +1,7 @@
 
 \section{A szimuláció eredményei}
 
-Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre (melyeket Archetti is használt\cite{archetti2013evolutionary}) elvégeztünk 100-100 szimulációt, minden egyes diffúziós távolságra 1-től 5-ig.
+Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre (melyeket Archetti is használt\cite{archetti2016cooperation}) elvégeztünk 100-100 szimulációt, minden egyes diffúziós távolságra 1-től 5-ig.
 
 \begin{multicols}{2}
 	A bemeneti paraméterek a következőek voltak:
@@ -21,7 +21,7 @@ Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rend
 	\end{itemize}	
 \end{multicols}
 
-Megállapítottuk, hogy ugyanarra az eredményre (Ábra \ref{fig:DistChange}) jutottunk mi is mint Archetti\cite{archetti2013evolutionary}, igaz kisebb eltérések ugyan mutatkoztak. Míg mi minden esetben 100 szimulálást végeztünk, addig ő csak 10-et, így a kis eltéréseket ennek tulajdoníthatjuk.
+Megállapítottuk, hogy ugyanarra az eredményre (Ábra \ref{fig:DistChange}) jutottunk mi is mint Archetti\cite{archetti2016cooperation}, igaz kisebb eltérések ugyan mutatkoztak. Míg mi minden esetben 100 szimulálást végeztünk, addig ő csak 10-et, így a kis eltéréseket ennek tulajdoníthatjuk.
 
 \begin{minipage}{\linewidth}
 	\centering
@@ -91,8 +91,8 @@ Egyik legkényesebb paraméterünk amelyet változtatni lehet, az a diffúziós 
 	\captionof{figure}{A játék végkimenetele két diffúziós távolságra. A paraméterek: 160 sejt, 5\% defektáló, 0.3 költség, távolság: 2 illetve 5\label{fig:DiffDist}}
 \end{minipage}\\
 
-
-Megfigyelhető, hogy a távolság növekedésével a defektáló sejtek jóval könnyebben terjednek el, nem csak a közvetlen szomszédokat befolyásolják, hanem a távolabbiakat is. Amennyiben a távolság állandónak bizonyul, célunk pedig a defektálók kiirtása, úgy jelent esetben csak a kooperálók költségének csökkentésével tudjuk megfékezni a terjedésüket. További megvalósítandó feladataink közé tartozik egy olyan funkció mely révén ellenanyagot juttathatunk a daganatba, vagy egy terápiát alkalmazhatunk.
+Megfigyelhető, hogy a távolság növekedésével a defektáló sejtek jóval könnyebben terjednek el, nem csak a közvetlen szomszédokat befolyásolják, hanem a tőlük távolabb elhelyezkedőeket is. Amennyiben a távolság állandónak bizonyul, célunk pedig a defektálók kiirtása, úgy jelent esetben csak a kooperálók költségének csökkentésével tudjuk megfékezni a terjedésüket. További megvalósítandó feladataink közé tartozik egy olyan funkció mely révén ellenanyagot juttathatunk a daganatba, vagy egy terápiát alkalmazhatunk.
+Meg kell jegyeznünk, hogy ezt a paramétert a hasnyálmirigyrák esetén megállapították\cite{archetti2015heterogeneity}, valamint az is biztos, hogy az esetek túlnyomó részében ez az érték 5-10-től 30-60-ig terjedhet\cite{archetti2016cooperation}.
 
 \subsection{Osztódásra képes populációk}
 
@@ -114,8 +114,8 @@ Eddigi szimulációink során a populáció mérete állandó volt, és egy adot
 \end{minipage}\\
 
 Igaz, hogy a stratégia váltást fel lehet fogni úgy mint egy fajta osztódást, ahol az a sejt amelyik átveszi a stratégiát meghal és annak a sejtnek a másolata jön létre ugyanazon a területen akitől azt átveszi, de a valóságban a defektáló sejtek nem csak területileg terjednek el, hanem számosságban is túlnövik a kooperálókat.
-Az osztódás során létrejött új sejtek képesek felgyorsítani a defektálók terjedését, de jelenleg ez a modell még nem tükrözi a valóságot teljes egészében. 
+Az osztódás során létrejött új sejtek képesek felgyorsítani a defektálók terjedését, de ezen területen még további kísérletek szükségesek, hogy pontosabb képet kapjunk arról, hogy ez mennyire befolyásolja a játék végkimenetelét.
 
 \subsection{Összegzés}
 
-Összességében azt állíthatjuk, hogy sikerült egy olyan terméket létrehoznunk, mely megállja helyét
+Mindezen szimulációs eredmények azt igazolják, hogy ...
