@@ -11,9 +11,14 @@ A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet j
 
 \subsection{A játék felépítése}
 \subsubsection{Voronoi diagram}
-Az általunk vizsgált modell eltér a megszokottól abban, hogy a sejtek ábrázolására voronoi hálózatokat használ. Térbeli játékok esetén általában szabályos pontrácsokkal (??) vagy skála-független hálózatokkal dolgoznak. Míg az előbbi figyelmen kívül hagyja a kapcsolatok sokféleségét, az utóbbi nem megfelelő, ha az egyedek egy síkban helyezkednek el. (?? kérdéses rész)
+Az általunk vizsgált modell eltér a megszokottól abban, hogy a sejtek ábrázolására voronoi hálózatokat használ. Térbeli játékok esetén általában szabályos pontrácsokkal (??) vagy skála-független hálózatokkal dolgoznak. Míg az előbbi figyelmen kívül hagyja a kapcsolatok sokféleségét, az utóbbi nem megfelelő, ha az egyedek egy síkban helyezkednek el \cite{archetti2016cooperation}. (?? kérdéses rész)
 
-Voronoi meghatározás  
+Legyen egy \textit{X} metrikus térben \textit{d} a távolságfüggvény, \textit{K} indexhalmaz, \(\{P_k\}_{k \in K}\) pedig \textit{X} nemüres résztereinek (subset?? részhalmaz? site) listája. A \(P_k\)-hoz tartozó \(R_k\) voronoi cella a \(P_k\)-hoz legközelebbi pontok halmaza: 
+\begin{equation}
+R_k = \{x \in K | d(x,P_k) \leq d(x,P_j), \forall j \neq k\}
+\end{equation}
+ahol \(d(x,A) = inf\{d(x,a)|a \in A\}\) \textit{x} pont távolságát jelöli \textit{A} résztértől. Egy voronoi diagram voronoi cellák rendezett listája
+  
 
 \subsubsection{A játék szereplői és a stratégiák}
 A játékban résztvevő sejtek két stratégia közül választhatnak: \textit{kooperálnak}, azaz termelnek növekedési faktorokat, vagy \textit{defektálnak}, azaz nem vesznek részt a faktorok termelésében. A stratégiák \textit{nyereségének (payoff)} kiszámítására a következő képletet használtuk: \(p = b(j) - c\) ahol a \textit{c} a növekedési faktor előállításának költsége, \textit{j} a csoportban résztvevő kooperatív sejtek száma és
