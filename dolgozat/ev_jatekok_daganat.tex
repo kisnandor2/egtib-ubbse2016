@@ -39,8 +39,10 @@ g(i) = 1/[1 + e^{(-z(i-d)/D)}]
 függvények segítségével kiszámolhatjuk az \textit{i} távolságra található kooperatív sejtek befolyásának mértékét. Így a termelők száma nem a fent említett \textit{j} lesz, hanem a \textit{G}-vel kiszámított súlyozott összeg. A képletben szereplő \textit{d} és \textit{D} a diffúziós gradiens alakját határozzák meg, a \textit{z} a gradiens meredekségét az áthajlási pontban\cite{archetti2016cooperation}.
 
 \subsection{Osztódás}
-Kezdeti szimulációink során nem vettük figyelembe azt, hogy a sejtek életük során szaporodni, azaz osztódni is szoktak. A legtöbbet használt modell, mely elég közel áll a természethez, az a Gompertz modell, amely leírja a tumor méretének időbeli változását a következő képlettel
+Kezdeti szimulációink során nem vettük figyelembe azt, hogy a sejtek életük során szaporodni, azaz osztódni is szoktak. A legtöbbet használt modell, mely elég közel áll a természethez, az a Gompertz modell, amely leírja a tumor méretének időbeli változását a következő képlettel:
 \begin{equation}
 	n_t = K \bigg(\frac{n_0}{K} \bigg) ^ {e^{(- \alpha t)}},
 \end{equation}
-ahol $n_t$ a populáció mérete a $t$ időpillanatban, $n_0$ a populáció kezdeti mérete, $K$ az elérhető maximális mérete a tumornak, míg az $\alpha$ egy konstans, mely a sejtek burjánzási képességével kapcsolatos\cite{wiki:gompertz}.
+ahol $n_t$ a populáció mérete a $t$ időpillanatban, $n_0$ a populáció kezdeti mérete, $K$ az elérhető maximális mérete a tumornak, míg az $\alpha$ egy konstans, mely a sejtek burjánzási képességével kapcsolatos\cite{wiki:gompertz}. Ez a modell nem csak, hogy egy valósághoz közeli képet ad, de azt is biztosítja, hogy a sejtek száma nem nő túl nagyra, mert az a szimulációs rész során komoly lassuláshoz vezetne. 
+
+A játék során használt modellbe könnyen beépíthető, viszont nem veszi figyelembe azt, hogy éppen milyen típusú sejt (kooperáló/defektáló) osztódik. Ez nem azt jelenti, hogy az eredmény amit így kapunk nem elég pontos, hanem azt, hogy nem minden esetben jó ez a megközelítés. Az is megtörténhet, hogy a defektáló sejtek gyorsabban terjednek mint a kooperálók és így egy hibás képet kapunk a játékról.
