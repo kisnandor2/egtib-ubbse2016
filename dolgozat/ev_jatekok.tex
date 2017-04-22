@@ -19,48 +19,22 @@ Az idő szerepe fontos osztályozási kritérium, eszerint beszélhetünk \texti
 \subsubsection{Nash-egyensúly}
 A játékelmélet egyik központi fogalma a Nash-egyensúly. Egy stratégia-együttes Nash-egyensúlyban van ha a csoportban egyik félnek sem érdemes eltérni az alkalmazott stratégiától, amennyiben egyik fél sem változtat a sajátján. Tekintsük \(G = ((N,S_i,u_i), i = 1,...,n)\) rendszert egy véges stratégia játék reprezentációjának, ahol \textit{N} a játékosok halmaza, \textit{n} pedig a játékosok száma. Minden \(i \in N\) játékos a \(S_i\) lépés-halmazból választhat. \(S = S_1 \times S_2 \times ... \times S_n\)  a játék összes kimenetelének halmaza, ahol \(s \in S\) egy stratégia-együttes. Minden \(i \in N\) játékos nyereségét a \(u_i:S \to \mathbb{R}\) hasznosságfüggvény írja le. Jelöljük \((s_i^*,s_i) = (s^*_1,...,s_i,...,s_n^*)\) -vel azt a stratégia-együttest, amelyet az \(s^*\)-ból kapunk ha az \textit{i} játékos stratégiáját kicseréljük \(s_i\)-re. Egy \(s^*\) stratégia-együttes Nash-egyensúlyban van, ha az \(u_i(s_i^*,s_i)\leq u_i(s^*) \) egyenlőtlenség igaz \(\forall i = 1,...,n, \forall s_i \in S_i, s_i \ne s_i^*\) esetén \cite{nash1951non}.
 
-dinamikák: szinkron aszinkron
-
 \subsection{Játékelmélet a biológiában}
 A játékelmélet alkalmazása a biológiában az \textit{evolúciós játékelmélet}. Maynard Smith, a terület első és legismertebb alakja, kijelenti, hogy az addigi nézetekkel ellentétben, a játékosoknak nem kell kötelező módon racionálisan dönteniük, elegendő ha van egy stratégiájuk. A stratégia genetikailag örökölt jelleg, ami az egyed viselkedését befolyásolja. Sikerét az mutatja, hogy mennyire tud fennmaradni és milyen gyakorisággal jelenik meg más stratégiák között. A résztvevők szelekciós sikerét a \textit{fitnesz} fejezi ki (a szaporodásra való relatív esély). Az evolúciós játékok segítségével modellezhetjük a fajon belüli rivalizálást, a ragadozó-préda kapcsolatot de akár a gének vagy baktériumok közötti kölcsönhatásokat is. A klasszikus játékelmélettel ellentétben itt a stratégiák változásának dinamikájára helyeződik/tevődik a hangsúly. Egészen egyszerű játékok esetén is megtörténik, hogy a hosszútávú eredmény nem a Nash-egyensúly, hanem rendszeres vagy rendszertelen oszcillálás \cite{nowak2004evolutionary}. Evolúciós játékokban az egyensúlyt az \textit{evolúciósan stabil stratégia} jelenti. Egy stratégia evolúciósan stabil, ha az azt alkalmazó populáció egy adott környezetben nem győzhető le semmilyen más alternatív, kezdetben kevés létszámú stratégiával.
-
-- nemek aránya, fajon belüli rivalizálás, ragadozó-préda kapcsolat stb
-- gének, baktériumok
-- Nash egyensúly nem elég , oszcillálás , 
-Egyik legegyszerűbb játékelméleti modell két stratégiával és négy lehetséges eredménnyel dolgozik. A játékosok együttműködhetnek vagy defektálhatnak. Ha mindkét játékos kooperál nagyon a nyereségük mintha mindketten defektálnának, de ha egyik kooperál a másiknak jobban megéri kihasználni azt és nem együttműködni. A kooperáló játékossal két dolog történhet: vagy az éri meg jobban ha ő is változtat a stratégián és nem hagyja, hogy kizsákmányolják, mint a jól ismert fogolydilemmában (ábra), vagy még mindig akkor dönt jobban ha továbbra is együttműködik, ahogyan a héja-galamb játékban (ábra) történik. A kihívást a nyereségfüggvény helyes beállítása jelenti, hiszen attól függ, hogy egyik vagy másik játékhoz hasonlítjuk a természetben előforduló jelenségeket. 
-legegyszerűbb modell: két stratégia, négy lehetséges eredmény: kooperál, defektál
-lehetséges esetek tárgyalni: kimenet: fogolydilemma vagy héja galamb
-kihivás: melyik játékhoz hasonlítjuk? a hasznossági függvény jó beállítása
-általánosan két stratégia esetén: a eltűnik stb
+ 
+Egyik legegyszerűbb játékelméleti modell két stratégiával és négy lehetséges eredménnyel dolgozik. A játékosok együttműködhetnek vagy defektálhatnak. Ha mindkét játékos kooperál nagyon a nyereségük mintha mindketten defektálnának, de ha egyik kooperál a másiknak jobban megéri kihasználni azt és nem együttműködni. A kooperáló játékossal két dolog történhet: vagy az éri meg jobban ha ő is változtat a stratégián és nem hagyja, hogy kizsákmányolják, mint a jól ismert fogolydilemmában (ábra), vagy még mindig akkor dönt jobban ha továbbra is együttműködik, ahogyan a héja-galamb játékban (ábra) történik. A kihívást a nyereségfüggvény helyes beállítása jelenti, hiszen attól függ, hogy egyik vagy másik játékhoz hasonlítjuk a természetben előforduló jelenségeket \cite{nowak2004evolutionary}. 
 
 \subsubsection{Replikátor dinamika}
-evolúciós játékok dinamikája
-dinamika differenciálegyenlete 
-gyakoriság-függő szelekció biológiai játékokban
-heterogén pop, véges számú stratégia, növekedés arányos a fitnesszel
-ez a dinamika átalakul, ha térbeli játékokkal foglalkozunk
-itt legtöbbször rácsszerűen helyezkednek el és csak a szomszédokkal lépnek kapcsolatba
-szinkron aszinkron
+A replikátor dinamika az egyik módja a gyakoriság-függő szelekció vizsgálatának. A megközelítés egy heterogén populációt feltételez, véges számú stratégiával, ahol a növekedés arányos a fitnesszel. A játék dinamikája a 
+\begin{equation}
+\frac{dx_i}{dt} = x_i(f_i(x) - F(x))
+\end{equation}
+differenciálegyenlettel írható le, ahol \(x_i\) az \textit{i} stratégia gyakorisága, \(f_i(x)\) a stratégia várható nyeresége az \(x = (x_1,...,x_n)\) eloszlású populációban, \(F(x)\) pedig a populáció átlagos nyeresége.
+Ez a dinamika átalakul ha térbeli játékokkal foglalkozunk, ahol a játékosok legtöbbször egy rácson helyezkednek el egy síkban és csak a szomszédokkal lépnek kapcsolatba. Számít emellett az is, hogy szinkron vagy aszinkron módon számoljuk ki a nyereségeket \cite{hummert2014evolutionary}. 
 
 \subsubsection{Adaptív dinamika}
-replikátor  nem beszél mutációról
-végeredmény függ a mutáció mértékétől
-képlet
-evolúciósan stabil - nem lehet győzheti le mutáns ha a kezdeti arány elég kicsi
-ha a jelenlegi veri asz összeset: verhetetlen
-
-
-\iffalse
-Kezdetben a darwini kiválasztódást próbálták modellezni a játékelmélet eszközeinek segítségével. 
-
-
-Játékok típusai, osztályozás
-Evol. játékok mint egy ág
-
-\subsection{Evolúciós stabil stratégia -- fitnesz mint nyereség}
-\subsection{Játékok dinamikája(Dynamic game theory)}
-\subsubsection{Replikátor dinamika}
-\subsubsection{Adaptív dinamika (Adaptive dynamics)}
-\subsection{Térbeli játékok (spatial games)}
-
-\fi
+A replikátor dinamikával ellentétben, ahol nem esik szó mutációról, az adaptív dinamika egy mutáns egyed vagy egyedek fitneszét vizsgálja egy rezidens populációban. Mint már említettük, egy populáció akkor stabil ha egyetlen mutáns csoport stratégiája sem múlja felül a jelenleg alkalmazottat, feltéve ha az új egyedek aránya elég kicsi. Tehát a végeredmény függ a mutáns egyedek  kezdeti arányától. A dinamika a 
+\begin{equation}
+\frac{dx_i}{dt} = \frac{\partial}{\partial y_i}A(y,x), i = 1,...,n
+\end{equation}
+differenciálegyenlettel számítható ki \(y = x\)-ben, ahol \textit{x} az eredeti stratégia, \(y = x + h\) a mutáns stratégiája (\textit{x}-hez közel álló), \textit{A(y,x)} egy \textit{y} stratégiát \textit{x}-szel szemben játszó egyed nyeresége. A relatív nyereség az \(A(y,x) - A(x,x)\) \cite{hummert2014evolutionary}.
