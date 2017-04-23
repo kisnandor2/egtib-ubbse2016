@@ -21,7 +21,7 @@ Megfelelve a követelményeknek melyeket a "megrendelő" állított fel, a felha
 	\item diffúziós távolság mérete
 	\item akarja-e a felhasználó, hogy a sejtek osztódásra legyenek képesek
 \end{itemize}
-
+Ezen paramétereket felhasználva kigenerálható egy voronoi diagram mely a sejteket ábrázolja. A simulate gombot megnyomva ez az adatcsomag eljut a szerverhez amely elvégzi az erőforrás igényes számításokat melynek eredményét visszaküldi a kliensnek, ami majd azt megjeleníti.
 Az alkalmazásunkat felhasználási szempontból két fő komponensre oszthatjuk:
 
 \paragraph{Vizualizáció}- képes szimulálni kevés sejtből (max. 500) álló populációkat és ezeket generációnként meg is tudja jeleníteni. A megjelenítés interaktív, ami azt jelenti, hogy bármikor meg lehet állítani, folytatni vagy akár tekergetni mint egy filmet. Továbbá mindehhez tartozik egy grafikon is, mely a populációnak változását ábrázolja generációnként.
@@ -32,13 +32,13 @@ Az alkalmazásunkat felhasználási szempontból két fő komponensre oszthatjuk
 
 A szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP mellett, websocketen keresztül is folyik. Az utóbbira azért van szükség, mert gyorsítja az adatok áramlását, és alkalmas nagyobb mennyiségű adat átvitelére, mely a szimuláció során keletkezik. 
 
-Kliens oldali technológiák közé sorolandó a Bootstrap, mely segítségével nem csak desktopon de mobil platformon is elegáns az oldal kinézete, valamint az AngularJS, ami biztosítja az oldal dinamikusságát. A Paper.js a rajzok megjelenítéséért felelős, és ennek egy segédkönyvtára pedig kifejezetten a voronoi diagram ábrázolásáért, úgy vizuálisan mint adatszerkezeti szinten is. A grafikonok kirajzolását kezdetben a Highchartsra míg a későbbiekben a könnyebben használható Plotly.js-re bíztuk.
+Kliens oldali technológiák közé sorolandó a Bootstrap\cite{soft:bootstrap}, mely segítségével nem csak desktopon de mobil platformon is elegáns az oldal kinézete, valamint az AngularJS\cite{soft:angular}, ami biztosítja az oldal dinamikusságát. A Paper.js\cite{soft:paper} a rajzok megjelenítéséért felelős, és ennek egy segédkönyvtára\cite{soft:voronoiModule} pedig kifejezetten a voronoi diagram ábrázolásáért, úgy vizuálisan mint adatszerkezeti szinten is. A grafikonok kirajzolását kezdetben a Highchartsra\cite{soft:highcharts} míg a későbbiekben a könnyebben használható Plotly.js-re\cite{soft:plotly} bíztuk.
 
-A szerverünk NodeJS alapú, az Express keretrendszert használja fel.Itt folyik az erőforrás igényes számítások nagy része, így itt is jelen van a Paper.js voronoi modulja.
+A szerverünk NodeJS\cite{soft:node} alapú, az Express\cite{soft:express} keretrendszert használja fel. Itt folyik az erőforrás igényes számítások nagy része, így itt is jelen van a Paper.js voronoi modulja\cite{soft:voronoiModule}.
 
-Mindezt összefogva és belerakva egy Dockerbe, már mehet is egy felhőbe, a mi esetünkben ez a Heroku (https://egtib.herokuapp.com/). A fejlesztési és tesztelési folyamatot amennyire csak lehetett megpróbáltuk automatizálni, így a Travis CI az, ami a projektünket teszteli és amennyiben szükséges kitelepíti a legújabb verziót a felhőbe.
+Mindezt összefogva és belerakva egy Dockerbe\cite{soft:docker}, már mehet is egy felhőbe, a mi esetünkben ez a Heroku (https://egtib.herokuapp.com/). A fejlesztési és tesztelési folyamatot amennyire csak lehetett megpróbáltuk automatizálni, így a Travis CI\cite{soft:travis} az, ami a projektünket teszteli és amennyiben szükséges kitelepíti a legújabb verziót a felhőbe.
 
-Az alkalmazásunk minőségét unit és E2E tesztekkel próbáltuk meg biztosítani, ezekhez a Mocha és TestCafe keretrendszereket használtuk.
+Az alkalmazásunk minőségét unit és E2E tesztekkel próbáltuk meg biztosítani, ezekhez a Mocha\cite{soft:mocha} és TestCafe\cite{soft:testcafe} keretrendszereket használtuk.
 
 \begin{figure}[ht!]
 	\centering
