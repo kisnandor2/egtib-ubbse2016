@@ -22,7 +22,21 @@ A játékelmélet egyik központi fogalma a Nash-egyensúly. Egy stratégia-egy�
 \subsection{Játékelmélet a biológiában}
 A játékelmélet alkalmazása a biológiában az \textit{evolúciós játékelmélet}. Maynard Smith, a terület első és legismertebb alakja, kijelenti, hogy az addigi nézetekkel ellentétben, a játékosoknak nem kell kötelező módon racionálisan dönteniük, elegendő ha van egy stratégiájuk. A stratégia genetikailag örökölt jelleg, ami az egyed viselkedését befolyásolja. Sikerét az mutatja, hogy mennyire tud fennmaradni és milyen gyakorisággal jelenik meg más stratégiák között. A résztvevők szelekciós sikerét a \textit{fitnesz} fejezi ki (a szaporodásra való relatív esély). Az evolúciós játékok segítségével modellezhetjük a fajon belüli rivalizálást, a ragadozó-préda kapcsolatot de akár a gének vagy baktériumok közötti kölcsönhatásokat is. A klasszikus játékelmélettel ellentétben itt a stratégiák változásának dinamikájára helyeződik/tevődik a hangsúly. Egészen egyszerű játékok esetén is megtörténik, hogy a hosszútávú eredmény nem a Nash-egyensúly, hanem rendszeres vagy rendszertelen oszcillálás \cite{nowak2004evolutionary}. Evolúciós játékokban az egyensúlyt az \textit{evolúciósan stabil stratégia} jelenti. Egy stratégia evolúciósan stabil, ha az azt alkalmazó populáció egy adott környezetben nem győzhető le semmilyen más alternatív, kezdetben kevés létszámú stratégiával.
  
-Egyik legegyszerűbb játékelméleti modell két stratégiával és négy lehetséges eredménnyel dolgozik. A játékosok együttműködhetnek vagy defektálhatnak. Ha mindkét játékos kooperál nagyon a nyereségük mintha mindketten defektálnának, de ha egyik kooperál a másiknak jobban megéri kihasználni azt és nem együttműködni. A kooperáló játékossal két dolog történhet: vagy az éri meg jobban ha ő is változtat a stratégián és nem hagyja, hogy kizsákmányolják, mint a jól ismert fogolydilemmában (ábra), vagy még mindig akkor dönt jobban ha továbbra is együttműködik, ahogyan a héja-galamb játékban (ábra) történik. A kihívást a nyereségfüggvény helyes beállítása jelenti, hiszen attól függ, hogy egyik vagy másik játékhoz hasonlítjuk a természetben előforduló jelenségeket \cite{nowak2004evolutionary}. 
+Egyik legegyszerűbb játékelméleti modell két stratégiával és négy lehetséges eredménnyel dolgozik. A játékosok együttműködhetnek vagy defektálhatnak. Ha mindkét játékos kooperál nagyon a nyereségük mintha mindketten defektálnának, de ha egyik kooperál a másiknak jobban megéri kihasználni azt és nem együttműködni. A kooperáló játékossal két dolog történhet: vagy az éri meg jobban ha ő is változtat a stratégián és nem hagyja, hogy kizsákmányolják, mint a jól ismert fogolydilemmában (ábra \ref{fig:prisoners}.), vagy még mindig akkor dönt jobban ha továbbra is együttműködik, ahogyan a héja-galamb játékban (ábra \ref{fig:hawkdove}.) történik. A kihívást a nyereségfüggvény helyes beállítása jelenti, hiszen attól függ, hogy egyik vagy másik játékhoz hasonlítjuk a természetben előforduló jelenségeket \cite{nowak2004evolutionary}.
+ 
+\begin{minipage}{\linewidth}
+	\centering
+	\begin{multicols}{2}
+		\begin{Figure}
+			\includegraphics[width=\linewidth]{images/prisoners}
+			\captionof{figure}{Fogolydilemma: két elkülönített fogoly dönthet, hogy hallgat vagy vall a másik ellen. A mátrix a nyereségeket (börtönben töltött évek) szemlélteti\label{fig:prisoners}}
+		\end{Figure}
+		\begin{Figure}
+			\includegraphics[width=\linewidth]{images/hawkdove}
+			\captionof{figure}{Héja-galamb játék: két héja mindig megküzd a \textit{V} erőforrásért, de ennek költsége \textit{C}, két galamb osztozkodik, egy galamb pedig mindig átengedi az erőforrást a héjának. \label{fig:hawkdove}}
+		\end{Figure}
+	\end{multicols}
+\end{minipage}
 
 \subsubsection{Replikátor dinamika}
 A replikátor dinamika az egyik módja a gyakoriság-függő szelekció vizsgálatának. A megközelítés egy heterogén populációt feltételez, véges számú stratégiával, ahol a növekedés arányos a fitnesszel. A játék dinamikája a 
