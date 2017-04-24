@@ -1,6 +1,6 @@
 \newcommand{\projectName}{Az EGTIB}
 
-\section{\projectName{} bemutatása}
+\chapter{\projectName{} bemutatása}
 
 \projectName{} projekt célja egy olyan felhasználóbarát felület, mely lehetőséget teremt a daganatos sejtek játékelméleti modellezésére és szimulációjára, valamint a szimulációs eredmények megjelenítésére. Ezért született meg, a mai trendeket figyelembe véve, egy kliens-szerver architektúrán alapuló webalkalmazás, mely részben a\cite{archetti2016cooperation}-ben megjelent modellt implementálja, és ahhoz új funkcionalitásokat is hozzáad.
 
@@ -10,7 +10,7 @@
 	\caption{Pillanatkép az alkalmazásról \label{fig:SimulateWithDiagram}}
 \end{figure}
 
-\subsection{Funkcionalitások}
+\section{Funkcionalitások}
 
 Megfelelve a követelményeknek melyeket a "megrendelő" állított fel, a felhasználónak lehetősége van bizonyos paramétereket megválasztani még a szimulálási fázis előtt:
 \begin{itemize}[noitemsep]
@@ -28,7 +28,7 @@ Az alkalmazásunkat felhasználási szempontból két fő komponensre oszthatjuk
 
 \paragraph{Szimuláció}- alkalmas nagyobb (max. 2000) populációval dolgozni, viszont ezek megjelenítése már túl sok időt venne igénybe, így csak a fentebb említett grafikon segítségével ábrázolja azt, hogy mi is történik a sejtek között. Előnye a vizualizációs részhez képest elsősorban az, hogy sokkal nagyobb populációval tud dolgozni, de a paraméterlista is változatosabb (a szimuláció során használt függvények viselkedésébe is bele tud szólni a felhasználó) és hatalmas kényelmi faktornak számít az, hogy több, különböző paraméterezésű szimulációt is képes egy gombnyomással lekérni.
 
-\subsection{Felhasznált technológiák}
+\section{Felhasznált technológiák}
 
 A szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP mellett, websocketen keresztül is folyik. Az utóbbira azért van szükség, mert gyorsítja az adatok áramlását, és alkalmas nagyobb mennyiségű adat átvitelére, mely a szimuláció során keletkezik. 
 

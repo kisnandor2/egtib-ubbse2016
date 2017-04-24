@@ -1,5 +1,5 @@
 
-\section{A szimuláció eredményei}
+\chapter{A szimuláció eredményei}
 
 Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre (melyeket Archetti is használt\cite{archetti2016cooperation}) elvégeztünk 100-100 szimulációt, minden egyes diffúziós távolságra 1-től 5-ig.
 
@@ -48,7 +48,7 @@ Megállapítottuk, hogy ugyanarra az eredményre (Ábra \ref{fig:DistChange}) ju
 
 Ezzel projektünk első mérföldkövét leraktuk, így most már kísérletezhetünk különböző paraméterekkel, hogy megvizsgáljuk a populáció viselkedését. Egy pár esetet a következő fejezetekben tárgyalunk.
 
-\subsection{A költség és nyereség hatása}
+\section{A költség és nyereség hatása}
 
 Mint ahogyan azt már láttuk, a kooperáló sejtek termelési költsége nagyban befolyásolja a játék végkimenetelét (Ábra \ref{fig:CoopCostChange}), ami nem nagy meglepetés, hisz minél többe kerül a termelés annál jobban megéri élősködni. Az esetek többségében a defektálás a legkifizetődőbb, de alacsony költségek mellett fenntartható egy bizonyos egyensúly is a két fél között, sőt, extrém körülmények (paraméterek) mellett az is elérhető, hogy a teljes populáció a kooperálás mellett döntsön.
 
@@ -72,7 +72,7 @@ Mint ahogyan azt már láttuk, a kooperáló sejtek termelési költsége nagyba
 \end{minipage}
 
 
-\subsection{Diffúziós távolság hatása}
+\section{Diffúziós távolság hatása}
 
 Egyik legkényesebb paraméterünk amelyet változtatni lehet, az a diffúziós távolság, amely növelésével valósághűbb adatokat kaphatunk. Sajnos nem állnak rendelkezésünkre erre vonatkozó adatok a biológiából, így csak egy pár, már más által is használt értékekre végeztünk kísérleteket (Ábra \ref{fig:DiffDist}).
 
@@ -93,7 +93,7 @@ Egyik legkényesebb paraméterünk amelyet változtatni lehet, az a diffúziós 
 
 Megfigyelhető, hogy a távolság növekedésével a defektáló sejtek jóval könnyebben terjednek el, nem csak a közvetlen szomszédokat befolyásolják, hanem a tőlük távolabb elhelyezkedőeket is. Meg kell jegyeznünk, hogy ezt a paramétert a hasnyálmirigyrák esetén megállapították\cite{archetti2015heterogeneity}, valamint az is biztos, hogy az esetek túlnyomó részében ez az érték 5-10-től 30-60-ig terjedhet\cite{archetti2016cooperation}.
 %További megvalósítandó feladataink közé tartozik egy olyan funkció mely révén ellenanyagot juttathatunk a daganatba, vagy egy terápiát alkalmazhatunk.
-\subsection{Osztódásra képes populációk}
+\section{Osztódásra képes populációk}
 
 Eddigi szimulációink során a populáció mérete állandó volt, és egy adott modellt követett. Nézzük meg mi történik ha a sejtek osztódni is képesek nem csak stratégiát váltani (Ábra \ref{fig:Divide}). 
 
