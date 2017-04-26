@@ -11,7 +11,6 @@ simulation.json
 *.toc
 *.bak
 *.log
-*.cls
 *.blg
 *.gz
 *.pdf
