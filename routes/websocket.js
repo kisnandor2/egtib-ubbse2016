@@ -45,8 +45,24 @@ Socket.prototype.listen = function() {
 				session.gen_count = data.gen_count;
 				session.coop_cost = data.coop_cost;
 				session.dist 			= data.dist;
-				session.randomGeneratorID = data.randomGeneratorID;
-				logger.debug("Websocket coop cost recieved: ", data.coop_cost);
+				if (data.itShouldDivide == undefined){
+					session.itShouldDivide = false;
+					logger.debug('itShouldDivide parameter did not arrive. Set to false');
+				}
+				else{
+					session.itShouldDivide = data.itShouldDivide;
+				}
+				if (data.steepness != undefined){
+					session.constantParameters = {
+						steepness: data.steepness,
+						inflexiosPontHelye: data.inflexiosPontHelye,
+						shapeOfDif: data.shapeOfDif,
+						z: data.z,
+					}
+				}
+				else{
+					logger.debug('Visualization');
+				}
 				//Set that variable
 				sessionParser.store.set(socket.sessionID, session, function(){
 					socket.send('ready');

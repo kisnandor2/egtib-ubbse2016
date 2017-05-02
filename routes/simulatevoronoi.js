@@ -1,6 +1,5 @@
 const voronoi = new (require('../public/javascripts/voronoi_core'))();
 const logger = require('./logger');
-const myRandomGenerator = new (require('./MyRandomGenerator'))();
 const Timer = require('../public/javascripts/timer');
 const fs = require('fs');
 const constantFunctions = new (require('./ConstantFunctions'))();
@@ -17,6 +16,7 @@ function SimulateVoronoi() {
 	this.diagram 						= undefined;
 	this.dist               = undefined;
 	this.cooperatingCost    = undefined;
+	this.itShouldDivide			= undefined;
 	this.defectingCost      = 0;
 
 	constantFunctions.dist = 1;
@@ -35,7 +35,6 @@ function SimulateVoronoi() {
  * @returns {randomGenerator}
  */
 SimulateVoronoi.prototype.swtichRandomGenerator = function(randomGeneratorID) {
-	return Math;
 	if (randomGeneratorID == 1){
 		myRandomGenerator.lastIndex = 0;
 		return myRandomGenerator;
@@ -65,7 +64,7 @@ SimulateVoronoi.prototype.getDividingChance = function(time){
  * @param {float} coop_cost - Cost of a cooperating cell(between 0 and 1)
  * @param {int} dist 				- Distance of interaction used in the simulation
  */
-SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, dist, randomGeneratorID }) {
+SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, dist, itShouldDivide, constantParameters }) {
 	logger.info('Init voronoi from the client data');
 	logger.debug('Client data: ', {sites_count: sites.length, bbox, gen_count, coop_cost, dist});
 
@@ -74,8 +73,13 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.generationCount = gen_count;
 	this.cooperatingCost = coop_cost;
 	this.dist = dist;
+	this.itShouldDivide = itShouldDivide;
+
+	if (constantParameters){ //set if there is what to set
+		this.setConstantFunctions(constantParameters)
+	}
+
 	constantFunctions.distance = dist;
-	this.randomGenerator = this.swtichRandomGenerator(randomGeneratorID);
 
 	try {
 		for (let i = 0; i < sites.length; ++i) {
@@ -104,6 +108,18 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 }
 
 /**
+ * Set the constant values of the ConstantFunctions
+ * Used when accessing simulaition from the simulateWithoutDiagram page
+ * parameters - a lot :)
+ */
+SimulateVoronoi.prototype.setConstantFunctions = function({steepness, inflexiosPontHelye, shapeOfDif, z}){
+	this.constantFunctions.steepness = steepness;
+	this.constantFunctions.inflexiosPontHelye = inflexiosPontHelye;
+	this.constantFunctions.shapeOfDif = shapeOfDif;
+	this.constantFunctions.z = z;
+}
+
+/**
  * Simulates using the parameters set in the init function 
  */
 SimulateVoronoi.prototype.simulate = function() {
@@ -112,17 +128,14 @@ SimulateVoronoi.prototype.simulate = function() {
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
 				let divChance = this.getDividingChance(j+1);
-				// let sitesBeforeChange = this.sites.map(val => Object.assign({}, val));
 				for (let i = 0; i < this.sites.length; ++i) {
 						//Select a random neighbor and change payoffs if needed
 						actualPoint = this.sites[i]
 						let neighbors = this.getNeighbors(actualPoint);
-						let rand = Math.round(this.randomGenerator.random() * (neighbors.length-1));
+						let rand = Math.round(Math.random() * (neighbors.length-1));
 						try {
-								// console.log(neighbors[rand].payoff, actualPoint.payoff)
 								if (neighbors[rand].attrib != actualPoint.attrib && neighbors[rand].payoff > actualPoint.payoff) {
-										// console.log(neighbors[rand].payoff, actualPoint.payoff)
-										actualPoint.attrib = neighbors[rand].attrib;
+										actualPoint.attrib = neighbors[rand].attrib;//neighborMatrix[actualPoint.voronoiId][neighbors[rand].voronoiId];
 										actualPoint.cost = neighbors[rand].cost;
 								}
 						} catch (error) {
@@ -130,10 +143,14 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
-						// sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
+						if (this.itShouldDivide){
+							sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance));
+						}
 				}
 				//Create a copy of this generation and push it to results
-				// this.sites = sitesAfterSplit;
+				if (this.itShouldDivide){
+					this.sites = sitesAfterSplit;
+				}
 				try{
 					this.diagram = voronoi.compute(this.sites, this.bbox);
 				}				
@@ -178,7 +195,7 @@ SimulateVoronoi.prototype.reCalculateSites = function(){
 /**
  * Tests if every site has a voronoiId
  */
-SimulateVoronoi.prototype.checkVoronoiID = function() {
+SimulateVoronoi.prototype.checkVoronoiId = function() {
 	//Error handling function, checks if each site after compute has a VoronoiID
 	//If not, that s quite a big problem
 	for (let i = 0; i < this.sites.length; ++i){
@@ -393,10 +410,5 @@ SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
 				neighborsCount: allNeighborsCount
 			};
 }
-
-/**
- * Export the randomGenerator to be accessed from the route
- */
-SimulateVoronoi.myRandomGenerator = myRandomGenerator;
 
 module.exports = SimulateVoronoi;

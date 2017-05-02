@@ -25,13 +25,12 @@ class Cell {
 	 *
 	 * @param {array} neighbors - the neighbors of the point(used for calculating the new points)
 	 * @param {float}	divChance - the chance that this cell will divide
-	 * @param {Object} randomGenerator - the generator that will be used at generating random number
 	 * @returns {array} dividingResult - an array with one or two cells
 	 */
-	divideCell(neighbors, divChance, randomGenerator){
+	divideCell(neighbors, divChance){
 		let ret = [];
 		//Check if division is needed
-		if (randomGenerator.random() < divChance) {
+		if (Math.random() < divChance) {
 			//Find X coordinate to divide
 			let min = 9999,
 				shiftOnX = 0,

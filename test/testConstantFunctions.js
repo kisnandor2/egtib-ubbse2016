@@ -42,7 +42,7 @@ describe('ConstantFunctions', function() {
 			let assertedArray = new Array(localDist);
 			assertedArray[0] = 1;
 			for (var i = 1; i < localDist; ++i) {
-				assertedArray[i] = 1 - ((cf.g(i) - cf.g(0) / cf.g(localDist) - cf.g(0)));
+				assertedArray[i] = 1 - ((cf.g(i) - cf.g(0)) / (cf.g(localDist) - cf.g(0)));
 			}
 			assert.deepEqual(cf.G, assertedArray);
 		});
