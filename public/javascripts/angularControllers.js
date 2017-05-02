@@ -246,6 +246,7 @@ app.controller('simulationController', function($scope, $rootScope){
 				gen_count: $scope.voronoi.getGen_Count(),
 				coop_cost: $scope.voronoi.getCoop_Cost(),
 				dist: $scope.voronoi.getDist(),
+				itShouldDivide: $("#itShouldDivide")[0].checked 
 				//send more data here
 		});
 		$scope.connection.send(message);
