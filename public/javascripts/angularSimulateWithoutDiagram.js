@@ -40,6 +40,11 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 
 		//Makes voronoi visible for highChartsController to set the voronoi chart
 		$rootScope.voronoi = voronoi;
+
+		$scope.defaultSteepness = 20;
+		$scope.defaultInflectionPoint = 0.5;
+		$scope.defaultShapeOfDif = 0.5;
+		$scope.defaultSteepnessOfGrad = 3;
 	}
 	function initAlertBoxes(){
 		$scope.successMessage = $('<div />', {
@@ -119,6 +124,11 @@ app.controller('parameterController', function($scope, $timeout) {
 	$scope.$watch('distanceOfInteraction', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
 			return value < 0 || value > 10;
+		})
+	})
+	$scope.$watch('shapeOfDif', function(newVal, oldVal){
+		showAlerts(newVal, oldVal, function(value){
+			return value < 0 || value > 1;
 		})
 	})
 
@@ -316,7 +326,12 @@ app.controller('simulationController', function($scope, $rootScope){
 			gen_count: voronois[i].getGen_Count(),
 			coop_cost: voronois[i].getCoop_Cost(),
 			dist: voronois[i].getDist(),
-			randomGeneratorID: 1,
+			itShouldDivide: $scope.itShouldDivide
+			// steepness: $scope.steepness,
+			// inflectionPoint: $scope.inflectionPoint,
+			// shapeOfDifF: $scope.shapeOfDif,
+			// steepnessOfGrad: $scope.steepnessOfGrad
+
 		});
 		$scope.connection.send(message);
 		$scope.connection.onmessage = function(e) {
