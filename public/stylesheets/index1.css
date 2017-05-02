@@ -42,16 +42,3 @@ html, body{
 }
 
 
-ul.nav li a, ul.nav li a:visited, a.navbar-brand{
-    color: #00293c !important;
-}
-
-ul.nav li a:hover{
-    color: #f62a00 !important;
-}
-
-ul.nav li.active a {
-    color: #00293c !important;
-    background-color: #ffffff !important;
-}
-

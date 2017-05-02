@@ -3,7 +3,7 @@ class Cell {
 	 * Creates a cell object that will be used in the sites array
 	 * @constructor
 	 */
-	constructor({x, y, attrib, cost, bbox, voronoiId}) {
+	constructor({x, y, attrib, cost, bbox, voronoiId, baseAttrib}) {
 		this.x = x;
 		this.y = y;
 		this.attrib = attrib;
@@ -12,6 +12,12 @@ class Cell {
 		this.bbox = bbox;
 		this.payoff = undefined;
 		this.voronoiId = voronoiId;
+		if (baseAttrib == undefined){
+			this.baseAttrib == attrib;
+		}
+		else{
+					this.baseAttrib = baseAttrib;
+		}
 	}
 
 	/**
@@ -19,13 +25,12 @@ class Cell {
 	 *
 	 * @param {array} neighbors - the neighbors of the point(used for calculating the new points)
 	 * @param {float}	divChance - the chance that this cell will divide
-	 * @param {Object} randomGenerator - the generator that will be used at generating random number
 	 * @returns {array} dividingResult - an array with one or two cells
 	 */
-	divideCell(neighbors, divChance, randomGenerator){
+	divideCell(neighbors, divChance){
 		let ret = [];
 		//Check if division is needed
-		if (randomGenerator.random() < divChance) {
+		if (Math.random() < divChance) {
 			//Find X coordinate to divide
 			let min = 9999,
 				shiftOnX = 0,

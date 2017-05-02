@@ -7,6 +7,8 @@
 
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
+  <script type="text/javascript" src="/javascripts/util/colorProvider.js"></script>
+  <script src="https://cdn.jsdelivr.net/canvg/1.4.0/rgbcolor.js"></script>
   <script type="text/javascript" src="/javascripts/BaseVoronoi.js"></script>
 	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
   <script type="text/javascript" src="/javascripts/angularControllers.js"></script>
@@ -21,7 +23,12 @@
 
 {% block body %}
 <div ng-app="myApp">
-<div class="section" ng-controller="animatableVoronoiController">
+<div class="section page-height" id="voronoi" ng-controller="animatableVoronoiController">
+  <header>
+    <div class="container">
+          <h2>Parameters</h2>
+    </div>
+  </header>
   <div class="container" style="width:95%;">
     <div class="row" id="successMessageRow">
       <div class="col-md-4"></div>
@@ -33,7 +40,7 @@
     <div class="row">
       <div class="col-md-3">
         <div class="panel panel-default" ng-controller="parameterController">
-          <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Set the parameters for the next run here</div>
+          <div class="panel-heading text-center" color: rgb(255,255,255);">Set the parameters for the next run here</div>
           <div class="panel-body">
             <form class="form-horizontal" role="form">
               <div class="form-group">
@@ -76,18 +83,26 @@
                   <input type="text" min="1" max="4" class="form-control" id="distanceOfInteraction" ng-model="distanceOfInteraction" ng-init="distanceOfInteraction=defaultDistanceOfInteraction">
                 </div>
               </div>
+              <div class="checkbox">
+                <label><input type="checkbox" id="itShouldDivide" ng-modell="itShouldDivide" value="">Cell division</label>
+              </div>
             </form>
             <div class="row" ng-controller="simulationController">
               <div class="row">
                 <div class="col-md-1"></div>
                 <input type="button" class="btn btn-default submit col-md-10" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
                 <div class="col-md-1"></div>
-              </div>
+              </div><br>
               <div class="row">
                 <div class="col-md-1"></div>
                 <input type="button" class="btn btn-default submit col-md-10" value="Start the simulation" id="startSimulation" ng-click="simulate()">
                 <input type="button" class="btn btn-default submit col-md-10" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
                 <input type="button" class="btn btn-default submit col-md-10" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
+                <div class="col-md-1"></div>
+              </div><br>
+              <div class="row">
+                <div class="col-md-1"></div>
+                  <a type="button" class="btn btn-default col-md-10" href="#statistics">Go to statistics</a>
                 <div class="col-md-1"></div>
               </div>
             </div>
@@ -113,11 +128,16 @@
     </div>
   </div>
 </div>
-<div class="section" ng-controller="highChartsController">
+<div class="section page-height" id="statistics" ng-controller="highChartsController">
+  <header>
+    <div class="container">
+      <h2>Satistics</h2>
+    </div>
+  </header>
   <div class="container">
     <div class="row">
       <div class="panel panel-default">
-        <div class="panel-heading text-center" style="background-color: #337CBB; color: rgb(255,255,255);">Statistics</div>
+        <div class="panel-heading text-center" color: rgb(255,255,255);">Statistics</div>
         <div class="panel-body text-center">
           <div id="highChartsContainer"></div>
         </div>

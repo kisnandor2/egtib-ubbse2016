@@ -76,8 +76,19 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		$scope.dangerMessage.appendChild(successMessageX2[0]);
 	}
 	function initWebSocket(){
-		let HOST = location.origin.replace(/^http/, 'ws');
-		$scope.connection = new WebSocket(HOST);
+		try {
+			let HOST = location.origin.replace(/^http/, 'ws');
+			$scope.connection = new WebSocket(HOST);
+		}
+		catch (err) {
+			try {
+				$scope.connection = new WebSocket("localhost:3001");
+			}
+			catch (err) {
+				alert("The Server is not working!");
+				return;
+			}
+		}
 
 		function sleep(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));
@@ -235,6 +246,7 @@ app.controller('simulationController', function($scope, $rootScope){
 				gen_count: $scope.voronoi.getGen_Count(),
 				coop_cost: $scope.voronoi.getCoop_Cost(),
 				dist: $scope.voronoi.getDist(),
+				itShouldDivide: $("#itShouldDivide")[0].checked 
 				//send more data here
 		});
 		$scope.connection.send(message);
@@ -317,6 +329,7 @@ app.controller('highChartsController', function($rootScope){
 	initHighCharts();
 
 	function initHighCharts(){
+		let colorProvider = new ColorProvider();
 		var chart = Highcharts.chart('highChartsContainer', {
 			chart: {type: 'column'},
 			title: {text: 'Number of cells, over time'},
@@ -336,17 +349,16 @@ app.controller('highChartsController', function($rootScope){
 			plotOptions: {column: {stacking: 'normal'}},
 			series: [{
 				name: 'Productive',
-				color: '#f36205',
+				color: colorProvider.getRGBColor('c').toHex(),
 				data: [],
 			}, {
 				name: 'Non-productive',
-				color: '#2f98da',
+				color: colorProvider.getRGBColor('d').toHex(),
 				data: [],
 			}, {
-				name: 'NS',
+				name: 'Separator',
 				type: 'spline',
 				color: '#000000',
-				data: [],
 			}]
 		});
 

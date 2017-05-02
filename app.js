@@ -44,11 +44,12 @@ app.engine('html', nunjucks.render);
 app.set('view engine', 'html');
 
 app.use('/index', require('./routes/index'));
-app.use('/', require('./routes/greet'));
+app.use('/', require('./routes/index'));
 const voronoi = require('./routes/voronoi');
 app.use('/voronoi', voronoi.router);
 app.use('/simulateWithDiagram', require('./routes/simulateWithDiagram'));
 app.use('/simulateWithoutDiagram', require('./routes/simulateWithoutDiagram'));
+app.use('/charts', require('./routes/charts'));
 app.use(require('./routes/404'));
 
 var server = app.listen(portno);

@@ -1,12 +1,20 @@
+var voronoiAccessibleFromOutside;
+
 var app = angular.module('myApp', []);
 
 app.controller('baseVoronoiController', function($scope, $rootScope) {
+	initStatistics();
 	initVoronoi();
 	initAlertBoxes();
 	initWebSocket();
+	
+	function initStatistics(){
+		$rootScope.hideStatistics = true;
+	}
 
 	function initVoronoi(){
 		$scope.voronoi = new BaseVoronoi();
+		voronoiAccessibleFromOutside = $scope.voronoi;
 
 		var voronoi = $scope.voronoi;
 		//Distance of interaction
@@ -32,6 +40,11 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 
 		//Makes voronoi visible for highChartsController to set the voronoi chart
 		$rootScope.voronoi = voronoi;
+
+		$scope.defaultSteepness = 20;
+		$scope.defaultInflectionPoint = 0.5;
+		$scope.defaultShapeOfDif = 0.5;
+		$scope.defaultSteepnessOfGrad = 3;
 	}
 	function initAlertBoxes(){
 		$scope.successMessage = $('<div />', {
@@ -83,6 +96,7 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 			heartbeat();
 		}, 1000)
 	}
+
 });
 
 app.controller('parameterController', function($scope, $timeout) {
@@ -110,6 +124,11 @@ app.controller('parameterController', function($scope, $timeout) {
 	$scope.$watch('distanceOfInteraction', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
 			return value < 0 || value > 10;
+		})
+	})
+	$scope.$watch('shapeOfDif', function(newVal, oldVal){
+		showAlerts(newVal, oldVal, function(value){
+			return value < 0 || value > 1;
 		})
 	})
 
@@ -144,6 +163,7 @@ app.controller('parameterController', function($scope, $timeout) {
 app.controller('simulationController', function($scope, $rootScope){
 
 	$scope.addHighChartsWithData = function(i, {numberProductive, numberNonProductive, categories}){
+		let colorProvider = new ColorProvider();
 		let name = 'highChartsContainer' + i;
 		$('#panel').append('<div id="' + name + '"></div>');
 		let chart = Highcharts.chart(name, {
@@ -165,11 +185,11 @@ app.controller('simulationController', function($scope, $rootScope){
 			plotOptions: {column: {stacking: 'normal'}},
 			series: [{
 				name: 'Productive',
-				color: '#f36205',
+				color: colorProvider.getRGBColor('c').toHex(),
 				data: [],
 			}, {
 				name: 'Non-productive',
-				color: '#2f98da',
+				color: colorProvider.getRGBColor('d').toHex(),
 				data: [],
 			}, {
 				name: 'NS',
@@ -306,7 +326,12 @@ app.controller('simulationController', function($scope, $rootScope){
 			gen_count: voronois[i].getGen_Count(),
 			coop_cost: voronois[i].getCoop_Cost(),
 			dist: voronois[i].getDist(),
-			randomGeneratorID: 1,
+			itShouldDivide: $scope.itShouldDivide,
+			steepness: $scope.steepness,
+			inflexiosPontHelye: $scope.inflectionPoint,
+			shapeOfDif: $scope.shapeOfDif,
+			z: $scope.steepnessOfGrad
+
 		});
 		$scope.connection.send(message);
 		$scope.connection.onmessage = function(e) {
@@ -336,12 +361,7 @@ app.controller('simulationController', function($scope, $rootScope){
 			return;
 		}
 		$scope.recursiveSimulate(0, voronois);
-		//reset the randomGenerator
-		$.get("voronoi/reset", function(data, textStatus, response){
-			if (response.responseText != 'ok'){
-				alert('error');
-			}
-		});
-		$("body").removeClass("loading");
+		$("body").removeClass("loading");		
+		$rootScope.hideStatistics = false;
 	}
 });

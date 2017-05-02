@@ -10,8 +10,6 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 */
 	constructor(view, context){
 		super();
-		this.cooperatorColor = new paper.Color(0.95,0.38,0.02); //#f36205
-		this.defectorColor = new paper.Color(0.18,0.59,0.85); //#2f98da
 		this.view = view;
 		this.margin = 0;
 		this.oldSize = view.size;
@@ -21,6 +19,8 @@ class AnimatableVoronoi extends BaseVoronoi{
 		this.toBeRendered = -9999;
 		this.savedToBeRendered = -9999;
 
+		let provider = new ColorProvider();
+		this.colors = provider.getColorlist();
 		this.context = context;
 
 		this.bbox = {
@@ -176,7 +176,6 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 */
 	renderChartData(sitesList) {
 		this.resetChart();
-		this.addDataToChart(this.sites, 0);
 		for (let i = 0; i < sitesList.length; ++i){
 			this.addDataToChart(sitesList[i], i);
 		}
@@ -200,13 +199,11 @@ class AnimatableVoronoi extends BaseVoronoi{
 			return;
 		if (i >= sitesList.length)
 			return;
-		setTimeout(()=>{
-			this.toBeRendered++;
-			this.savedToBeRendered = this.toBeRendered;
-			this.sites = this.sitesList[i];
-			this.renderDiagram();
-			this.updateProgressBar(i);
-		}, 0)
+		this.toBeRendered++;
+		this.savedToBeRendered = this.toBeRendered;
+		this.sites = this.sitesList[i];
+		this.renderDiagram();
+		this.updateProgressBar(i);
 	}
 
 	/**
@@ -215,8 +212,8 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 */
 	updateProgressBar(i){
 		let percent = 100 * (i+1)/this.sitesList.length;
-		this.progressBar.style.width = percent + '%'
 		$('#progressText')[0].textContent = Math.ceil(percent) + '%';
+		this.progressBar.style.width = percent + '%'
 	}
 
 	/**
@@ -244,8 +241,7 @@ class AnimatableVoronoi extends BaseVoronoi{
 	createPath(points, center) {
 		let path = new Path();
 		if (!this.selected) {
-			let color = points[0].attrib == 'c' ? this.cooperatorColor : this.defectorColor;
-			path.fillColor = color;
+			path.fillColor = this.colors[points[0].attrib];
 		} else {
 			path.fullySelected = selected;
 		}

@@ -1,0 +1,39 @@
+
+body { 
+	position: relative; /*necessary for the footer*/
+    padding-top: 65px; /*without this navbar hides content*/
+    padding-bottom: 50px; /*footer height*/
+    height: 100%;
+}
+
+/*no underline*/
+.navbar-fixed-top {
+	border-bottom: none;
+}
+
+.panel-default > .panel-heading, header {
+  background-color: #91AA9D;
+}
+
+header {
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+.footer {
+	position: absolute; /*"The element is positioned relative to its first positioned (not static) ancestor element"*/
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+}
+
+.btn {
+	background-color: #91AA9D;
+}
+
+.page-height{
+	height: 100vh;
+}
+
+#statistics {
+	padding-top: 65px;
+}

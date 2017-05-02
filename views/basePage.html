@@ -2,8 +2,8 @@
 <head>
 	<title>EGTB - EvolutionAndStuff</title>
 
-	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
-	<link rel="stylesheet" href="/stylesheets/index.css">
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<link rel="stylesheet" href="/stylesheets/amend.css">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -34,12 +34,15 @@
 						<li {% if active=='simulateWithDiagram' %} class='active' {% endif %} class="dropdown">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Visualize<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href='/simulateWithDiagram'>Voronoi1</a></li>
-								<li><a href='/simulateWithDiagram'>Voronoi2</a></li>
+								<li><a href='/simulateWithDiagram'>Voronoi</a></li>
+								<li class='disabled'><a href='/simulateWithDiagram'>New simulations coming</a></li>
 							</ul>
 						</li>
 						<li {% if active=='simulateWithoutDiagram' %} class='active' {% endif %}>
 							<a href='/simulateWithoutDiagram'>Simulate</a>
+						</li>
+						<li {% if active=='charts' %} class='active' {% endif %}>
+							<a href='/charts'>Results</a>
 						</li>
 					</ul>
 				</div>
@@ -49,16 +52,5 @@
 
 	{% block body %}
 	{% endblock %}
-	<footer class="footer">
-		<div class="section">
-			<div class="container">
-				<div class="row">
-					<span class="pull-left">This webpage was created on 2017.03.16.</span>
-					<span class="pull-right">©EvolutionAndStuff</span>
-				</div>
-			</div>
-		</div>
-	</footer>
-
 </body>
 </html>
