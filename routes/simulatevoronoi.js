@@ -124,7 +124,7 @@ SimulateVoronoi.prototype.setConstantFunctions = function({steepness, inflexiosP
  */
 SimulateVoronoi.prototype.simulate = function() {
 		var ret = [];
-		ret.push(this.sites);
+		ret.push(JSON.parse(JSON.stringify(this.sites)));
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
 				let divChance = this.getDividingChance(j+1);
@@ -161,8 +161,8 @@ SimulateVoronoi.prototype.simulate = function() {
 				this.reCalculateSites();
 				this.initNeighborMatrix();
 				this.setPayoffs();
-				thisGenerationSites = this.sites.map(val => Object.assign({}, val)); //copy the sites list, and push it into the array
-				ret.push(thisGenerationSites);
+				// thisGenerationSites = this.sites.map(val => Object.assign({}, val)); //copy the sites list, and push it into the array
+				ret.push(JSON.parse(JSON.stringify(this.sites)));
 		}
 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
 		return ret;

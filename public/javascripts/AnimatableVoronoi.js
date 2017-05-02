@@ -176,7 +176,6 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 */
 	renderChartData(sitesList) {
 		this.resetChart();
-		this.addDataToChart(this.sites, 0);
 		for (let i = 0; i < sitesList.length; ++i){
 			this.addDataToChart(sitesList[i], i);
 		}
@@ -200,13 +199,11 @@ class AnimatableVoronoi extends BaseVoronoi{
 			return;
 		if (i >= sitesList.length)
 			return;
-		setTimeout(()=>{
-			this.toBeRendered++;
-			this.savedToBeRendered = this.toBeRendered;
-			this.sites = this.sitesList[i];
-			this.renderDiagram();
-			this.updateProgressBar(i);
-		}, 0)
+		this.toBeRendered++;
+		this.savedToBeRendered = this.toBeRendered;
+		this.sites = this.sitesList[i];
+		this.renderDiagram();
+		this.updateProgressBar(i);
 	}
 
 	/**
@@ -215,8 +212,8 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 */
 	updateProgressBar(i){
 		let percent = 100 * (i+1)/this.sitesList.length;
-		this.progressBar.style.width = percent + '%'
 		$('#progressText')[0].textContent = Math.ceil(percent) + '%';
+		this.progressBar.style.width = percent + '%'
 	}
 
 	/**
