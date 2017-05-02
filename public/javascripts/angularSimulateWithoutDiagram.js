@@ -326,11 +326,11 @@ app.controller('simulationController', function($scope, $rootScope){
 			gen_count: voronois[i].getGen_Count(),
 			coop_cost: voronois[i].getCoop_Cost(),
 			dist: voronois[i].getDist(),
-			itShouldDivide: $scope.itShouldDivide
-			// steepness: $scope.steepness,
-			// inflectionPoint: $scope.inflectionPoint,
-			// shapeOfDifF: $scope.shapeOfDif,
-			// steepnessOfGrad: $scope.steepnessOfGrad
+			itShouldDivide: $scope.itShouldDivide,
+			steepness: $scope.steepness,
+			inflexiosPontHelye: $scope.inflectionPoint,
+			shapeOfDif: $scope.shapeOfDif,
+			z: $scope.steepnessOfGrad
 
 		});
 		$scope.connection.send(message);

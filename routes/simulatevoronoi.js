@@ -76,6 +76,7 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.itShouldDivide = itShouldDivide;
 
 	if (constantParameters){ //set if there is what to set
+		console.log(constantParameters);
 		this.setConstantFunctions(constantParameters)
 	}
 
@@ -113,10 +114,10 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
  * parameters - a lot :)
  */
 SimulateVoronoi.prototype.setConstantFunctions = function({steepness, inflexiosPontHelye, shapeOfDif, z}){
-	this.constantFunctions.steepness = steepness;
-	this.constantFunctions.inflexiosPontHelye = inflexiosPontHelye;
-	this.constantFunctions.shapeOfDif = shapeOfDif;
-	this.constantFunctions.z = z;
+	constantFunctions.steepness = steepness;
+	constantFunctions.inflexiosPontHelye = inflexiosPontHelye;
+	constantFunctions.shapeOfDif = shapeOfDif;
+	constantFunctions.z = z;
 }
 
 /**
