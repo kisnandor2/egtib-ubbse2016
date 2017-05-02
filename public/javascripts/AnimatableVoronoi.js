@@ -134,9 +134,9 @@ class AnimatableVoronoi extends BaseVoronoi{
 			}
 		}
 		//Show the coordinates in the canvas for debugging purpose
-		// for (let i in this.sites){
-		// 	this.context.fillText(Math.floor(this.sites[i].x) + ", " + Math.floor(this.sites[i].y), this.sites[i].x-50, this.sites[i].y);
-		// }
+		for (let i in this.sites){
+			this.context.fillText(Math.floor(this.sites[i].x) + ", " + Math.floor(this.sites[i].y), this.sites[i].x-50, this.sites[i].y);
+		}
 	}
 
 	/**

@@ -35,6 +35,7 @@ function SimulateVoronoi() {
  * @returns {randomGenerator}
  */
 SimulateVoronoi.prototype.swtichRandomGenerator = function(randomGeneratorID) {
+	return Math;
 	if (randomGeneratorID == 1){
 		myRandomGenerator.lastIndex = 0;
 		return myRandomGenerator;
@@ -73,7 +74,7 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.generationCount = gen_count;
 	this.cooperatingCost = coop_cost;
 	this.dist = dist;
-	constantFunctions.dist = dist;
+	constantFunctions.distance = dist;
 	this.randomGenerator = this.swtichRandomGenerator(randomGeneratorID);
 
 	try {
@@ -107,17 +108,20 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
  */
 SimulateVoronoi.prototype.simulate = function() {
 		var ret = [];
+		ret.push(this.sites);
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
 				let divChance = this.getDividingChance(j+1);
-				let sitesBeforeChange = this.sites.slice(0);
+				// let sitesBeforeChange = this.sites.map(val => Object.assign({}, val));
 				for (let i = 0; i < this.sites.length; ++i) {
 						//Select a random neighbor and change payoffs if needed
-						actualPoint = this.sites[i];
-						let neighbors = this.getNeighbors(sitesBeforeChange[i]);
+						actualPoint = this.sites[i]
+						let neighbors = this.getNeighbors(actualPoint);
 						let rand = Math.round(this.randomGenerator.random() * (neighbors.length-1));
 						try {
-								if (neighbors[rand].payoff > actualPoint.payoff) {
+								// console.log(neighbors[rand].payoff, actualPoint.payoff)
+								if (neighbors[rand].attrib != actualPoint.attrib && neighbors[rand].payoff > actualPoint.payoff) {
+										// console.log(neighbors[rand].payoff, actualPoint.payoff)
 										actualPoint.attrib = neighbors[rand].attrib;
 										actualPoint.cost = neighbors[rand].cost;
 								}
@@ -126,10 +130,10 @@ SimulateVoronoi.prototype.simulate = function() {
 								logger.error('X: ' + actualPoint.x + ' Y:' + actualPoint.y);
 								logger.error('Rand: ' + rand + ' neighborsCount: ' + neighbors.length);
 						}
-						sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
+						// sitesAfterSplit = sitesAfterSplit.concat(actualPoint.divideCell(neighbors, divChance, this.randomGenerator));
 				}
 				//Create a copy of this generation and push it to results
-				this.sites = sitesAfterSplit;
+				// this.sites = sitesAfterSplit;
 				try{
 					this.diagram = voronoi.compute(this.sites, this.bbox);
 				}				
@@ -144,7 +148,6 @@ SimulateVoronoi.prototype.simulate = function() {
 				ret.push(thisGenerationSites);
 		}
 		logger.debug('Simulation length: ' + ret.length + ' SitesCount: ' + this.sites.length);
-		this.saveSimulationData(ret);
 		return ret;
 };
 
@@ -173,7 +176,7 @@ SimulateVoronoi.prototype.reCalculateSites = function(){
 }
 
 /**
- * Tests if every site has a voronoiID
+ * Tests if every site has a voronoiId
  */
 SimulateVoronoi.prototype.checkVoronoiID = function() {
 	//Error handling function, checks if each site after compute has a VoronoiID
@@ -192,9 +195,8 @@ SimulateVoronoi.prototype.checkVoronoiID = function() {
 SimulateVoronoi.prototype.setPayoffs = function() {
 	for (var i = 0; i < this.sites.length; ++i) {
 		let actualPoint = this.sites[i];
-		let neighborsCount = this.getNeighborsCount(actualPoint.voronoiId);
-		let cooperatingNeighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
-		actualPoint.payoff = constantFunctions.payoff(cooperatingNeighbors, actualPoint.cost, neighborsCount);
+		let neighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
+		actualPoint.payoff = constantFunctions.payoff(neighbors.coops/neighbors.neighborsCount, actualPoint.cost, 1);
 	}
 }
 
@@ -267,17 +269,12 @@ SimulateVoronoi.prototype.initNeighborMatrix = function() {
  */
 SimulateVoronoi.prototype.getNeighbors = function(p) {
 	//Find neighbors of cell which has site at p point
-	var neighbors = [];
-	let halfedges = this.getCellBySite(p, this.diagram.cells).halfedges;
-	for (let i = 0; i < halfedges.length; ++i) {
-		let lsite = halfedges[i].edge.lSite
-		if (lsite != null && !this.compareSites(lsite, p)) {
-			neighbors.push(lsite);
+	let neighbors = [];
+	let voronoiId = p.voronoiId;
+	for (let i = 0; i < this.neighborMatrix.length; ++i){
+		if (this.neighborMatrix[voronoiId][i] != 0){
+			neighbors.push(this.getSiteByVoronoiID(i));
 		}
-		let rsite = halfedges[i].edge.rSite
-		if (rsite != null && !this.compareSites(rsite, p)){
-		neighbors.push(rsite);
-		} 
 	}
 	return neighbors;
 }
@@ -285,11 +282,11 @@ SimulateVoronoi.prototype.getNeighbors = function(p) {
 /**
  * Counts the neighbors of a point/site/cell
  * 
- * @param 	{int} index	 - the index(voronoiID) of a point/site/cell
+ * @param 	{int} index	 - the index(voronoiId) of a point/site/cell
  * @returns {int}			 - total number of neighbors
  */
 SimulateVoronoi.prototype.getNeighborsCount = function(index) {
-	var count = 0;
+	let count = 0;
 	for (let i = 0; i < this.neighborMatrix[index].length; ++i) {
 		if (this.neighborMatrix[index][i] != 0) {
 			count++;
@@ -312,7 +309,7 @@ SimulateVoronoi.prototype.getCooperatingCount = function(sites){
  * Saves the current simulation results to the simulation.json file
  * @param {arrayOfarrays} - the `ret` from the simulation
  */
-SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
+SimulateVoronoi.prototype.saveSimulationData = function(filename, sitesList, callback,i, data2){
 	let coopAndDef = [];
 	for (let i = 0; i < sitesList.length; ++i){
 		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
@@ -328,7 +325,8 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 		dist: this.dist, 
 		results: coopAndDef
 	}
-	fs.readFile('simulation.json', 'utf8', function readFileCallback(err, data){
+	fs.readFile(filename, 'utf8', function readFileCallback(err, data){
+		let obj = [];
 		if (err){
 			logger.error(err);
 			return;
@@ -337,12 +335,14 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 			obj = JSON.parse(data); //now it an object
 		}
 		catch(err){
+			logger.error(data);
 			logger.error(err);
 			obj = [];
 		}
 		obj.push(params);
 		json = JSON.stringify(obj); //convert it back to json
-		fs.writeFile('simulation.json', json, 'utf8', ()=>{}); // write it back 
+		console.log('write' + i);
+		fs.writeFile(filename, json, 'utf8', () => {callback(i, data2)}); // write it back 
 	});
 }
 
@@ -350,12 +350,14 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
  * Counts the cooperating neighbors of a point/site/cell
  * Distance is taken in consideration
  * 
- * @param 	{int} k	- the index(voronoiID) of a point/site/cell
+ * @param 	{int} k	- the index(voronoiId) of a point/site/cell
  * @returns {int} 	- total number of cooperating neighbors
  */
 SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
 	var neighbors = [];
 	neighbors.push(k);
+
+	let allNeighborsCount = 0;
 
 	var newneighbors = [];
 	var coops = 0;
@@ -383,9 +385,13 @@ SimulateVoronoi.prototype.getCooperatingNeighbors = function(k) {
 			}
 		}
 		neighbors = newneighbors.slice();
+		allNeighborsCount += neighbors.length * constantFunctions.G[d];
 		coops = coops + constantFunctions.G[d] * gradcoops;
 	}
-	return coops;
+	return {
+				coops,
+				neighborsCount: allNeighborsCount
+			};
 }
 
 /**

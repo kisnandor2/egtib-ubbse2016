@@ -1,0 +1,21 @@
+{% extends "basePage.html" %}
+
+{% block head %}
+	<title> Simulation </title>
+
+	<script type="text/javascript" src="/javascripts/plotly-latest.min.js"></script>
+	<script type="text/javascript" src="/javascripts/charts.js"></script>
+
+	<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% block body %}
+
+<div ng-app="myApp">
+	<div class="section" ng-controller="fillWithData" id="body">
+	
+	</div>
+</div>
+
+{% endblock %}

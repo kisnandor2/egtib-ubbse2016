@@ -3,7 +3,7 @@ class Cell {
 	 * Creates a cell object that will be used in the sites array
 	 * @constructor
 	 */
-	constructor({x, y, attrib, cost, bbox, voronoiId}) {
+	constructor({x, y, attrib, cost, bbox, voronoiId, baseAttrib}) {
 		this.x = x;
 		this.y = y;
 		this.attrib = attrib;
@@ -12,6 +12,12 @@ class Cell {
 		this.bbox = bbox;
 		this.payoff = undefined;
 		this.voronoiId = voronoiId;
+		if (baseAttrib == undefined){
+			this.baseAttrib == attrib;
+		}
+		else{
+					this.baseAttrib = baseAttrib;
+		}
 	}
 
 	/**

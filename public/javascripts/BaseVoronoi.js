@@ -36,9 +36,9 @@ class BaseVoronoi{
 		sitesList.unshift(this.sites);
 		for (let i = 0; i < sitesList.length; ++i){
 			categories.push(i);
-			let prod = this.getProductiveCount(sitesList[i]);
+			let prod = this.getProductiveCount(sitesList[i])/sitesList[i].length;
 			productive.push(prod);
-			nonproductive.push(sitesList[i].length - prod);
+			nonproductive.push(1 - prod);
 		}
 		return {
 			numberProductive: productive,
@@ -246,7 +246,7 @@ class BaseVoronoi{
 	 * @param {int} value
 	 */
 	setTotalNumberOfCells(value){
-		if (value <2 || value > 500)
+		if (value <2 || value > 2500)
 			return;
 		this.totalNumberOfCells = value;
 	}

@@ -1,3 +1,5 @@
+var voronoiAccessibleFromOutside;
+
 var app = angular.module('myApp', []);
 
 app.controller('baseVoronoiController', function($scope, $rootScope) {
@@ -12,6 +14,7 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 
 	function initVoronoi(){
 		$scope.voronoi = new BaseVoronoi();
+		voronoiAccessibleFromOutside = $scope.voronoi;
 
 		var voronoi = $scope.voronoi;
 		//Distance of interaction
