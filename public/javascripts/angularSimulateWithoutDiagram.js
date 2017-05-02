@@ -1,9 +1,14 @@
 var app = angular.module('myApp', []);
 
 app.controller('baseVoronoiController', function($scope, $rootScope) {
+	initStatistics();
 	initVoronoi();
 	initAlertBoxes();
 	initWebSocket();
+	
+	function initStatistics(){
+		$rootScope.hideStatistics = true;
+	}
 
 	function initVoronoi(){
 		$scope.voronoi = new BaseVoronoi();
@@ -83,6 +88,7 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 			heartbeat();
 		}, 1000)
 	}
+
 });
 
 app.controller('parameterController', function($scope, $timeout) {
@@ -342,6 +348,7 @@ app.controller('simulationController', function($scope, $rootScope){
 				alert('error');
 			}
 		});
-		$("body").removeClass("loading");
+		$("body").removeClass("loading");		
+		$rootScope.hideStatistics = false;
 	}
 });
