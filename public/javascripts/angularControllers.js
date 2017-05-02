@@ -328,6 +328,7 @@ app.controller('highChartsController', function($rootScope){
 	initHighCharts();
 
 	function initHighCharts(){
+		let colorProvider = new ColorProvider();
 		var chart = Highcharts.chart('highChartsContainer', {
 			chart: {type: 'column'},
 			title: {text: 'Number of cells, over time'},
@@ -347,17 +348,16 @@ app.controller('highChartsController', function($rootScope){
 			plotOptions: {column: {stacking: 'normal'}},
 			series: [{
 				name: 'Productive',
-				color: '#f36205',
+				color: colorProvider.getRGBColor('c').toHex(),
 				data: [],
 			}, {
 				name: 'Non-productive',
-				color: '#2f98da',
+				color: colorProvider.getRGBColor('d').toHex(),
 				data: [],
 			}, {
-				name: 'NS',
+				name: 'Separator',
 				type: 'spline',
 				color: '#000000',
-				data: [],
 			}]
 		});
 

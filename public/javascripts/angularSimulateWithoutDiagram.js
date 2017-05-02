@@ -153,6 +153,7 @@ app.controller('parameterController', function($scope, $timeout) {
 app.controller('simulationController', function($scope, $rootScope){
 
 	$scope.addHighChartsWithData = function(i, {numberProductive, numberNonProductive, categories}){
+		let colorProvider = new ColorProvider();
 		let name = 'highChartsContainer' + i;
 		$('#panel').append('<div id="' + name + '"></div>');
 		let chart = Highcharts.chart(name, {
@@ -174,11 +175,11 @@ app.controller('simulationController', function($scope, $rootScope){
 			plotOptions: {column: {stacking: 'normal'}},
 			series: [{
 				name: 'Productive',
-				color: '#f36205',
+				color: colorProvider.getRGBColor('c').toHex(),
 				data: [],
 			}, {
 				name: 'Non-productive',
-				color: '#2f98da',
+				color: colorProvider.getRGBColor('d').toHex(),
 				data: [],
 			}, {
 				name: 'NS',
@@ -345,12 +346,6 @@ app.controller('simulationController', function($scope, $rootScope){
 			return;
 		}
 		$scope.recursiveSimulate(0, voronois);
-		//reset the randomGenerator
-		$.get("voronoi/reset", function(data, textStatus, response){
-			if (response.responseText != 'ok'){
-				alert('error');
-			}
-		});
 		$("body").removeClass("loading");		
 		$rootScope.hideStatistics = false;
 	}

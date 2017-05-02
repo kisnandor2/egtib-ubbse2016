@@ -37,11 +37,6 @@ router.get('/data', function(req, res) {
 	}
 });
 
-router.get('/reset', function(req, res){
-	SimulateVoronoi.myRandomGenerator.resetSeed();
-	res.status(200).send('ok');
-})
-
 module.exports = {
 	router: router,
 	setWebSocket: setWebSocket
