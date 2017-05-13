@@ -14,6 +14,9 @@
 
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+  <script src="/javascripts/Chart.min.js"></script>
+<script src="javascripts/angular-chart.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -83,7 +86,7 @@
                   <label for="steepness" class="control-label">Steepness of the function:</label>
                 </div>
                 <div class="col-sm-4">
-                  <input type="number" class="form-control" id="steepness" min="0" ng-model="steepness" ng-init="steepness=defaultSteepness">
+                  <input type="number" class="form-control" id="steepness" min="0" ng-model="steepness" ng-init="steepness=defaultSteepness" ng-change="reloadPayoff()">
                 </div>
               </div>
               <div class="form-group">
@@ -91,7 +94,7 @@
                   <label for="inflectionPoint" class="control-label">Position of the inflection point:</label>
                 </div>
                 <div class="col-sm-4">
-                  <input type="number" class="form-control" id="inflectionPoint" min="0" ng-model="inflectionPoint" ng-init="inflectionPoint=defaultInflectionPoint">
+                  <input type="number" class="form-control" id="inflectionPoint" min="0" ng-model="inflectionPoint" ng-init="inflectionPoint=defaultInflectionPoint" ng-change="reloadPayoff()">
                 </div>
               </div>
               <div class="form-group">
@@ -99,7 +102,7 @@
                   <label for="shapeOfDif" class="control-label">Shape of the diffusion gradient:</label>
                 </div>
                 <div class="col-sm-4">
-                  <input type="text" min="0" class="form-control" id="shapeOfDif" ng-model="shapeOfDif" ng-init="shapeOfDif=defaultShapeOfDif">
+                  <input type="text" min="0" class="form-control" id="shapeOfDif" ng-model="shapeOfDif" ng-init="shapeOfDif=defaultShapeOfDif" ng-change="reloadGradient()">
                 </div>
               </div>
               <div class="form-group">
@@ -107,7 +110,7 @@
                   <label for="steepnessOfGrad" class="control-label">Steepness of the gradient:</label>
                 </div>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="steepnessOfGrad" ng-model="steepnessOfGrad" ng-init="steepnessOfGrad=defaultSteepnessOfGrad">
+                  <input type="text" class="form-control" id="steepnessOfGrad" ng-model="steepnessOfGrad" ng-init="steepnessOfGrad=defaultSteepnessOfGrad" ng-change="reloadGradient()">
                 </div>
               </div>
             </form>
@@ -121,11 +124,35 @@
           </div>
         </div>
       </div>
+      <div class="col-md-8" >
+        <div class="row">
+          <div class="col-md-6">
+            <img src="/images/bj_trans.png" class="img-responsive">
+          </div>
+          <div class="col-md-6">
+            <img src="/images/gj_trans.png" class="img-responsive">
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>     
+           </div>
+            <div class="col-md-6">
+                <canvas id="line" class="chart chart-line" chart-data="gradientData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>     
+           </div>         
+        </div>
+      </div>
+
 
      </div>
+
     </div>
   </div>
+
 </div>
+
+
+
 <div class="section">
   <div class="container">
     <div class="row">
