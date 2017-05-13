@@ -21,7 +21,12 @@
 
 {% block body %}
 <div ng-app="myApp">
-<div class="section" ng-controller="baseVoronoiController">
+<div class="section page-height" ng-controller="baseVoronoiController">
+  <header>
+    <div class="container">
+          <h2>Parameters</h2>
+    </div>
+  </header>
   <div class="container" style="width:95%;">
     <div class="row" id="successMessageRow">
       <div class="col-md-4"></div>
@@ -153,7 +158,12 @@
 
 
 
-<div class="section">
+<div class="section page-height" id="statistics">
+  <header>
+    <div class="container">
+          <h2>Statistics</h2>
+    </div>
+  </header>
   <div class="container">
     <div class="row">
       <div class="panel panel-default" ng-hide="$root.hideStatistics" class="ng-hide">

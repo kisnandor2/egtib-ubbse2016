@@ -1,7 +1,7 @@
 
 body { 
 	position: relative; /*necessary for the footer*/
-    padding-top: 65px; /*without this navbar hides content*/
+    padding-top: 50px; /*without this navbar hides content*/
     padding-bottom: 50px; /*footer height*/
     height: 100%;
 }
@@ -35,5 +35,5 @@ header {
 }
 
 #statistics {
-	padding-top: 65px;
+	padding-top: 50px;
 }
