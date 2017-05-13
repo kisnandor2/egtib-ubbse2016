@@ -97,12 +97,16 @@ Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, In
 }
 \AtBeginSection
 {
-	\begin{frame}
-		\tableofcontents[
-			currentsection,
-			hideallsubsections
-			]
-	\end{frame}
+	\ifnum \thesection > 1 
+		\ifnum \thesection < 6
+			\begin{frame}
+				\tableofcontents[
+					currentsection,
+					hideallsubsections
+					]
+			\end{frame}
+		\fi
+	\fi
 }
 
 %\include{bevezeto}
