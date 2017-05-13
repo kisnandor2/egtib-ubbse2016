@@ -52,124 +52,65 @@
 
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage[utf8]{inputenc}
+\usepackage{multicol}
+\usepackage{multirow}
+%\usepackage[backend=biber]{biblatex}
+%\bibliography{articles.bib}
 
-\title[Short title]{Main Topic } % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[EGTIB]{Evolúciós játékok alkalmazása daganatos sejtek modellezésében} % The short title appears at the bottom of every slide, the full title is only on the title page
 
-\author{John Smith} % Your name
-\institute[UCLA] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+\author{Szilágyi Réka, Kis Nándor} % Your name
+\institute[BBTE] 
 {
-University of California \\ % Your institution for the title page
+Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, Informatika szak, alapképzés, III. év \\ 
 \medskip
-\textit{john@smith.com} % Your email address
 }
-\date{\today} % Date, can be changed to a custom date
+\date{\today} 
 
 \begin{document}
 
 \begin{frame}
-\titlepage % Print the title page as the first slide
+	\titlepage
 \end{frame}
 
 \begin{frame}
-\frametitle{Overview} % Table of contents slide, comment this block out to remove it
-\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+	\frametitle{Áttekintés} % Table of contents slide, comment this block out to remove it
+	\tableofcontents[hideallsubsections]
 \end{frame}
 
 %----------------------------------------------------------------------------------------
 %	PRESENTATION SLIDES
 %----------------------------------------------------------------------------------------
 
-\AtBeginSection[]
+\AtBeginSubsection[]
 {
-	\begin{frame}{Table of Contents}
-		\tableofcontents[currentsection]
+	\begin{frame}{Áttekintés}
+		\tableofcontents[
+			currentsubsection,
+			hideothersubsections, 
+			sectionstyle=show/hide, 
+			subsectionstyle=show/shaded/hide,
+			subsubsectionstyle=show/show/hide
+			]
 	\end{frame}
 }
-
-%------------------------------------------------
-\section{First Section} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
-%------------------------------------------------
-
-\subsection{Subsection Example} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
-
-\begin{frame}
-\frametitle{Paragraphs of Text}
-Sed iaculis dapibus gravida. Morbi sed tortor erat, nec interdum arcu. Sed id lorem lectus. Quisque viverra augue id sem ornare non aliquam nibh tristique. Aenean in ligula nisl. Nulla sed tellus ipsum. Donec vestibulum ligula non lorem vulputate fermentum accumsan neque mollis.\\~\\
-
-Sed diam enim, sagittis nec condimentum sit amet, ullamcorper sit amet libero. Aliquam vel dui orci, a porta odio. Nullam id suscipit ipsum. Aenean lobortis commodo sem, ut commodo leo gravida vitae. Pellentesque vehicula ante iaculis arcu pretium rutrum eget sit amet purus. Integer ornare nulla quis neque ultrices lobortis. Vestibulum ultrices tincidunt libero, quis commodo erat ullamcorper id.
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Bullet Points}
-\begin{itemize}
-\item Lorem ipsum dolor sit amet, consectetur adipiscing elit
-\pause
-\item Aliquam blandit faucibus nisi, sit amet dapibus enim tempus eu
-\pause
-\item Nulla commodo, erat quis gravida posuere, elit lacus lobortis est, quis porttitor odio mauris at libero
-\pause
-\item Nam cursus est eget velit posuere pellentesque
-\pause
-\item Vestibulum faucibus velit a augue condimentum quis convallis nulla gravida
-\pause
-\item<2-> Hali, 2.oldaltol
-\end{itemize}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Blocks of Highlighted Text}
-\begin{block}{Block 1}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-\end{block}
-\end{frame}
-
-%------------------------------------------------
-
-%------------------------------------------------
-\section{Second Section}
-%------------------------------------------------
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Citation}
-An example of the \verb|\cite| command to cite within the presentation:\\~
-
-This statement requires citation \cite{p1}.
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{References}
-\footnotesize{
-\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
-\bibitem[Smith, 2012]{p1} John Smith (2012)
-\newblock Title of the publication
-\newblock \emph{Journal Name} 12(3), 45 -- 678.
-\end{thebibliography}
+\AtBeginSection
+{
+	\begin{frame}
+		\tableofcontents[
+			currentsection,
+			hideallsubsections
+			]
+	\end{frame}
 }
-\end{frame}
 
-%------------------------------------------------
-
-\begin{frame}
-\Huge{\centerline{The End}}
-\end{frame}
-
-%----------------------------------------------------------------------------------------
+%\include{bevezeto}
+%\include{ev_jatekok}
+%\include{ev_jatekok_daganat}
+%\include{alkalmazas}
+%\include{szim_eredmenyek}
+\include{osszegzes}
+\include{bibliography}
 
 \end{document}
