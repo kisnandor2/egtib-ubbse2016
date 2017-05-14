@@ -21,7 +21,7 @@
 
 {% block body %}
 <div ng-app="myApp">
-<div class="section page-height" ng-controller="baseVoronoiController">
+<div class="section" ng-controller="baseVoronoiController">
   <header>
     <div class="container">
           <h2>Parameters</h2>
@@ -118,33 +118,25 @@
                   <input type="text" class="form-control" id="steepnessOfGrad" ng-model="steepnessOfGrad" ng-init="steepnessOfGrad=defaultSteepnessOfGrad" ng-change="reloadGradient()">
                 </div>
               </div>
-            </form>
-            <div class="row" ng-controller="simulationController">
-              <div class="row">
-                <div class="col-md-1"></div>
-                <input type="button" class="btn btn-default submit col-md-10" value="Start" id="start" ng-click="simulate()">
-                <div class="col-md-1"></div>
+              <div ng-controller="simulationController">
+              <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Start" id="start" ng-click="simulate()">
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
       <div class="col-md-8" >
+        <div class="panel panel-default">
+        <div class="panel-heading">Functions used in calculations</div>
         <div class="row">
           <div class="col-md-6">
             <img src="/images/bj_trans.png" class="img-responsive">
+            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
           </div>
           <div class="col-md-6">
             <img src="/images/gj_trans.png" class="img-responsive">
+            <canvas id="line" class="chart chart-line" chart-data="gradientData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
           </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>     
-           </div>
-            <div class="col-md-6">
-                <canvas id="line" class="chart chart-line" chart-data="gradientData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>     
-           </div>         
         </div>
       </div>
 

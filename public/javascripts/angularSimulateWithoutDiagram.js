@@ -107,6 +107,10 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
   	$scope.payoffData = x.map(function (data) {
 	    	return (V(data) - V(0))/(V(n) - V(0))
 	});
+
+	$scope.gradientData = x.map(function (data) {
+	    	return (g(data) - g(0))/(g(n) - g(0))
+	});
 	$scope.reloadPayoff = function () {
 	  	$scope.payoffData = x.map(function (data) {
 	    	return (V(data) - V(0))/(V(n) - V(0))
@@ -125,30 +129,14 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 	function g(j){
 		return 1 / (1 + Math.pow(e, ($("#steepnessOfGrad")[0].value * (j - $("#distanceOfInteraction")[0].value * $("#shapeOfDif")[0].value)) / $("#distanceOfInteraction")[0].value));
 	}
-
-	  $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-	  $scope.options = {
+	$scope.options = {
 	  	elements: { point: { radius: 0 } },
 	    scales: {
-	      yAxes: [
-	        {
-	          id: 'y-axis-1',
-	          type: 'linear',
-	          display: true,
-	          position: 'left'
-	        },
-	        {
-	          id: 'y-axis-2',
-	          type: 'linear',
-	          display: true,
-	          position: 'right'
-	        }
-	      ],
 	      xAxes: [{
 	                display: false
 	            }]
 	    }
-	  };
+	};
 
 });
 
