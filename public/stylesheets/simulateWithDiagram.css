@@ -6,7 +6,7 @@ canvas[resize] {
 
 #successMessageRow {
 	position: absolute;
-	top: -20px;
+	top: 50px;
 	left: 20px;
 	right: 20px;
 }

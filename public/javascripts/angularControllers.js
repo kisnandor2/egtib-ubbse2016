@@ -198,8 +198,9 @@ app.controller('parameterController', function($scope, $timeout) {
 
 	function showAlerts(newVal, oldVal, condition, execute){
 		try{
-			for (let i = 0; i < $scope.successMessageDiv.childNodes.length; ++i)
-			$('.close')[i].click();
+			for (let i = 0; i < $scope.successMessageDiv.childNodes.length; ++i){
+				$('.close')[i].click();
+			}
 		}
 		catch(error){}
 		if (newVal == undefined)
