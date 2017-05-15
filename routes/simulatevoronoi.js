@@ -125,7 +125,7 @@ SimulateVoronoi.prototype.setConstantFunctions = function({steepness, inflexiosP
  */
 SimulateVoronoi.prototype.simulate = function() {
 		var ret = [];
-		ret.push(JSON.parse(JSON.stringify(this.sites)));
+		// ret.push(JSON.parse(JSON.stringify(this.sites)));
 		for (let j = 0; j < this.generationCount; ++j) {
 				let sitesAfterSplit = [];
 				let divChance = this.getDividingChance(j+1);

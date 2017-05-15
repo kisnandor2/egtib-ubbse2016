@@ -176,8 +176,10 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 */
 	renderChartData(sitesList) {
 		this.resetChart();
+		// sitesList.unshift(this.sites);
+		this.addDataToChart(this.sites, 0);
 		for (let i = 0; i < sitesList.length; ++i){
-			this.addDataToChart(sitesList[i], i);
+			this.addDataToChart(sitesList[i], i+1);
 		}
 		this.displayChartData();
 		this.sitesList = sitesList;
