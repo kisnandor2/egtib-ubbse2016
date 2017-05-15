@@ -268,7 +268,7 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 * Resizes the canvas - attached to window resize event in angularController
 	 */
 	onResize() {
-		v = this.voronoiAccessibleFromOutside;
+		let v = this.voronoiAccessibleFromOutside;
 		v.bbox = {
 			xl: v.margin,
 			xr: v.view.bounds.width - v.margin,
