@@ -5,7 +5,7 @@
 		\begin{itemize}
 			\item felhasználóbarát felület
 			\item lehetőség a daganatos sejtek modellezésére 
-			\item és szimulációjára
+			\item szimulációk megjelenítése
 			\pause
 			\item a szimulációs eredmények megjelenítésére
 		\end{itemize}
@@ -13,7 +13,7 @@
 
 	\begin{figure}[ht!]
 		\centering
-		\includegraphics[width=0.6\linewidth]{images/EGTIB.jpg}
+		\includegraphics[width=0.6\linewidth]{images/voronoi_page.png}
 		\caption{Pillanatkép az alkalmazásról}
 		\label{fig:SimulateWithDiagram}
 	\end{figure}
@@ -31,6 +31,32 @@
 			\item diffúziós távolság mérete
 			\item legyenek a sejtek osztódásra képesek?
 		\end{itemize}
+	\end{block}
+
+	\begin{block}{}
+		\begin{columns}[T]
+			\begin{column}{0.5\linewidth}
+				\begin{equation}
+				V(j) = 1/[1 + e^{(-s(j-k)/n)}]
+				\end{equation}
+				\begin{itemize}
+					\vspace{-1cm}
+					\item k - az áthajlási pont helye
+					\item s - a függvény meredeksége a áthajlási pontban
+					\item n - a csoport mérete
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.5\linewidth}
+				\begin{equation}
+				g(i) = 1/[1 + e^{(-z(i-d)/D)}]
+				\end{equation}
+			\begin{itemize}
+				\vspace{-1cm}
+				\item z - a függvény meredeksége a áthajlási pontban
+				\item d és D - a diffúziós gradiens alakja
+			\end{itemize}
+			\end{column}
+		\end{columns}
 	\end{block}
 \end{frame}
 

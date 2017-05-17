@@ -1,26 +1,62 @@
 \section{Daganatos sejtek modellezése}
 \begin{frame}
 \frametitle{Daganatos sejtek modellezése}
-A rosszindulatú daganatok sokszoros mutáció következtében létrejött szabályozatlan, elburjánzó sejttömörülések, amelyek az egészséges szövetbe betörve versenyeznek az erőforrásokért. Egy daganaton belül többféle daganatos sejt is megtalálható, mindegyik különböző módon hatva a környezetében található sejtekre. Ez a heterogenitás segíti a burjánzást, az egyre agresszívabb sejttípusok megjelenését és az erősebb ellenállást a kezelésekre. A játékelmélet egy lehetséges eszköz lehet a különböző típusok közötti versengés valamint az alkalmazott stratégiák modellezésére.
+\begin{itemize}
+	\item daganat - sokszoros mutáció következtében létrejött elburjánzó sejttömörülés
+	\item egy daganaton belül többféle sejt $\rightarrow$ agresszívabb sejttípusok megjelenése
+\end{itemize}
+	\begin{block}{}
+	$\Rightarrow$ a játékelmélet egy lehetséges eszköz a sejttípusok közötti versengés modellezésére
+\end{block}
 
-A evolúciós játékelméleti modellek segítségével többféleképpen is megközelíthető a probléma. Játékosok lehetnek csak a daganatos sejtek és a játékot az erőforrásokért folytatott \textit{verseny} jelenti. Ez a verseny átalakulhat \textit{parazitizmussá} ha a bizonyos növekedési faktorokat termelő egészséges sejteket tekintjük az egyik félnek, és az ezt kihasználó daganatos sejteket a másiknak. Az immunsejtek játszhatják a \textit{ragadozó} szerepét de felléphet \textit{mutualizmus} is például az erek belső rétegének sejtjei és a daganatos sejtek között. 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Daganatos sejtek modellezése}
+	Lehetséges modellek:
+	\begin{itemize}
+		\item daganatos sejtek - erőforrásokért folyatott \textbf{verseny}
+		\item növekedési faktorokat termelő egészséges sejtek és daganatos sejtek - \textbf{parazitizmus}
+		\item immunsejtek - \textbf{ragadozó}
+		\item egészséges sejtek, daganatos sejtek - \textbf{mutualizmnus}
+	\end{itemize}
+\begin{tikzpicture}
+
+\node[anchor=south west,inner sep=0] (image) at (4,0) { \includegraphics[width=0.5\linewidth]{images/models}};
+\pause
+\begin{scope}[x={(image.south east)},y={(image.north west)}]
+\draw[red,ultra thick,rounded corners] (0.15,0.6) rectangle (0.28,1);
+\end{scope}
+\end{tikzpicture}
+
 \end{frame}
 
 \subsection{Közjó játék (Public goods game)}
 \begin{frame}
-\frametitle{Közjó játék (Public goods game)}
-A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet játszanak az általuk termelt növekedési faktorok és jelzőmolekulák. Ezek segítenek többek között abban, hogy a rákos sejtek a saját növekedésüket ösztönözzék, hogy képesek legyenek kijátszani a szervezet védekezési rendszerét és hogy szétterjedjenek távoli szövetekbe (metasztázis). Mivel ezek az anyagok kikerülnek a sejtek közötti térbe, nem csak az őket termelő sejtekre vannak hatással, hanem az ezeket körülvevőkre is. Így a növekedési faktor felfogható mint egy "közös jó" (\textit{public good}). Az evolúciós játékelmélet megfelelő keretet biztosít, mivel nem feltételez racionális viselkedést és egy stratégia sikerességét megadja a populáción belüli gyakorisága \cite{archetti2016cooperation}.
-\end{frame}
+\begin{itemize}
+	\item növekedési faktorok és jelzőmolekulák szerepe
+	\begin{itemize}
+		\item saját növekedés elősegítése
+		\item a szervezet védekezésének kijátszása
+		\item metasztázis kialakulása
+	\end{itemize}
+	\item ezek az anyagok kikerülhetnek a sejtek közötti térbe
+\end{itemize}
+\begin{block}
+	\centering
+	$\Rightarrow$ növekedési faktor mint "közös jó"
+\end{block}
+\frametitle{Közjó játék (Public goods game)}\end{frame}
 
-\subsection{A játék felépítése}
+\subsection{A játékmodell felépítése}
 \subsubsection{Voronoi diagram}
 \begin{frame}
 	\frametitle{Voronoi diagram}
 	\begin{block}{}
 		\begin{itemize}
 			\item a sejtek ábrázolása Voronoi hálózatokkal
-			\item szabályos pontrács - figyelmen kívül hagyja a kapcsolatok sokféleségét\cite{archetti2016cooperation}
-			\item skála-független hálózatok - nem megfelelő, ha az egyedek egy síkban helyezkednek el\cite{archetti2016cooperation}
+			\item ???szabályos pontrács - figyelmen kívül hagyja a kapcsolatok sokféleségét\cite{archetti2016cooperation}
+			\item ??skála-független hálózatok - nem megfelelő, ha az egyedek egy síkban helyezkednek el\cite{archetti2016cooperation}
 		\end{itemize}
 	\end{block}
 	
@@ -58,7 +94,7 @@ A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet j
 		\item minden körben véletlenszerűen kiválasztunk egy sejtet és annak egy szomszédját 
 		\item megvizsgáljuk a nyereségeket
 		\item ha a szomszéd stratégiája kifizetődőbb, a kiválasztott sejt átveszi azt
-		\item minden kör végén aktualizáljuk a nyereségeket(aszinkron módon számolunk)
+		\item minden kör végén aktualizáljuk a nyereségeket (aszinkron módon számolunk)
 	\end{itemize}
 \end{frame}
 
@@ -66,18 +102,22 @@ A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet j
 \begin{frame}
 	\frametitle{Diffúziós távolság}
 	\begin{block}{}
-		Nem csak az elsőfokú szomszédokat vesszük figyelembe, hanem egy bizonyos diffúziós távolságon belül található összes sejtet. A szomszédos termelő sejtek befolyásának súlyozására egy diffúziós gradienst vezetünk be:
+		\begin{itemize}
+			\item a diffúziós távolságon belül található összes sejt figyelembe vétele
+			\item szomszédok befolyásának súlyozása - diffúziós gradiens
+		\end{itemize}
 		\begin{equation}
+			\label{eq:diffGradient}
 			G(i) = [g(i) - g(0)]/[g(D) - g(0)] 
 		\end{equation}
 		\begin{equation}
-			\label{eq:diffGradient}
 			g(i) = 1/[1 + e^{(-z(i-d)/D)}]
 		\end{equation}
 	\end{block}
 	\begin{block}{}
-		A termelők száma a \textit{G}-vel kiszámított súlyozott összeg.\\
-		A sejtek nem csak a közvetlen szomszédokkal vannak kölcsönhatásban, hanem távolabbiakkal is.
+		\begin{itemize}
+				\item a termelők száma a \ref{eq:diffGradient}-sal kiszámított súlyozott összeg
+		\end{itemize}
 	\end{block}
 \end{frame}
 
@@ -100,7 +140,6 @@ A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet j
 		\begin{itemize}
 			\item az eddigi modellbe könnyen beépíthető
 			\item nem veszi figyelembe, hogy éppen milyen típusú sejt (kooperáló/defektáló) osztódik
-			\item nem minden esetben jó ez a megközelítés
 		\end{itemize}
 	\end{block}
 \end{frame}
