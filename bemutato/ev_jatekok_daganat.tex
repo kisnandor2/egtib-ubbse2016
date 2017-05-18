@@ -20,15 +20,16 @@
 		\item immunsejtek - \textbf{ragadozó}
 		\item egészséges sejtek, daganatos sejtek - \textbf{mutualizmnus}
 	\end{itemize}
-\begin{tikzpicture}
-
-\node[anchor=south west,inner sep=0] (image) at (4,0) { \includegraphics[width=0.5\linewidth]{images/models}};
-\pause
-\begin{scope}[x={(image.south east)},y={(image.north west)}]
-\draw[red,ultra thick,rounded corners] (0.15,0.6) rectangle (0.28,1);
-\end{scope}
-\end{tikzpicture}
-
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+	\node[anchor=south west,inner sep=0] (image) at (4,0) { \includegraphics[width=0.5\linewidth]{images/models}};
+	\pause
+	\begin{scope}[x={(image.south east)},y={(image.north west)}]
+	\draw[red,ultra thick,rounded corners] (0.15,0.6) rectangle (0.28,1);
+	\end{scope}
+	\end{tikzpicture}
+\end{figure}
 \end{frame}
 
 \subsection{Közjó játék (Public goods game)}
@@ -55,8 +56,8 @@
 	\begin{block}{}
 		\begin{itemize}
 			\item a sejtek ábrázolása Voronoi hálózatokkal
-			\item ???szabályos pontrács - figyelmen kívül hagyja a kapcsolatok sokféleségét\cite{archetti2016cooperation}
-			\item ??skála-független hálózatok - nem megfelelő, ha az egyedek egy síkban helyezkednek el\cite{archetti2016cooperation}
+			\item \sout{szabályos pontrács}
+			\item \sout{skála-független hálózatok}
 		\end{itemize}
 	\end{block}
 	

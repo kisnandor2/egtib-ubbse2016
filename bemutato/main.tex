@@ -13,7 +13,7 @@
 %\usetheme{Berkeley}
 %\usetheme{Berlin}
 %\usetheme{Boadilla}
-%\usetheme{CambridgeUS}
+\usetheme{CambridgeUS}
 %\usetheme{Copenhagen}
 %\usetheme{Darmstadt}
 %\usetheme{Dresden}
@@ -23,7 +23,7 @@
 %\usetheme{Ilmenau}
 %\usetheme{JuanLesPins}
 %\usetheme{Luebeck}
-\usetheme{Madrid}
+%\usetheme{Madrid}
 
 % As well as themes, the Beamer class has a number of color themes
 % for any slide theme. Uncomment each of these in turn to see how it
@@ -57,6 +57,8 @@
 \usepackage{multirow}
 \usepackage{adjustbox}
 \usepackage{tikz}
+\usepackage[normalem]{ulem}
+\renewcommand{\figurename}{Ábra}
 %\usepackage[backend=biber]{biblatex}
 %\bibliography{articles.bib}
 
@@ -85,19 +87,6 @@ Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, In
 %	PRESENTATION SLIDES
 %----------------------------------------------------------------------------------------
 
-\AtBeginSubsection[]
-{
-	\begin{frame}{Áttekintés}
-		\tableofcontents[
-			currentsubsection,
-			hideothersubsections, 
-			sectionstyle=show/hide, 
-			subsectionstyle=show/shaded/hide,
-			subsubsectionstyle=show/show/hide
-			]
-	\end{frame}
-}
-
 \AtBeginSection
 {
 	\ifnum \thesection > 1 
@@ -116,8 +105,8 @@ Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, In
 \include{ev_jatekok}
 \include{ev_jatekok_daganat}
 \include{alkalmazas}
-%\include{szim_eredmenyek}
-%\include{osszegzes}
-%\include{bibliography}
+\include{szim_eredmenyek}
+\include{osszegzes}
+\include{bibliography}
 
 \end{document}
