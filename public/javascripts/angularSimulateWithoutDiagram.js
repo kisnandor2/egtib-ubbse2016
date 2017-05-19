@@ -105,11 +105,11 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
   	x = x.map(function (data) { return data/100; })
   	$scope.labels = x;
   	$scope.payoffData = x.map(function (data) {
-	    	return (V(data) - V(0))/(V(n) - V(0))
+	    	return (V_def(data) - V_def(0))/(V_def(n) - V_def(0))
 	});
 
 	$scope.gradientData = x.map(function (data) {
-	    	return (g(data) - g(0))/(g(n) - g(0))
+	    	return (g_def(data) - g_def(0))/(g_def(n) - g_def(0))
 	});
 	$scope.reloadPayoff = function () {
 	  	$scope.payoffData = x.map(function (data) {
@@ -122,6 +122,12 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 	    	return (g(data) - g(0))/(g(n) - g(0))
 	      });
 	};
+	function V_def(j){
+		return 1 / (1 + Math.pow(e, ($scope.defaultSteepness * (j - $scope.defaultInflectionPoint)) / n));
+	}
+	function g_def(j){
+		return 1 / (1 + Math.pow(e, ($scope.defaultSteepnessOfGrad * (j - $scope.defaultDistanceOfInteraction * $scope.defaultShapeOfDif)) / $scope.defaultDistanceOfInteraction));
+	}
 	function V(j){
 		return 1 / (1 + Math.pow(e, ($("#steepness")[0].value * (j - $("#inflectionPoint")[0].value )) / n));
 	}
