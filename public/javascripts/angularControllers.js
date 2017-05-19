@@ -29,11 +29,11 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		voronoi.setGen_Count($scope.defaultGenerationCount);
 
 		//Number of non_productive cells
-		$scope.defaultNonProductiveCellCount = 2;
+		$scope.defaultNonProductiveCellCount = 10;
 		voronoi.setPercentOfDefectingCells($scope.defaultNonProductiveCellCount);
 
 		//CellCount
-		$scope.defaultCellCount = 16;
+		$scope.defaultCellCount = 81;
 		voronoi.setTotalNumberOfCells($scope.defaultCellCount);
 		voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt($scope.defaultCellCount)), Math.ceil(Math.sqrt($scope.defaultCellCount))), true));
 
@@ -198,8 +198,9 @@ app.controller('parameterController', function($scope, $timeout) {
 
 	function showAlerts(newVal, oldVal, condition, execute){
 		try{
-			for (let i = 0; i < $scope.successMessageDiv.childNodes.length; ++i)
-			$('.close')[i].click();
+			for (let i = 0; i < $scope.successMessageDiv.childNodes.length; ++i){
+				$('.close')[i].click();
+			}
 		}
 		catch(error){}
 		if (newVal == undefined)

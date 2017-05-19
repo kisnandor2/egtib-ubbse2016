@@ -1,6 +1,6 @@
 var voronoiAccessibleFromOutside;
 
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ["chart.js"]);
 
 app.controller('baseVoronoiController', function($scope, $rootScope) {
 	initStatistics();
@@ -41,7 +41,7 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 		//Makes voronoi visible for highChartsController to set the voronoi chart
 		$rootScope.voronoi = voronoi;
 
-		$scope.defaultSteepness = 20;
+		$scope.defaultSteepness = 4;
 		$scope.defaultInflectionPoint = 0.5;
 		$scope.defaultShapeOfDif = 0.5;
 		$scope.defaultSteepnessOfGrad = 3;
@@ -96,6 +96,53 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 			heartbeat();
 		}, 1000)
 	}
+
+//---------------------------------------------- charts with functions ---------------
+	let x = Array.from(Array(100).keys());
+  	y = []
+  	const e = Math.exp(1);
+  	const n = 6;
+  	x = x.map(function (data) { return data/100; })
+  	$scope.labels = x;
+  	$scope.payoffData = x.map(function (data) {
+	    	return (V_def(data) - V_def(0))/(V_def(n) - V_def(0))
+	});
+
+	$scope.gradientData = x.map(function (data) {
+	    	return (g_def(data) - g_def(0))/(g_def(n) - g_def(0))
+	});
+	$scope.reloadPayoff = function () {
+	  	$scope.payoffData = x.map(function (data) {
+	    	return (V(data) - V(0))/(V(n) - V(0))
+	      });
+	};
+
+	$scope.reloadGradient = function () {
+	  	$scope.gradientData = x.map(function (data) {
+	    	return (g(data) - g(0))/(g(n) - g(0))
+	      });
+	};
+	function V_def(j){
+		return 1 / (1 + Math.pow(e, ($scope.defaultSteepness * (j - $scope.defaultInflectionPoint)) / n));
+	}
+	function g_def(j){
+		return 1 / (1 + Math.pow(e, ($scope.defaultSteepnessOfGrad * (j - $scope.defaultDistanceOfInteraction * $scope.defaultShapeOfDif)) / $scope.defaultDistanceOfInteraction));
+	}
+	function V(j){
+		return 1 / (1 + Math.pow(e, ($("#steepness")[0].value * (j - $("#inflectionPoint")[0].value )) / n));
+	}
+
+	function g(j){
+		return 1 / (1 + Math.pow(e, ($("#steepnessOfGrad")[0].value * (j - $("#distanceOfInteraction")[0].value * $("#shapeOfDif")[0].value)) / $("#distanceOfInteraction")[0].value));
+	}
+	$scope.options = {
+	  	elements: { point: { radius: 0 } },
+	    scales: {
+	      xAxes: [{
+	                display: false
+	            }]
+	    }
+	};
 
 });
 

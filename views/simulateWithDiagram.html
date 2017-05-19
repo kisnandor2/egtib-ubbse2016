@@ -17,13 +17,11 @@
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
-	<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-
 {% endblock %}
 
 {% block body %}
 <div ng-app="myApp">
-<div class="section page-height" id="voronoi" ng-controller="animatableVoronoiController">
+<div class="section" id="voronoi" ng-controller="animatableVoronoiController">
   <header>
     <div class="container">
           <h2>Parameters</h2>
@@ -85,27 +83,18 @@
               </div>
               <div class="checkbox">
                 <label><input type="checkbox" id="itShouldDivide" ng-modell="itShouldDivide" value="">Cell division</label>
-              </div>
-            </form>
-            <div class="row" ng-controller="simulationController">
-              <div class="row">
-                <div class="col-md-1"></div>
-                <input type="button" class="btn btn-default submit col-md-10" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
-                <div class="col-md-1"></div>
               </div><br>
-              <div class="row">
-                <div class="col-md-1"></div>
-                <input type="button" class="btn btn-default submit col-md-10" value="Start the simulation" id="startSimulation" ng-click="simulate()">
-                <input type="button" class="btn btn-default submit col-md-10" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
-                <input type="button" class="btn btn-default submit col-md-10" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
-                <div class="col-md-1"></div>
-              </div><br>
-              <div class="row">
-                <div class="col-md-1"></div>
-                  <a type="button" class="btn btn-default col-md-10" href="#statistics">Go to statistics</a>
-                <div class="col-md-1"></div>
-              </div>
+              <div ng-controller="simulationController">
+                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
+              <br><br>
+                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Start the simulation" id="startSimulation" ng-click="simulate()">
+                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
+                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
+              <br><br>
+                  <a type="button" class="btn btn-default col-md-10 col-md-offset-1" href="#statistics">Go to statistics</a>
             </div>
+            </form>
+
           </div>
         </div>
       </div>
