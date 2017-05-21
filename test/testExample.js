@@ -7,32 +7,84 @@ logger.setLevel('OFF');
 
 describe('SimulateVoronoi', function() {
 
-	describe('compareSites', function() {
-		it('should return true when the two parameters are the same', function() {
-			let voronoi = new SimulateVoronoi();
-			let site1 = {
-				x: 50,
-				y: 26.6
-			}
-			let site2 = {
-				x: 50,
-				y: 26.6
-			}
-			assert.isTrue(voronoi.compareSites(site1, site2));
-		});
-		it('should return false when the two parameters are different', function(){
-			let voronoi = new SimulateVoronoi();
-			let site1 = {
-				x: 5,
-				y: 266.6
-			}
-			let site2 = {
-				x: 500,
-				y: 266.6
-			}
-			assert.isFalse(voronoi.compareSites(site1, site2));
-		});
+
+	describe('getNeighborsCount', function() {
+
+
+		before(function() {
+        // Create a new instance of SimulateVoronoi module to be used in
+        voronoi = new SimulateVoronoi();
+   	});
+
+		it('testing neighbours count',function(){
+			sites = [ [215.72439, 62.73974, 'c',0.1],
+              [399.53053, 306.80018, 'c',  0.1],
+              [638.83229,79.52932, 'c', 0.1 ]];
+
+
+			bbox = { xl: 0, xr: 961.15625, yt: 0, yb: 438.390625 };
+			gen_count = 1
+			coop_cost = 0.1
+			dist = 1
+			itShouldDivide = true
+			constantParameters = undefined
+			voronoi.init({sites,bbox,gen_count, dist, itShouldDivide, constantParameters })
+
+
+			assert.equal(voronoi.getNeighborsCount(1), 2);
+		})
 	});
 
-	// describe('other functions');
+
+		describe('getCooperatingCount', function() {
+
+
+			before(function() {
+	        // Create a new instance of SimulateVoronoi module to be used in
+	        voronoi = new SimulateVoronoi();
+	   	});
+
+			it('testing cooperating cells count',function(){
+				sites = [['',215.72439, 62.73974, 'c',0.1],
+	              ['',399.53053, 306.80018, 'c',  0.1],
+	              ['',638.83229,79.52932, 'c', 0.1 ]];
+
+
+				bbox = { xl: 0, xr: 961.15625, yt: 0, yb: 438.390625 };
+				gen_count = 1
+				coop_cost = 0.1
+				dist = 1
+				itShouldDivide = true
+				constantParameters = undefined
+
+				voronoi.init({sites,bbox,gen_count, dist, itShouldDivide, constantParameters })
+				assert.equal(voronoi.getCooperatingCount(voronoi.sites), 3);
+			})
+
+			describe('areAllCellsDefecting', function() {
+
+
+				before(function() {
+		        // Create a new instance of SimulateVoronoi module to be used in
+		        voronoi = new SimulateVoronoi();
+		   	});
+
+				it('tests if every site is defector ',function(){
+					sites = [ [215.72439, 62.73974, 'd',0.1],
+		              [399.53053, 306.80018, 'd',  0.1],
+		              [638.83229,79.52932, 'd', 0.1 ]];
+
+
+					bbox = { xl: 0, xr: 961.15625, yt: 0, yb: 438.390625 };
+					gen_count = 1
+					coop_cost = 0.1
+					dist = 1
+					itShouldDivide = true
+					constantParameters = undefined
+					voronoi.init({sites,bbox,gen_count, dist, itShouldDivide, constantParameters })
+					assert.isTrue(voronoi.areAllCellsDefecting());
+				})
+			});
+
+});
 });

@@ -30,12 +30,7 @@ describe('ConstantFunctions', function() {
 		});
 	});
 	describe('testing calculateDiffGradient, V, and payoff functions', function() {
-		it('After invoked, the G member should be an this.dist length array.', function() {
-			let cf = new ConstantFunctions();
-			cf.distance = 10; // this setter invokes aslo calculateDiffGradient
-			assert.equal(cf.G.length, 10);
-		});
-		it('After invoked, the G member should contain the proper values.', function() {
+		it('After calculateDiffGradient invoked, the G member should contain the proper values.', function() {
 			let cf = new ConstantFunctions();
 			let localDist = 4; // this setter invokes aslo calculateDiffGradient
 			cf.distance = localDist;
