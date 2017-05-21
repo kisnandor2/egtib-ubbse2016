@@ -24,7 +24,7 @@ before_script:
 
 # run the tests
 script:
-#  - ./test_e2e.sh
+  - ./test_e2e.sh
   - ./test.sh
 
 # if build passed, deploy 
