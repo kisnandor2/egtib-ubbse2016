@@ -27,11 +27,12 @@ Socket.prototype.listen = function() {
 				logger.debug(error);
 				return;
 			}
-			socket.sessionID = socket.upgradeReq.signedCookies['connect.sid'];
+			socket.sessionID = socket.upgradeReq.signedCookies['connect.sid']; //ITT AZTAN VEGKEPP PROBLEMA VAN
 		})
 
 		socket.on('message', function(msg) {
 			data = JSON.parse(msg);
+
 			if (data.heartbeat){
 				logger.debug(`heartbeat ${socket.upgradeReq.connection.remoteAddress}`);
 				return;

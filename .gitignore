@@ -5,3 +5,12 @@ logs/*
 .ssh/*
 logs/serverLog.log
 simulation.json
+*.aux
+*.out
+*.bbl
+*.toc
+*.bak
+*.log
+*.blg
+*.gz
+*.pdf

@@ -1,4 +1,7 @@
 
+var voronoiAccessibleFromOutside;
+var voronoiAccessibleFromOutside2 = {};
+
 var app = angular.module('myApp', []);
 
 app.controller('animatableVoronoiController', function($scope, $rootScope) {
@@ -9,6 +12,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 
 	//TODO: look for a better way to wait for CSS animation(this is a workaround);
 	voronoiAccessibleFromOutside = $scope.voronoi;
+
 
 	function initVoronoi(){
 		let canvas = $('#canvas')[0];
@@ -219,6 +223,8 @@ app.controller('parameterController', function($scope, $timeout) {
 	}
 
 	$scope.renderNewDiagram = function(){
+
+
 		$scope.voronoi.setSites($scope.voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt($scope.voronoi.totalNumberOfCells)), Math.ceil(Math.sqrt($scope.voronoi.totalNumberOfCells))), true));
 		$scope.voronoi.renderDiagram();
 		$scope.voronoi.progressBar.style.width = '0%';
@@ -227,6 +233,15 @@ app.controller('parameterController', function($scope, $timeout) {
 		$('#pauseSimulation')[0].style.display = 'none';
 		$('#startSimulation')[0].style.display = 'block';
 		$('#startSimulation')[0].disabled = false;
+		voronoiAccessibleFromOutside2 = JSON.stringify({ //testing
+				bbox: $scope.voronoi.getBbox(),
+				sites: $scope.voronoi.getSites(),
+				gen_count: $scope.voronoi.getGen_Count(),
+				coop_cost: $scope.voronoi.getCoop_Cost(),
+				dist: $scope.voronoi.getDist(),
+				itShouldDivide: $("#itShouldDivide")[0].checked 
+				//send more data here
+		});
 	}
 
 });
