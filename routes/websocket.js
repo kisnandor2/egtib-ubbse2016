@@ -40,11 +40,18 @@ Socket.prototype.listen = function() {
 			server.connections.push(socket);
 			//Get session variable
 			sessionParser.store.get(socket.sessionID, function(err, session) {
-				session.sites 		= data.sites;
-				session.bbox 			= data.bbox;
-				session.gen_count = data.gen_count;
-				session.coop_cost = data.coop_cost;
-				session.dist 			= data.dist;
+				try {
+					session.sites 		= data.sites;
+					session.bbox 			= data.bbox;
+					session.gen_count = data.gen_count;
+					session.coop_cost = data.coop_cost;
+					session.dist 			= data.dist;
+				}
+				catch (error2){
+					logger.error("Session is null. Probably beacuse of testcafe");
+					socket.send('ready');
+					return;
+				}
 				if (data.itShouldDivide == undefined){
 					session.itShouldDivide = false;
 					logger.debug('itShouldDivide parameter did not arrive. Set to false');
