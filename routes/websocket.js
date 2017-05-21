@@ -27,11 +27,12 @@ Socket.prototype.listen = function() {
 				logger.debug(error);
 				return;
 			}
-			socket.sessionID = socket.upgradeReq.signedCookies['connect.sid'];
+			socket.sessionID = socket.upgradeReq.signedCookies['connect.sid']; //ITT AZTAN VEGKEPP PROBLEMA VAN
 		})
 
 		socket.on('message', function(msg) {
 			data = JSON.parse(msg);
+
 			if (data.heartbeat){
 				logger.debug(`heartbeat ${socket.upgradeReq.connection.remoteAddress}`);
 				return;
@@ -40,6 +41,7 @@ Socket.prototype.listen = function() {
 			server.connections.push(socket);
 			//Get session variable
 			sessionParser.store.get(socket.sessionID, function(err, session) {
+				logger.warn(err);
 				session.sites 		= data.sites;
 				session.bbox 			= data.bbox;
 				session.gen_count = data.gen_count;

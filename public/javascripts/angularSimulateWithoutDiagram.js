@@ -1,4 +1,5 @@
 var voronoiAccessibleFromOutside;
+var voronoiAccessibleFromOutside2;
 
 var app = angular.module('myApp', ["chart.js"]);
 
@@ -373,7 +374,7 @@ app.controller('simulationController', function($scope, $rootScope){
 			gen_count: voronois[i].getGen_Count(),
 			coop_cost: voronois[i].getCoop_Cost(),
 			dist: voronois[i].getDist(),
-			itShouldDivide: $scope.itShouldDivide,
+			itShouldDivide: $("#itShouldDivide")[0].checked ,
 			steepness: $scope.steepness,
 			inflexiosPontHelye: $scope.inflectionPoint,
 			shapeOfDif: $scope.shapeOfDif,
@@ -400,6 +401,7 @@ app.controller('simulationController', function($scope, $rootScope){
 	}
 
 	$scope.simulate = function(){
+
 		$("body").addClass("loading");
 		$('#panel').empty();
 		let voronois = getBaseVoronoiList();
@@ -407,6 +409,18 @@ app.controller('simulationController', function($scope, $rootScope){
 			$scope.showDangerAlert();
 			return;
 		}
+		voronoiAccessibleFromOutside2 = JSON.stringify({ //testing
+			bbox: voronois[0].getBbox(),
+			sites: voronois[0].getSites(),
+			gen_count: voronois[0].getGen_Count(),
+			coop_cost: voronois[0].getCoop_Cost(),
+			dist: voronois[0].getDist(),
+			itShouldDivide: $("#itShouldDivide")[0].checked,
+			steepness: $scope.steepness,
+			inflectionPoint: $scope.inflectionPoint,
+			shapeOfDif: $scope.shapeOfDif,
+			z: $scope.steepnessOfGrad
+		});
 		$scope.recursiveSimulate(0, voronois);
 		$("body").removeClass("loading");		
 		$rootScope.hideStatistics = false;
