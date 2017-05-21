@@ -59,7 +59,7 @@ describe('Cell', function() {
 				cost: 0.4,
 				bbox: [4,5]
 			});
-            let divideCell=cell1.divideCell([cell2],1, myRandomGenerator);
+            let divideCell=cell1.divideCell([cell2],2);
             
             if(divideCell[0].x == 3.5 && divideCell[1].x==4.5 && divideCell[0].y==4 && divideCell[1].y==4)
                 assert.isTrue(true);
@@ -82,7 +82,7 @@ describe('Cell', function() {
 				cost: 0.4,
 				bbox: [4,5]
 			});
-            let divideCell=cell1.divideCell([cell2],1, myRandomGenerator);
+            let divideCell=cell1.divideCell([cell2],2, myRandomGenerator);
           
             if(divideCell[0].x == 1.75 && divideCell[1].x==2.25 && divideCell[0].y==6 && divideCell[1].y==6)
                 assert.isTrue(true);
@@ -105,7 +105,7 @@ describe('Cell', function() {
 				cost: 0.4,
 				bbox: [4,5]
 			});
-            let divideCell=cell1.divideCell([cell2],1, myRandomGenerator);
+            let divideCell=cell1.divideCell([cell2],2, myRandomGenerator);
           
             if(divideCell[0].cost == 0.1 && divideCell[1].cost == 0.1)
                 assert.isTrue(true);
@@ -128,7 +128,7 @@ describe('Cell', function() {
 				cost: 0.8,
 				bbox: [4,5]
 			});
-            let divideCell=cell1.divideCell([cell2],1, myRandomGenerator);
+            let divideCell=cell1.divideCell([cell2],2, myRandomGenerator);
           
             if(divideCell[0].cost == 0.6 && divideCell[1].cost == 0.6)
                 assert.isTrue(true);

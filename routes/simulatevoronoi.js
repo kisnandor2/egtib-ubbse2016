@@ -68,6 +68,11 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	logger.info('Init voronoi from the client data');
 	logger.debug('Client data: ', {sites_count: sites.length, bbox, gen_count, coop_cost, dist});
 
+	if (!sites){
+		logger.error("No site in Sites, probably testing");
+		return;		
+	}
+
 	this.sites = [];
 	this.bbox = bbox;
 	this.generationCount = gen_count;
@@ -124,6 +129,10 @@ SimulateVoronoi.prototype.setConstantFunctions = function({steepness, inflexiosP
  * Simulates using the parameters set in the init function 
  */
 SimulateVoronoi.prototype.simulate = function() {
+		if (!this.sites){
+			logger.error("No this.sites, probably testing");
+			return [];
+		}
 		var ret = [];
 		// ret.push(JSON.parse(JSON.stringify(this.sites)));
 		for (let j = 0; j < this.generationCount; ++j) {
