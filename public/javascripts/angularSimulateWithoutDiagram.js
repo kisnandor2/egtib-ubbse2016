@@ -77,6 +77,11 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 	function initWebSocket(){
 		let HOST = location.origin.replace(/^http/, 'ws');
 		$scope.connection = new WebSocket(HOST);
+		$scope.connection.addEventListener("error", e => {
+      if (e.target.readyState === 3) {
+      	$scope.connection = new WebSocket("ws://localhost:3001");	
+      }
+    });
 
 		function sleep(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));

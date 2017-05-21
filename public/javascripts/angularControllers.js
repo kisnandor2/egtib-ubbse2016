@@ -1,4 +1,3 @@
-var voronoiAccessibleFromOutside;
 
 var app = angular.module('myApp', []);
 
@@ -76,19 +75,13 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		$scope.dangerMessage.appendChild(successMessageX2[0]);
 	}
 	function initWebSocket(){
-		try {
-			let HOST = location.origin.replace(/^http/, 'ws');
-			$scope.connection = new WebSocket(HOST);
-		}
-		catch (err) {
-			try {
-				$scope.connection = new WebSocket("localhost:3001");
-			}
-			catch (err) {
-				alert("The Server is not working!");
-				return;
-			}
-		}
+		let HOST = location.origin.replace(/^http/, 'ws');
+		$scope.connection = new WebSocket(HOST);
+		$scope.connection.addEventListener("error", e => {
+      if (e.target.readyState === 3) {
+      	$scope.connection = new WebSocket("ws://localhost:3001");	
+      }
+    });
 
 		function sleep(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));
