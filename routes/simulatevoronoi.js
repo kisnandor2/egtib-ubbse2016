@@ -4,7 +4,16 @@ const Timer = require('../public/javascripts/timer');
 const fs = require('fs');
 const constantFunctions = new (require('./ConstantFunctions'))();
 const Cell = require('./Cell')
+const MongoClient = require('mongodb').MongoClient;
 
+var MongoURI = null;
+if (process.env.MONGODB_URI){
+	MongoURI = process.env.MONGODB_URI;
+}
+else{
+	MongoURI = "mongodb://localhost:27017";
+}
+MongoURI += "/egtib";
 const alfa = 0.1; //dividing chance constant
 const e = Math.exp(1);
 
@@ -81,7 +90,6 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.itShouldDivide = itShouldDivide;
 
 	if (constantParameters){ //set if there is what to set
-		console.log(constantParameters);
 		this.setConstantFunctions(constantParameters)
 	}
 
@@ -336,7 +344,7 @@ SimulateVoronoi.prototype.getCooperatingCount = function(sites){
  * Saves the current simulation results to the simulation.json file
  * @param {arrayOfarrays} - the `ret` from the simulation
  */
-SimulateVoronoi.prototype.saveSimulationData = function(filename, sitesList, callback,i, data2){
+SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 	let coopAndDef = [];
 	for (let i = 0; i < sitesList.length; ++i){
 		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
@@ -348,28 +356,25 @@ SimulateVoronoi.prototype.saveSimulationData = function(filename, sitesList, cal
 	}
 	let params = {
 		generationCount: this.generationCount,
-		cooperating: this.cooperatingCost,
-		dist: this.dist, 
+		cooperatingCost: this.cooperatingCost,
+		dist: this.dist,
+		itShouldDivide: this.itShouldDivide,
 		results: coopAndDef
 	}
-	fs.readFile(filename, 'utf8', function readFileCallback(err, data){
-		let obj = [];
-		if (err){
-			logger.error(err);
-			return;
-		}
-		try {
-			obj = JSON.parse(data); //now it an object
-		}
-		catch(err){
-			logger.error(data);
-			logger.error(err);
-			obj = [];
-		}
-		obj.push(params);
-		json = JSON.stringify(obj); //convert it back to json
-		console.log('write' + i);
-		fs.writeFile(filename, json, 'utf8', () => {callback(i, data2)}); // write it back 
+	// Connect to the db
+	MongoClient.connect(MongoURI, function(err, db) {
+	  if(err) {
+	  	logger.error(err); 
+	  	return;
+	  }
+	  db.collection("egtib").insert(params, {w:1}, function(err, result) {
+	  	if (err){
+	  		logger.error(err);
+	  		return;
+	  	}
+	  	logger.trace("1 simulation inserted into MongoDB");
+	  	db.close();
+	  });
 	});
 }
 
