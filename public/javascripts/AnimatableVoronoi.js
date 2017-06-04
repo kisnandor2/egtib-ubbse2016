@@ -175,13 +175,13 @@ class AnimatableVoronoi extends BaseVoronoi{
 	 * @param {array_of_sites} sitesList
 	 */
 	renderChartData(sitesList) {
-		this.resetChart();
-		// sitesList.unshift(this.sites);
-		this.addDataToChart(this.sites, 0);
-		for (let i = 0; i < sitesList.length; ++i){
-			this.addDataToChart(sitesList[i], i+1);
-		}
-		this.displayChartData();
+		// this.resetChart();
+		// // sitesList.unshift(this.sites);
+		// this.addDataToChart(this.sites, 0);
+		// for (let i = 0; i < sitesList.length; ++i){
+		// 	this.addDataToChart(sitesList[i], i+1);
+		// }
+		// this.displayChartData();
 		this.sitesList = sitesList;
 	}
 
@@ -315,4 +315,9 @@ class AnimatableVoronoi extends BaseVoronoi{
 	setProgressBar(p){
 		this.progressBar = p;
 	}
+
+	setSitesList(sitesList){
+		this.sitesList = sitesList;
+	}
+
 }

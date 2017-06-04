@@ -274,7 +274,7 @@ app.controller('simulationController', function($scope, $rootScope){
 					sitesList[i] = $scope.voronoi.sitesBadFormatToPointFormat(sitesList[i]);
 				}
 				$("body").removeClass("loading");
-				$scope.voronoi.renderChartData(sitesList);
+				$scope.voronoi.setSitesList(sitesList);
 				turnOffProgressBarClickAndHoverAndMouseMove();
 				$('#startSimulation')[0].style.display = 'none';
 				$('#pauseSimulation')[0].style.display = 'block';
