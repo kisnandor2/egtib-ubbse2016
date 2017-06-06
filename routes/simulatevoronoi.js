@@ -345,6 +345,25 @@ SimulateVoronoi.prototype.getCooperatingCount = function(sites){
  * @param {arrayOfarrays} - the `ret` from the simulation
  */
 SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
+	if (sitesList[0].length < 100){
+		logger.trace('No need to save simulation. Total cells is out of range');
+		return;
+	}
+	const testCoopCount = this.getCooperatingCount(sitesList[0]);
+	const percentageDef = 1 - testCoopCount/sitesList[0].length;
+	if (percentageDef <= 0.01 || percentageDef >= 0.1){
+		logger.trace('No need to save simulation. percentageDef is out of range');
+		return;
+	}
+	if (this.generationCount < 5){
+		logger.trace('No need to save simulation. gen_count is out of range');
+		return;	
+	}
+	if (this.cooperatingCost <= 0.01 || this.cooperatingCost > 0.2){
+		logger.trace('No need to save simulation. cooperatingCost is out of range');
+		return;
+	}
+
 	let coopAndDef = [];
 	for (let i = 0; i < sitesList.length; ++i){
 		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
