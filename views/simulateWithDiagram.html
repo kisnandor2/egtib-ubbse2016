@@ -1,44 +1,45 @@
 {% extends "basePage.html" %}
 
 {% block head %}
-	<title> Simulation </title>
-	<link rel="stylesheet" href="/stylesheets/loading_clock.css">
-  <link rel="stylesheet" href="/stylesheets/simulateWithDiagram.css">
+<title> Simulation </title>
+<link rel="stylesheet" href="/stylesheets/loading_clock.css">
+<link rel="stylesheet" href="/stylesheets/simulateWithDiagram.css">
 
-	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
-	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
-  <script type="text/javascript" src="/javascripts/util/colorProvider.js"></script>
-  <script src="https://cdn.jsdelivr.net/canvg/1.4.0/rgbcolor.js"></script>
-  <script type="text/javascript" src="/javascripts/BaseVoronoi.js"></script>
-	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
-  <script type="text/javascript" src="/javascripts/angularControllers.js"></script>
-  <script type="text/javascript" src="/javascripts/timer.js"></script>
+<script type="text/javascript" src="/javascripts/paper-full.js"></script>
+<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
+<script type="text/javascript" src="/javascripts/util/colorProvider.js"></script>
+<script src="https://cdn.jsdelivr.net/canvg/1.4.0/rgbcolor.js"></script>
+<script type="text/javascript" src="/javascripts/BaseVoronoi.js"></script>
+<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
+<script type="text/javascript" src="/javascripts/angularControllers.js"></script>
+<script type="text/javascript" src="/javascripts/commonController.js"></script>
+<script type="text/javascript" src="/javascripts/timer.js"></script>
 
-	<script src="https://code.highcharts.com/highcharts.js"></script>
-	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 {% endblock %}
 
 {% block body %}
 <div ng-app="myApp">
-<div class="section" id="voronoi" ng-controller="animatableVoronoiController">
-  <header>
-    <div class="container">
-          <h2>Parameters</h2>
-    </div>
-  </header>
-  <div class="container" style="width:95%;">
-    <div class="row" id="successMessageRow">
-      <div class="col-md-4"></div>
-      <strong>
-      <div class="col-md-4" id="successMessage"></div>
-      </strong>
-      <div class="col-md-4"></div>
-    </div>
-    <div class="row">
-      <div class="col-md-3">
-        <div class="panel panel-default" ng-controller="parameterController">
-          <div class="panel-heading text-center" color: rgb(255,255,255);">Set the parameters for the next run here</div>
+  <div class="section" id="voronoi" ng-controller="animatableVoronoiController">
+    <header>
+      <div class="container">
+        <h2>Parameters</h2>
+      </div>
+    </header>
+    <div class="container" style="width:95%;">
+      <div class="row" id="successMessageRow">
+        <div class="col-md-4"></div>
+        <strong>
+          <div class="col-md-4" id="successMessage"></div>
+        </strong>
+        <div class="col-md-4"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <div class="panel panel-default" ng-controller="parameterController">
+            <div class="panel-heading text-center" color: rgb(255,255,255);">Set the parameters for the next run here</div>
           <div class="panel-body">
             <form class="form-horizontal" role="form">
               <div class="form-group">
@@ -84,15 +85,15 @@
               <div class="checkbox">
                 <label><input type="checkbox" id="itShouldDivide" ng-modell="itShouldDivide" value="">Cell division</label>
               </div><br>
-              <div ng-controller="simulationController">
+              <div>
                 <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
-              <br><br>
+                <br><br>
                 <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Start the simulation" id="startSimulation" ng-click="simulate()">
                 <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
                 <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
-              <br><br>
-                  <a type="button" class="btn btn-default col-md-10 col-md-offset-1" href="#statistics">Go to statistics</a>
-            </div>
+                <br><br>
+                <a type="button" class="btn btn-default col-md-10 col-md-offset-1" href="#statistics">Go to statistics</a>
+              </div>
             </form>
 
           </div>
@@ -115,6 +116,7 @@
         </div>
       </div>
     </div>
+    <voronoi-column-chart data="chartData">Placeholder for generic chart</voronoi-column-chart>
   </div>
 </div>
 <div class="section page-height" id="statistics" ng-controller="highChartsController">
@@ -127,12 +129,14 @@
     <div class="row">
       <div class="panel panel-default">
         <div class="panel-heading text-center" color: rgb(255,255,255);">Statistics</div>
-        <div class="panel-body text-center">
-          <div id="highChartsContainer"></div>
-        </div>
+      <div class="panel-body text-center">
+        <div id="highChartsContainer"></div>
       </div>
     </div>
   </div>
+</div>
+<div ng-controller="testContr">
+
 </div>
 </div>
 
