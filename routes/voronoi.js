@@ -18,10 +18,7 @@ router.get('/data', function(req, res) {
 	v.init(req.session);	//ES6 parameter destructuring
 	try {
 		let data = v.simulate();
-		if (!req.session.constantParameters) {
-			//Save it only if req came from simulateWithDiagram Page
-			v.saveSimulationData(data);
-		}
+		v.saveSimulationData(data);
 		server.sendData(JSON.stringify(data));
 		res.status(200).send('ok');
 	}
