@@ -182,12 +182,11 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 			var n = siteList[i].length
 			productive.push(p)
 			nonProductive.push(n-p)
-			console.log(p, " ", n)
 		}
-		console.log(productive)
 		$scope.chartData[0].data = productive
 		$scope.chartData[1].data = nonProductive
-		console.log($scope.chartData[0])
+		$scope.chartData[2].data = nonProductive
+
     }
 
     $scope.simulate = function(){
@@ -216,10 +215,8 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
                     sitesList[i] = $scope.voronoi.sitesBadFormatToPointFormat(sitesList[i]);
                 }
                 $("body").removeClass("loading");
-                $scope.voronoi.setSitesList(sitesList);
-                console.log(sitesList)
-				$scope.chartData[1].data = [0,0,0,0,0,0,0,0,0,0]
                 setChartData(sitesList)
+                $scope.voronoi.setSitesList(sitesList);
                 turnOffProgressBarClickAndHoverAndMouseMove();
                 $('#startSimulation')[0].style.display = 'none';
                 $('#pauseSimulation')[0].style.display = 'block';
@@ -374,38 +371,6 @@ app.controller('parameterController', function($scope, $timeout) {
 
 });
 
-app.controller('testContr', function($scope){
-
-    let colorProvider = new ColorProvider();
-    $scope.data = [{
-        name: 'Productive',
-        color: colorProvider.getRGBColor('c').toHex(),
-        data: [],
-    }, {
-        name: 'Non-productive',
-        color: colorProvider.getRGBColor('d').toHex(),
-        data: [],
-    }, {
-        name: 'Separator',
-        type: 'spline',
-        color: '#000000',
-    }]
-
-    let n = Math.ceil(Math.random() * 100);
-    let categories = [];
-    let numberProductive = [];
-    let numberNonProductive = [];
-    for (i = 0; i < 10; i++) {
-        var p = Math.ceil(Math.random() * n); //ezt kell megkapjam
-        numberProductive.push(p);
-        numberNonProductive.push(n - p);
-        categories.push(i + 1);
-    }
-    chart.series[0].setData(numberProductive);
-    chart.series[1].setData(numberNonProductive);
-    chart.series[2].setData(numberNonProductive);
-    chart.xAxis[0].setCategories(categories);
-})
 app.controller('highChartsController', function($rootScope){
 	initHighCharts();
 

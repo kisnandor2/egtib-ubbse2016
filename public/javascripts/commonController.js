@@ -10,7 +10,7 @@ angular.module("commonApp", [])
                 data: '='
             },
             link: function (scope, element) {
-                Highcharts.chart(element[0], {
+                var chart = Highcharts.chart(element[0], {
                     chart: {
                         type: 'column'
                     },
@@ -33,6 +33,14 @@ angular.module("commonApp", [])
                     plotOptions: {column: {stacking: 'normal'}},
                     series: scope.data
                 });
+
+                scope.$watch('data', function(newVal) {
+                    if (newVal) {
+                        for (var i=0; i<chart.series.length; ++i){
+                            chart.series[i].setData(scope.data[i].data);
+                        }
+                    }
+                }, true);
             }
         };
     })

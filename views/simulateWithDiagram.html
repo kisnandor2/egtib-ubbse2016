@@ -21,8 +21,8 @@
 {% endblock %}
 
 {% block body %}
-<div ng-app="myApp">
-  <div class="section" id="voronoi" ng-controller="animatableVoronoiController">
+<div ng-app="myApp" ng-controller="animatableVoronoiController">
+  <div class="section" id="voronoi" >
     <header>
       <div class="container">
         <h2>Parameters</h2>
@@ -116,28 +116,24 @@
         </div>
       </div>
     </div>
-    <voronoi-column-chart data="chartData">Placeholder for generic chart</voronoi-column-chart>
   </div>
-</div>
-<div class="section page-height" id="statistics" ng-controller="highChartsController">
-  <header>
+
+  <div class="section page-height" id="statistics">
+    <header>
+      <div class="container">
+        <h2>Statistics</h2>
+      </div>
+    </header>
     <div class="container">
-      <h2>Statistics</h2>
-    </div>
-  </header>
-  <div class="container">
-    <div class="row">
-      <div class="panel panel-default">
-        <div class="panel-heading text-center" color: rgb(255,255,255);">Statistics</div>
-      <div class="panel-body text-center">
-        <div id="highChartsContainer"></div>
+      <div class="row">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center" color: rgb(255,255,255);">Statistics</div>
+        <div class="panel-body text-center">
+          <voronoi-column-chart  data="chartData" title="Number of cells, over time"></voronoi-column-chart>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div ng-controller="testContr">
-
-</div>
 </div>
 
 <div class="loading_clock"></div>
