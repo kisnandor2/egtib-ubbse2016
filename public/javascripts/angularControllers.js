@@ -4,7 +4,24 @@ var voronoiAccessibleFromOutside2 = {};
 
 var app = angular.module('myApp', ['commonApp']);
 
-app.controller('animatableVoronoiController', function($scope, $rootScope) {
+app.constant('defaults', {
+	distance : 1,
+	generation: 10,
+	nonProductive: 10,
+	cellCount: 81,
+	coopCost: 0.1
+});
+
+app.constant('boundary', {
+    maxNumberOfCells: 500,
+    maxPercentOfDefectingCells: 100,
+	minGenerationCount: 0,
+    minCooperatingCost: 0,
+	maxCooperatingCost: 1,
+	maxDistanceOfInteraction: 5
+
+})
+app.controller('animatableVoronoiController', function($scope, $rootScope, defaults) {
 	initVoronoi();
 	initAlertBoxes();
 	initWebSocket();
@@ -24,24 +41,24 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		var voronoi = $scope.voronoi;
 
 		//Distance of interaction
-		$scope.defaultDistanceOfInteraction = 1;
+		$scope.defaultDistanceOfInteraction = defaults.distance;
 		voronoi.setDist($scope.defaultDistanceOfInteraction);
 
 		//GenerationCount
-		$scope.defaultGenerationCount = 10;
+		$scope.defaultGenerationCount = defaults.generation;
 		voronoi.setGen_Count($scope.defaultGenerationCount);
 
 		//Number of non_productive cells
-		$scope.defaultNonProductiveCellCount = 10;
+		$scope.defaultNonProductiveCellCount = defaults.nonProductive;
 		voronoi.setPercentOfDefectingCells($scope.defaultNonProductiveCellCount);
 
 		//CellCount
-		$scope.defaultCellCount = 81;
+		$scope.defaultCellCount = defaults.cellCount;
 		voronoi.setTotalNumberOfCells($scope.defaultCellCount);
 		voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt($scope.defaultCellCount)), Math.ceil(Math.sqrt($scope.defaultCellCount))), true));
 
 		//CoopCost
-		$scope.defaultCoopCost = 0.1;
+		$scope.defaultCoopCost = defaults.coopCost;
 		voronoi.setCoop_Cost($scope.defaultCoopCost);
 
 		voronoi.renderDiagram();
@@ -160,7 +177,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
                 return Math.floor(Math.random() * 9);
             })
         }, {
-            name: 'Non-productive',
+            name: 'Non-nonProductive',
             color: colorProvider.getRGBColor('d').toHex(),
             data: Array.apply(null, Array(10)).map(function(item, index){
                 return Math.floor(Math.random() * 9);
@@ -275,15 +292,13 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
         $('#progressBar')[0].removeEventListener('transitionend', $('#progressBar')[0].waitForCSSAnimation);
     }
 
-
-
 });
 
-app.controller('parameterController', function($scope, $timeout) {
+app.controller('parameterController', function($scope, $timeout, boundary) {
 	$scope.successMessageDiv = $('#successMessage')[0];
 	$scope.$watch('totalNumberOfCells', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value <2 || value > 500;
+			return value <2 || value > boundary.maxNumberOfCells;
 		}, function(){
 			$scope.voronoi.setTotalNumberOfCells(newVal);
 		})
@@ -291,7 +306,7 @@ app.controller('parameterController', function($scope, $timeout) {
 	})
 	$scope.$watch('percentOfDefectingCells', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value < 0 || value > 100;
+			return value < 0 || value > boundary.maxPercentOfDefectingCells;
 		}, function(value){
 			$scope.voronoi.setPercentOfDefectingCells(newVal);
 		})
@@ -299,21 +314,21 @@ app.controller('parameterController', function($scope, $timeout) {
 	})
 	$scope.$watch('generationCount', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value <= 0;
+			return value <= boundary.minGenerationCount;
 		}, function(){
 			$scope.voronoi.setGen_Count(newVal);
 		})
 	})
 	$scope.$watch('cooperatingCost', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value < 0 || value > 1;
+			return value < boundary.minCooperatingCost || value > boundary.maxCooperatingCost;
 		}, function(){
 			$scope.voronoi.setCoop_Cost(newVal);
 		})
 	})
 	$scope.$watch('distanceOfInteraction', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value < 0 || value > 5;
+			return value < 0 || value > boundary.maxDistanceOfInteraction;
 		}, function(){
 			$scope.voronoi.setDist(newVal);
 		})
