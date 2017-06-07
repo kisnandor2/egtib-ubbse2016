@@ -186,6 +186,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		$scope.chartData[0].data = productive
 		$scope.chartData[1].data = nonProductive
 		$scope.chartData[2].data = nonProductive
+		$scope.$apply() // necessary for the "digest cycle" to detect changes!
 
     }
 
@@ -371,61 +372,6 @@ app.controller('parameterController', function($scope, $timeout) {
 
 });
 
-app.controller('highChartsController', function($rootScope){
-	initHighCharts();
-
-	function initHighCharts(){
-
-		let colorProvider = new ColorProvider();
-		var chart = Highcharts.chart('highChartsContainer', {
-			chart: {type: 'column'},
-			title: {text: 'Number of cells, over time'},
-			xAxis: {categories: []},
-			yAxis: {
-				allowDecimals: false,
-				min: 0,
-				title: {text: 'Number of cells'}
-			},
-			tooltip: {
-				formatter: function() {
-					return '<b>' + this.x + '</b><br/>' +
-						this.series.name + ': ' + this.y + '<br/>' +
-						'Total: ' + this.point.stackTotal;
-				}
-			},
-			plotOptions: {column: {stacking: 'normal'}},
-			series: [{
-				name: 'Productive',
-				color: colorProvider.getRGBColor('c').toHex(),
-				data: [],
-			}, {
-				name: 'Non-productive',
-				color: colorProvider.getRGBColor('d').toHex(),
-				data: [],
-			}, {
-				name: 'Separator',
-				type: 'spline',
-				color: '#000000',
-			}]
-		});
-
-		let n = Math.ceil(Math.random() * 100);
-		let categories = [];
-		let numberProductive = [];
-		let numberNonProductive = [];
-		for (i = 0; i < 10; i++) {
-			var p = Math.ceil(Math.random() * n); //ezt kell megkapjam
-			numberProductive.push(p);
-			numberNonProductive.push(n - p);
-			categories.push(i + 1);
-		}
-		chart.series[0].setData(numberProductive);
-		chart.series[1].setData(numberNonProductive);
-		chart.series[2].setData(numberNonProductive);
-		chart.xAxis[0].setCategories(categories);
-		$rootScope.voronoi.setChart(chart);
-	}
-})
 
 app.controller('progressBarController', function($rootScope){
 	$rootScope.voronoi.setProgressBar($('#progressBar')[0]);
