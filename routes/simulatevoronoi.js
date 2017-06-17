@@ -32,6 +32,7 @@ function SimulateVoronoi() {
 	this.sites = [];
 	this.bbox = {};
 	this.neighborMatrix = [];
+	this.percentageDef = undefined;
 
 	logger.debug("new SimulateVoronoi created");
 	// this.timer = new Timer(this);
@@ -141,6 +142,8 @@ SimulateVoronoi.prototype.simulate = function() {
 			logger.error("No this.sites, probably testing");
 			return [];
 		}
+		const testCoopCount = this.getCooperatingCount(this.sites);
+		this.percentageDef = 1 - testCoopCount/this.sites.length;
 		var ret = [];
 		// ret.push(JSON.parse(JSON.stringify(this.sites)));
 		for (let j = 0; j < this.generationCount; ++j) {
@@ -349,20 +352,18 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 		logger.trace('No need to save simulation. Total cells is out of range');
 		return;
 	}
-	const testCoopCount = this.getCooperatingCount(sitesList[0]);
-	const percentageDef = 1 - testCoopCount/sitesList[0].length;
-	if (percentageDef <= 0.01 || percentageDef >= 0.1){
-		logger.trace('No need to save simulation. percentageDef is out of range');
-		return;
-	}
+	// if (percentageDef <= 0.01 || percentageDef >= 0.1){
+	// 	logger.trace('No need to save simulation. percentageDef is out of range');
+	// 	return;
+	// }
 	if (this.generationCount < 5){
-		logger.trace('No need to save simulation. gen_count is out of range');
+		logger.trace('No need to save simulation. gen_count is too small');
 		return;	
 	}
-	if (this.cooperatingCost <= 0.01 || this.cooperatingCost > 0.2){
-		logger.trace('No need to save simulation. cooperatingCost is out of range');
-		return;
-	}
+	// if (this.cooperatingCost <= 0.01 || this.cooperatingCost > 0.2){
+	// 	logger.trace('No need to save simulation. cooperatingCost is out of range');
+	// 	return;
+	// }
 
 	let coopAndDef = [];
 	for (let i = 0; i < sitesList.length; ++i){
@@ -376,6 +377,7 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 	let params = {
 		generationCount: this.generationCount,
 		cooperatingCost: this.cooperatingCost,
+		percentageDef: this.percentageDef,
 		dist: this.dist,
 		itShouldDivide: this.itShouldDivide,
 		results: coopAndDef
