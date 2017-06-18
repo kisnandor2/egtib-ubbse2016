@@ -6,15 +6,20 @@
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=90mm]{images/EGTIB}
-	\caption{Pillanatkép az alkalmazásról \label{fig:SimulateWithDiagram}}
+	\begin{tabular}{cc}
+		\includegraphics[width=0.47\linewidth]{images/EGTIB}
+		&
+		\includegraphics[width=0.47\linewidth]{images/VisualizationDiagram}
+	\end{tabular}
+	\caption{Bal: pillanatkép az alkalmazásról. Jobb: a populáció változása generációnként adott paraméterekre}	
+	\label{fig:VisualizationDiagram}
 \end{figure}
 
 \section{Funkcionalitások}
 
 Az alkalmazásunkat, funkcionalitás szerint, három fő komponensre oszthatjuk:
 
-\paragraph{Vizualizáció}- képes szimulálni kevés sejtből (max. 500) álló populációkat és ezeket generációnként meg is tudja jeleníteni. A megjelenítés interaktív, ami azt jelenti, hogy bármikor meg lehet állítani, folytatni vagy akár tekergetni mint egy filmet. Továbbá mindehhez tartozik egy grafikon is, mely a populációnak változását ábrázolja generációnként.
+\paragraph{Vizualizáció}- képes szimulálni kevés sejtből (max. 500) álló populációkat és ezeket generációnként meg is tudja jeleníteni egy Voronoi diagram segítségével. A diagram alatt egy progress bar kapott helyet, mely nem csak, hogy azt mutatja melyik generációnál tartunk éppen, hanem ezzel ugrálni is lehet a generációk között, ezzel interaktívabbá téve a szimulációt, olyan mint ha egy filmet tekergetnénk. Természetesen nem csak tekergetni de megállítani is lehet. Továbbá mindehhez tartozik egy grafikon is, mely a populációnak változását ábrázolja generációnként (\ref{fig:VisualizationDiagram}).
 
 \paragraph{Szimuláció}- alkalmas nagyobb (max. 2000) populációval dolgozni, viszont ezek megjelenítése már túl sok időt venne igénybe, így csak a fentebb említett grafikon segítségével ábrázolja azt, hogy mi is történik a sejtek között. Előnye a vizualizációs részhez képest elsősorban az, hogy sokkal nagyobb populációval tud dolgozni, de a paraméterlista is változatosabb (a szimuláció során használt függvények viselkedésébe is bele tud szólni a felhasználó) és hatalmas kényelmi faktornak számít az, hogy több, különböző paraméterezésű szimulációt is képes egy gombnyomással lekérni.
 
@@ -66,20 +71,29 @@ Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a fe
 
 Már a projekt kezdetekor biztosak voltunk benne, hogy egy könnyen és bárki által elérhető alkalmazásra lesz szükség, így nem volt kérdéses az, hogy webes felületet akarunk. Ezután már csak az volt a kérdéses, hogy számunkra milyen környezet lenne a legkényelmesebb, amely ha szükség van rá könnyen skálázható is. Végül a \textbf{NodeJS}-re (\cite{soft:node}) esett a választásunk, hiszen ez egy egyszerű felület skálázható hálózati alkalmazások írására, valamint egy nagyon egyszerű és elterjedt nyelvet használ, a JavasSriptet. Keretrendszernek a sokak által ismert és használt \textbf{ExpressJS}-t (\cite{soft:express}) választottuk.
 
-Tehát a szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP-vel folyik. A fejlesztés során bizonyos szimulációs adatok JSON-beli küldözgetése túl nagy feladatnak bizonyult, így ezek átvitelét \textbf{WebSocket} segítségével oldottuk meg.
-
-%A szerver oldalon folyik az erőforrás igényes számítások nagy része.
+Tehát a szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP-vel folyik. A fejlesztés során bizonyos szimulációs adatok JSON-beli küldözgetése túl nagy feladatnak bizonyult, így ezek átvitelét \textbf{WebSocket} segítségével oldottuk meg. Azt is jó tudni, hogy a szerver oldalon folyik az erőforrás igényes számítások nagy része.
 
 Említettük, hogy \textbf{Voronoi} diagramokkal ábrázoljuk a sejteket, így szükségünk volt egy Voronoi modulra is (\cite{soft:voronoiModule}). Ez a modul egy JavaScript implementációja Steven J. Fortune algoritmusának, mely hatékonyon dolgozik Voronoi diagramokkal, viszont csak az adatszerkezettel foglalkozik, nem képes ki is rajzolni azt.
 
-Kliens oldalon a technológiák felhozatala eléggé változatos. Először is egy weboldal jól kell kinézzen és ezen feladatot a \textbf{Bootstrap} (\cite{soft:bootstrap}) keretrendszer tökéletesen ki is elégíti. Dinamikus oldalt lehet vele létrehozni, bármilyen eszközt együttesen lehet kezelni vele, nem csak desktopon de mobil eszközökön is jól néz ki az oldal. Kezdetben kliens oldalon nem nagyon volt bármiféle struktúra a JavaScriptben és elég hamar rá is jöttünk, hogy ez egy hatalmas probléma, a kód elég hamar átláthatatlan lett. Ezért átálltunk \textbf{AngularJS}-re (\cite{soft:angular}), mellyel már sokkal olvashatóbb kódot sikerült létrehoznunk, egyszerűbbé tette a kód bővítését is és az oldal dinamikussága is nőtt (pl. megjelentek az alertek). A Voronoi diagram megjelenítéséért a \textbf{Paper.js} (\cite{soft:paper}) a felelős, valamint itt is jelen van a Voronoi adatszerkezetet feldolgozó modul (\cite{soft:voronoiModule}). A grafikonok kirajzolására több keretrendszert is használunk. Ez azért van mert ismertünk már egyet ami az adott feladatot kielégítette, viszont a későbbiekben új típusú diagramok jöttek be, melyekhez, mint kiderült, új keretrendszerre volt szükségünk. Így alakult, hogy a Voronoi diagram alatti grafikont a \textbf{Highcharts} (\cite{soft:highcharts}) segítségével, a V és g függvényeket (\ref{fig:SimulationFunctionDiagrams}) az AngularJS grafikonjaival, míg az error bart (\ref{fig:SimulationResults}) a \textbf{Plotly.js} (\cite{soft:plotly}) segítségével rajzoltuk ki.
+Webalkalmazásról lévén szó szükség van egy adatbázisra is ahol a szesszió adatokat el lehet tárolni, ez a \textbf{MongoDB} (\cite{soft:mongodb}). Továbbá a szimulációs eredmények lementése is ide történik, és természetesen az eredmények oldal kigenerálása során is innen vesszük ki az adatokat. Emeljük ki azt a tényt, hogy a MongoDB sokat könnyített a munkánkon az adatok lementését illetően. Adataink JavaScript objektumokként vannak reprezentálva és köszönhetően az adatbázisnak, nem volt szükségünk semmilyen tervezésre, egyszerűen le lehet ilyen struktúrában lévő adatokat menteni, majd ezek lekérése is könnyen megvalósítható.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\linewidth]{images/SimulationProcess}
+	\caption{Szekvencia diagram. A szimulálási folyamat lépései}
+	\label{fig:SimulationProcess}
+\end{figure}
+
+
+Kliens oldalon a technológiák felhozatala eléggé változatos. Először is egy weboldal jól kell kinézzen és ezen feladatot a \textbf{Bootstrap} (\cite{soft:bootstrap}) keretrendszer tökéletesen ki is elégíti. Dinamikus oldalt lehet vele létrehozni, bármilyen eszközt együttesen lehet kezelni vele, nem csak desktopon de mobil eszközökön is jól néz ki az oldal. Kezdetben kliens oldalon nem nagyon volt bármiféle struktúra a JavaScriptben és elég hamar rá is jöttünk, hogy ez egy hatalmas probléma, a kód elég hamar átláthatatlan lett. Ezért átálltunk \textbf{AngularJS}-re (\cite{soft:angular}), mellyel már sokkal olvashatóbb kódot sikerült létrehoznunk, egyszerűbbé tette a kód bővítését is és az oldal dinamikussága is nőtt (pl. megjelentek az alertek). A Voronoi diagram megjelenítéséért a \textbf{Paper.js} (\cite{soft:paper}) a felelős, valamint itt is jelen van a Voronoi adatszerkezetet feldolgozó modul (\cite{soft:voronoiModule}). A grafikonok kirajzolására több keretrendszert is használunk. Ez azért van, mert ismertünk már egyet ami az adott feladatot kielégítette, viszont a későbbiekben új típusú diagramok jöttek be, melyekhez, mint kiderült, új keretrendszerre volt szükségünk. Így alakult, hogy a Voronoi diagram alatti grafikont a \textbf{Highcharts} (\cite{soft:highcharts}) segítségével, a V és g függvényeket (\ref{fig:SimulationFunctionDiagrams}) az AngularJS grafikonjaival, míg az error bart (\ref{fig:SimulationResults}) a \textbf{Plotly.js} (\cite{soft:plotly}) segítségével rajzoltuk ki.
 
 Mivel ez az egész egy webalkalmazás szükségünk volt egy szerverre, ahova ezt kitelepíthetjük. Míg régen ez egy saját szerverre telepítették mely egy statikus IP címmel rendelkezett, addig mára már sokkal könnyebb ha ezt inkább egy felhőbe rakjuk. Több ingyenesen használható felhő is létezik már, a mi választásunk a \textbf{Heroku} lett (az alábbi linken érhető el az alkalmazásunk: \url{https://egtib.herokuapp.com/}). A Heroku egy PaaS típusú felhőszolgáltató, ami annyit jelent, hogy platformot és kész szolgáltatásokat nyújt. Elég volt csak azt megmondani, hogy egy NodeJS alapú szervert akarunk üzemeltetni, ahhoz kiválasztottunk egy akármilyen adatbázist, és már kész is. Természetesen senki sem szereti a kitelepítést kézzel elvégezni, ezért, és persze még sok más hasznos funkcióért is, automatizáltuk a fejlesztést a \textbf{TravisCI} (\cite{soft:travis}) segítségével. A TravisCI egy folytonos integrációs platform, mely könnyen összeköthető github projektekkel, és minden egyes alkalmazás frissítéskor képes előre megadott parancsokat elvégezni. Továbbá ha az alkalmazásunkat egy \textbf{Docker}-be (\cite{soft:docker}) rakjuk, akkor biztosíthatjuk azt, hogy bárhova is kerül az alkalmazásunk, mindig ugyanazon körülmények között fog futni.
 
-Semmilyen kódot nem adhatunk ki a kezünkből, ha annak minősége nincs valahogyan biztosítva. Ezt a minőséget tesztekkel lehet valamilyen szinten biztosítani, amit is megpróbáltunk. Köszönhetően a TravisCI-nak a tesztelés beépítése a fejlesztési folyamatba könnyen ment. Minden egyes új verzió felkerülésekor a github repositoryba, a Travis lefuttatja a teszteket és jelezi, hogy ezek között van-e olyan amely megbukott, illetve rak egy zöld pipát ha mind átment. A unit tesztjeinket a \textbf{Mocha} (\cite{soft:mocha}), míg az E2E tesztjeinket a \textbf{TestCafe} (\cite{soft:testcafe}) keretrendszerekben íródtak. Ezek közül kiemelném a TestCafet, mert ez egy olyan keretrendszer melynél nincs szükség böngésző driverre, egyenesen egy előre telepített böngészőt használ, illetve fel lehet venni vele kattintásokat, azaz ki lehet vele generálni a tesztesetet és nem kell hozzá kódot írni.
+Semmilyen kódot nem adhatunk ki a kezünkből, ha annak minősége nincs valahogyan biztosítva. Ezt a minőséget tesztekkel lehet valamilyen szinten biztosítani, amit is megpróbáltunk. Köszönhetően a TravisCI-nak a tesztelés beépítése a fejlesztési folyamatba könnyen ment. Minden egyes új verzió felkerülésekor a github repositoryba, a Travis lefuttatja a teszteket és jelezi, hogy ezek között van-e olyan amely megbukott, illetve rak egy zöld pipát ha mind átment. A unit tesztjeink a \textbf{Mocha} (\cite{soft:mocha}), míg az E2E tesztjeink a \textbf{TestCafe} (\cite{soft:testcafe}) keretrendszerekben íródtak. Ezek közül kiemeljük a TestCafet, mert ez egy olyan keretrendszer melynél nincs szükség böngésző driverre, egyenesen egy előre telepített böngészőt használ, illetve fel lehet venni vele kattintásokat, azaz ki lehet vele generálni a tesztesetet és nem kell hozzá kódot írni.
 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\linewidth]{images/Architecture}
-	\caption{A projekt architektúrája\label{fig:Architecture}}
+	\caption{A projekt architektúrája}
+	\label{fig:Architecture}
 \end{figure}
