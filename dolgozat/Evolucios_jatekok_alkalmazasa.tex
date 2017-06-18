@@ -1,4 +1,5 @@
-\documentclass[12pt,a4paper]{ubb_dolgozat}
+% BEÁLLÍTÁSOK - JOBB NEM VÁLTOZTATNI
+\documentclass[final]{ubb_dolgozat}
 
 \usepackage{definitions}
 \usepackage{caption}
@@ -7,62 +8,102 @@
 \usepackage[all]{nowidow}
 \usepackage{hyperref}
 
+\sloppy
+\frenchspacing
+
 \renewcommand{\baselinestretch}{1.5}
 \setlength{\columnsep}{1cm}
 \newenvironment{Figure}
-	{\par\medskip\noindent\minipage{\linewidth}}
-	{\endminipage\par\medskip}
+{\par\medskip\noindent\minipage{\linewidth}}
+{\endminipage\par\medskip}
 
-%\renewcommand{\figurename}{Ábra}
-%\renewcommand{\contentsname}{Tartalomjegyzék}
-%\renewcommand{\refname}{Bibliográfia}
+% milyen nyelveken akarunk forráskódot megjeleníteni
+%\lstloadlanguages{Java}
 
-\title{Evolúciós játékok alkalmazása daganatos sejtek modellezésében}
+% ezt be lehet tenni MINDEGYIK megjelenítendő kód elé.
+%\lstset{language=Java}
 
-\onehalfspacing
-\begin{document}
-
-\newpage
-
-\thispagestyle{empty}
-
-\begin{center}
-	XX. reál- és humántudományi Erdélyi Tudományos Diákköri Konferencia (ETDK) Kolozsvár, 2017. május 18–21.\\
-	\vspace{5cm}
-	{\huge Evolúciós játékok alkalmazása daganatos sejtek modellezésében}
-\end{center}
-
-\vspace{5cm}
-\noindent
-\textbf{Szerzők:}\\
-\textbf{Szilágyi Réka}\\
-Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, Informatika szak, alapképzés, III. év\\
-\textbf{Kis Nándor}\\
-Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, Informatika szak, alapképzés, III. év\\
-\\
-\textbf{Témavezetők:}\\
-\textbf{dr. Gaskó Noémi adjunktus}\\
-Babeş–Bolyai Tudományegyetem, Kolozsvár, Magyar Matematika és Informatika Intézet
-
-
-\newpage
-
-\setcounter{page}{1}
-
-\begin{center}
-	\textbf{Összefoglaló}
-\end{center}
-
-\vspace{3cm}
-	Dolgozatunkban az evolúciós játékok alkalmazását mutatjuk be a sejtbiológiában. Már a sejtek szintjén megfigyelhetőek kooperatív illetve kompetitív viszonyok, amelyek játékelmélettel modellezhetőek. Ezeket, az alkalmazásunk elméleti háttereként is szolgáló matematikai modelleket használják a rákkutatásban is, ahol a sejtek mint játékosok vannak jelen. Fő célunk játékelméleti modellek kiterjesztése a sejtek interakcióinak vizsgálatára. A projekt gyakorlati részét egy webes felület képezi, amin megjeleníthető a különböző sejtpopulációk viselkedése, időbeni alakulása. A szimuláció paramétereit, a generációk számát a felhasználó módosíthatja, ezáltal valós időben betekintést nyerve a daganatok dinamikájába.
-
-{ 
-	\newpage
-	\baselineskip 1ex
-	\parskip 1ex
-	\tableofcontents
+%% MELYIK ÉVBEN ADJUK LE
+\submityear{%
+2017
+}
+%% MELYIK HÓNAPBAN ADJUK LE
+\submitmonthHU{%
+Július
+}
+\submitmonthRO{%
+Iulie
+}
+\submitmonthEN{%
+July
 }
 
+\titleHU{%
+Evolúciós játékok alkalmazása daganatos sejtek modellezésében
+}
+
+% Amennyiben szükséges, az alábbi sorokat ki kell komment-ezni és 
+% beírni a megfelelő címeket
+
+\titleEN{%
+???Evolutionary games used to model cancerous cells
+}
+
+\titleRO{%
+?
+}
+
+\author{%
+Kis Nándor
+}
+
+%%
+\tutorHU{%
+dr. Gaskó Noémi,\newline egyetemi adjunktus\\
+{\large Babe\c{s}--Bolyai Tudományegyetem,\\
+ Matematika és Informatika Kar}% ha különbözik, akkor fel kell tűntetni
+}
+%%
+\tutorRO{%
+Adjunct dr. Gaskó Noémi\\
+ {\large Universitatea Babe\c{s}--Bolyai,\\ % dacã diferã!!!
+ Facultatea de Matematic\u{a} \c{s}i Informatic\u{a} }%
+}
+%%
+\tutorEN{%
+Adjunct prof. dr. Gaskó Noémi
+ {\large Babe\c{s}--Bolyai University,\\
+ Faculty of Mathematics and Informatics}
+}
+
+\begin{document}
+
+%% ABSTRAKT
+\begin{abstractEN} % ANGOL VÁLTOZAT
+
+% a lenti részt értelemszerűen ki kell tölteni a dolgozat angol kivonatával.
+% A BEGIN ... END között CSAK A SAJÁT SZÖVEG kell, hogy legyen.
+% Az utolsó mondatot benne kell hagyni, mely által kijelentitek, hogy a munkátok SAJÁT.
+
+
+{	ANGOLUUUULLLL!!!
+	Dolgozatunkban az evolúciós játékok alkalmazását mutatjuk be a sejtbiológiában. Már a sejtek szintjén megfigyelhetőek kooperatív illetve kompetitív viszonyok, amelyek játékelmélettel modellezhetőek. Ezeket, az alkalmazásunk elméleti háttereként is szolgáló matematikai modelleket használják a rákkutatásban is, ahol a sejtek mint játékosok vannak jelen. Fő célunk játékelméleti modellek kiterjesztése a sejtek interakcióinak vizsgálatára. A projekt gyakorlati részét egy webes felület képezi, amin megjeleníthető a különböző sejtpopulációk viselkedése, időbeni alakulása. A szimuláció paramétereit, a generációk számát a felhasználó módosíthatja, ezáltal valós időben betekintést nyerve a daganatok dinamikájába.
+}
+
+This work is the result of my own activity. I have neither given nor received unauthorized assistance on this work.
+
+\end{abstractEN}
+
+% ez a címoldal része
+\maketitle
+
+%% 
+
+% a dolgozat tartalomjegyzéke -- ez automatikusan generálódik a STRUKTÚRA alapján.
+{ \baselineskip 1ex
+  \parskip 1ex
+  \tableofcontents
+}
 
 \include{bevezeto}
 \include{ev_jatekok}
@@ -71,6 +112,11 @@ Babeş–Bolyai Tudományegyetem, Kolozsvár, Magyar Matematika és Informatika 
 \include{szim_eredmenyek}
 \include{osszegzes}
 
-\bibliography{articles}
-\bibliographystyle{ieeetr}
+{ \renewcommand{\baselinestretch}{0.8}\normalsize %
+  \setlength{\itemsep}{-2.4mm}
+  \setlength{\bibspacing}{0.67\baselineskip}
+  \bibliographystyle{abbrvnat_hu}
+  \bibliography{articles}
+}
+
 \end{document}

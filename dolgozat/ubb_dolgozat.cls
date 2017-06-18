@@ -761,9 +761,9 @@
 \setlength{\hoffset}{-1in}
 \setlength{\voffset}{-1in}
 %% PAGE SIZES
-\topmargin=2cm
-\oddsidemargin=3cm
-\evensidemargin=3cm
+\topmargin=2.5cm
+\oddsidemargin=2.5cm
+\evensidemargin=2.5cm
 \marginparwidth=0in
 \textwidth=6.3in
 \hsize=6.3in
