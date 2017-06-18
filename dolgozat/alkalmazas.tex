@@ -6,7 +6,7 @@
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=90mm]{images/EGTIB.jpg}
+	\includegraphics[width=90mm]{images/EGTIB}
 	\caption{Pillanatkép az alkalmazásról \label{fig:SimulateWithDiagram}}
 \end{figure}
 
@@ -40,7 +40,7 @@ melyek segítségével a felhasználónak sokkal nagyobb beleszólása van abba,
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=90mm]{images/SimulationFunctionDiagrams.jpg}
+	\includegraphics[width=90mm]{images/SimulationFunctionDiagrams}
 	\caption{A V és g függvények alakja adott paraméterekre}
 	\label{fig:SimulationFunctionDiagrams}
 \end{figure}
@@ -56,7 +56,7 @@ Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a fe
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=90mm]{images/SimulationResults.jpg}
+	\includegraphics[width=90mm]{images/SimulationResults}
 	\caption{Eddigi szimulációk eredményei}
 	\label{fig:SimulationResults}
 \end{figure}
@@ -64,15 +64,19 @@ Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a fe
 
 \section{Felhasznált technológiák}
 
-A szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP mellett, websocketen keresztül is folyik. Az utóbbira azért van szükség, mert gyorsítja az adatok áramlását, és alkalmas nagyobb mennyiségű adat átvitelére, mely a szimuláció során keletkezik. 
+Már a projekt kezdetekor biztosak voltunk benne, hogy egy könnyen és bárki által elérhető alkalmazásra lesz szükség, így nem volt kérdéses az, hogy webes felületet akarunk. Ezután már csak az volt a kérdéses, hogy számunkra milyen környezet lenne a legkényelmesebb, amely ha szükség van rá könnyen skálázható is. Végül a \textbf{NodeJS}-re (\cite{soft:node}) esett a választásunk, hiszen ez egy egyszerű felület skálázható hálózati alkalmazások írására, valamint egy nagyon egyszerű és elterjedt nyelvet használ, a JavasSriptet. Keretrendszernek a sokak által ismert és használt \textbf{ExpressJS}-t (\cite{soft:express}) választottuk.
 
-Kliens oldali technológiák közé sorolandó a Bootstrap \cite{soft:bootstrap}, mely segítségével nem csak desktopon de mobil platformon is elegáns az oldal kinézete, valamint az AngularJS \cite{soft:angular}, ami biztosítja az oldal dinamikusságát. A Paper.js \cite{soft:paper} a rajzok megjelenítéséért felelős, és ennek egy segédkönyvtára \cite{soft:voronoiModule} pedig kifejezetten a voronoi diagram ábrázolásáért, úgy vizuálisan mint adatszerkezeti szinten is. A grafikonok kirajzolását kezdetben a Highchartsra \cite{soft:highcharts} míg a későbbiekben a könnyebben használható Plotly.js-re \cite{soft:plotly} bíztuk.
+Tehát a szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP-vel folyik. A fejlesztés során bizonyos szimulációs adatok JSON-beli küldözgetése túl nagy feladatnak bizonyult, így ezek átvitelét \textbf{WebSocket} segítségével oldottuk meg.
 
-A szerverünk NodeJS \cite{soft:node} alapú, az Express \cite{soft:express} keretrendszert használja fel. Itt folyik az erőforrás igényes számítások nagy része, így itt is jelen van a Paper.js voronoi modulja \cite{soft:voronoiModule}.
+%A szerver oldalon folyik az erőforrás igényes számítások nagy része.
 
-Mindezt összefogva és belerakva egy Dockerbe \cite{soft:docker}, már mehet is egy felhőbe, a mi esetünkben ez a Heroku (https://egtib.herokuapp.com/). A fejlesztési és tesztelési folyamatot amennyire csak lehetett megpróbáltuk automatizálni, így a Travis CI \cite{soft:travis} az, ami a projektünket teszteli és amennyiben szükséges kitelepíti a legújabb verziót a felhőbe.
+Említettük, hogy \textbf{Voronoi} diagramokkal ábrázoljuk a sejteket, így szükségünk volt egy Voronoi modulra is (\cite{soft:voronoiModule}). Ez a modul egy JavaScript implementációja Steven J. Fortune algoritmusának, mely hatékonyon dolgozik Voronoi diagramokkal, viszont csak az adatszerkezettel foglalkozik, nem képes ki is rajzolni azt.
 
-Az alkalmazásunk minőségét unit és E2E tesztekkel próbáltuk meg biztosítani, ezekhez a Mocha \cite{soft:mocha} és TestCafe \cite{soft:testcafe} keretrendszereket használtuk.
+Kliens oldalon a technológiák felhozatala eléggé változatos. Először is egy weboldal jól kell kinézzen és ezen feladatot a \textbf{Bootstrap} (\cite{soft:bootstrap}) keretrendszer tökéletesen ki is elégíti. Dinamikus oldalt lehet vele létrehozni, bármilyen eszközt együttesen lehet kezelni vele, nem csak desktopon de mobil eszközökön is jól néz ki az oldal. Kezdetben kliens oldalon nem nagyon volt bármiféle struktúra a JavaScriptben és elég hamar rá is jöttünk, hogy ez egy hatalmas probléma, a kód elég hamar átláthatatlan lett. Ezért átálltunk \textbf{AngularJS}-re (\cite{soft:angular}), mellyel már sokkal olvashatóbb kódot sikerült létrehoznunk, egyszerűbbé tette a kód bővítését is és az oldal dinamikussága is nőtt (pl. megjelentek az alertek). A Voronoi diagram megjelenítéséért a \textbf{Paper.js} (\cite{soft:paper}) a felelős, valamint itt is jelen van a Voronoi adatszerkezetet feldolgozó modul (\cite{soft:voronoiModule}). A grafikonok kirajzolására több keretrendszert is használunk. Ez azért van mert ismertünk már egyet ami az adott feladatot kielégítette, viszont a későbbiekben új típusú diagramok jöttek be, melyekhez, mint kiderült, új keretrendszerre volt szükségünk. Így alakult, hogy a Voronoi diagram alatti grafikont a \textbf{Highcharts} (\cite{soft:highcharts}) segítségével, a V és g függvényeket (\ref{fig:SimulationFunctionDiagrams}) az AngularJS grafikonjaival, míg az error bart (\ref{fig:SimulationResults}) a \textbf{Plotly.js} (\cite{soft:plotly}) segítségével rajzoltuk ki.
+
+Mivel ez az egész egy webalkalmazás szükségünk volt egy szerverre, ahova ezt kitelepíthetjük. Míg régen ez egy saját szerverre telepítették mely egy statikus IP címmel rendelkezett, addig mára már sokkal könnyebb ha ezt inkább egy felhőbe rakjuk. Több ingyenesen használható felhő is létezik már, a mi választásunk a \textbf{Heroku} lett (az alábbi linken érhető el az alkalmazásunk: \url{https://egtib.herokuapp.com/}). A Heroku egy PaaS típusú felhőszolgáltató, ami annyit jelent, hogy platformot és kész szolgáltatásokat nyújt. Elég volt csak azt megmondani, hogy egy NodeJS alapú szervert akarunk üzemeltetni, ahhoz kiválasztottunk egy akármilyen adatbázist, és már kész is. Természetesen senki sem szereti a kitelepítést kézzel elvégezni, ezért, és persze még sok más hasznos funkcióért is, automatizáltuk a fejlesztést a \textbf{TravisCI} (\cite{soft:travis}) segítségével. A TravisCI egy folytonos integrációs platform, mely könnyen összeköthető github projektekkel, és minden egyes alkalmazás frissítéskor képes előre megadott parancsokat elvégezni. Továbbá ha az alkalmazásunkat egy \textbf{Docker}-be (\cite{soft:docker}) rakjuk, akkor biztosíthatjuk azt, hogy bárhova is kerül az alkalmazásunk, mindig ugyanazon körülmények között fog futni.
+
+Semmilyen kódot nem adhatunk ki a kezünkből, ha annak minősége nincs valahogyan biztosítva. Ezt a minőséget tesztekkel lehet valamilyen szinten biztosítani, amit is megpróbáltunk. Köszönhetően a TravisCI-nak a tesztelés beépítése a fejlesztési folyamatba könnyen ment. Minden egyes új verzió felkerülésekor a github repositoryba, a Travis lefuttatja a teszteket és jelezi, hogy ezek között van-e olyan amely megbukott, illetve rak egy zöld pipát ha mind átment. A unit tesztjeinket a \textbf{Mocha} (\cite{soft:mocha}), míg az E2E tesztjeinket a \textbf{TestCafe} (\cite{soft:testcafe}) keretrendszerekben íródtak. Ezek közül kiemelném a TestCafet, mert ez egy olyan keretrendszer melynél nincs szükség böngésző driverre, egyenesen egy előre telepített böngészőt használ, illetve fel lehet venni vele kattintásokat, azaz ki lehet vele generálni a tesztesetet és nem kell hozzá kódot írni.
 
 \begin{figure}[ht!]
 	\centering
