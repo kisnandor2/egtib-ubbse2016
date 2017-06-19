@@ -54,6 +54,7 @@ Kezdeti szimulációink során nem vettük figyelembe azt, hogy a sejtek életü
 
 A legtöbbet használt modell, mely elég közel áll a természethez, az a Gompertz modell \cite{wiki:gompertz}, amely leírja a tumor méretének időbeli változását a következő képlettel:
 \begin{equation}
+	\label{eq:gompertz}
 	n_t = K \bigg(\frac{n_0}{K} \bigg) ^ {e^{(- \alpha t)}},
 \end{equation}
 ahol $n_t$ a populáció mérete a $t$ időpillanatban, $n_0$ a populáció kezdeti mérete, $K$ az elérhető maximális mérete a tumornak, míg az $\alpha$ egy konstans, mely a sejtek burjánzási képességével áll összefüggésben. Ez a modell nem csak egy valósághoz közeli képet ad, de azt is biztosítja, hogy a sejtek száma nem nő túl nagyra, mert az a szimulációs rész során komoly lassuláshoz vezetne. 

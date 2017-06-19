@@ -1,25 +1,26 @@
 
 \chapter{A szimuláció eredményei}
 
+Mostanra láttuk azt, hogy milyen modellekkel dolgozunk és azt is, hogy ezt szépen össze lehet gyúrni egy alkalmazásba. Azt viszont még nem láttuk, hogy ezek konkrétan milyen eredményeket is produkálnak. Az alábbiakban több szempontból is megvizsgáltuk azt, hogy a \cite{archetti2016cooperation} cikkbeli modell, illetve annak általunk kiegészített változata, hogyan viselkedik.
+
 Kezdetben a szimuláció pontosságának megvizsgálása érdekében a már rendelkezésünkre álló bemeneti paraméterekre (melyeket Archetti is használt \cite{archetti2016cooperation}) elvégeztünk 100-100 szimulációt, minden egyes diffúziós távolságra 1-től 5-ig.
 
-\begin{multicols}{2}
-	A bemeneti paraméterek a következőek voltak:
-	\begin{itemize}[noitemsep]
-		\item populáció mérete: 1000
-		\item defektálók: 5\%
-		\item generációk száma: 15
-		\item kooperálók költsége: 0.01
-		\item osztódás: nincs
-	\end{itemize}
-	Az \eqref{eq:payoffGradient} és \eqref{eq:diffGradient} függvények paraméterei, melyeket az elkövetkezendő szimulációk során használtunk:
-	\begin{itemize}[noitemsep]
-		\item $s = 2$
-		\item $k = 1$
-		\item $d = \frac{1}{2}D$
-		\item $z = 20$
-	\end{itemize}	
-\end{multicols}
+A bemeneti paraméterek a következőek voltak:
+\begin{itemize}
+	\item populáció mérete: 1000
+	\item defektálók: 5\%
+	\item generációk száma: 15
+	\item kooperálók költsége: 0.01
+	\item osztódás: nincs
+\end{itemize}
+
+A \eqref{eq:payoffGradient} és \eqref{eq:diffGradient} függvények paraméterei, melyeket az elkövetkezendő szimulációk során használtunk:
+\begin{itemize}
+	\item $s = 2$
+	\item $k = 1$
+	\item $d = \frac{1}{2}D$
+	\item $z = 20$
+\end{itemize}
 
 Megállapítottuk, hogy ugyanarra az eredményre (Ábra \ref{fig:DistChange}) jutottunk mi is mint Archetti \cite{archetti2016cooperation}, igaz kisebb eltérések ugyan mutatkoztak. Míg mi minden esetben 100 szimulálást végeztünk, addig ő csak 10-et, így a kis eltéréseket ennek tulajdoníthatjuk.
 
@@ -39,7 +40,7 @@ Megállapítottuk, hogy ugyanarra az eredményre (Ábra \ref{fig:DistChange}) ju
 	\label{fig:DistChange}
 \end{figure}
 
-Ezzel projektünk első mérföldkövét leraktuk, így most már kísérletezhetünk különböző paraméterekkel, hogy megvizsgáljuk a populáció viselkedését. Egy pár esetet a következő fejezetekben tárgyalunk.
+Ezzel projektünk első mérföldkövét leraktuk, megbizonyosodtunk arról, hogy az általunk implementált modell visszaadja az eredetit. Most már kísérletezhetünk különböző paraméterekkel, hogy megvizsgáljuk a populáció viselkedését. Egy pár esetet a következő fejezetekben tárgyalunk.
 
 \section{A költség és nyereség hatása}
 
@@ -77,7 +78,7 @@ Megfigyelhető, hogy a távolság növekedésével a defektáló sejtek jóval k
 %További megvalósítandó feladataink közé tartozik egy olyan funkció mely révén ellenanyagot juttathatunk a daganatba, vagy egy terápiát alkalmazhatunk.
 \section{Osztódásra képes populációk}
 
-Eddigi szimulációink során a populáció mérete állandó volt, és egy adott modellt követett. Nézzük meg mi történik ha a sejtek osztódni is képesek nem csak stratégiát váltani (Ábra \ref{fig:Divide}). 
+Eddigi szimulációink során a populáció mérete állandó volt, és egy adott modellt követett. A már említett Gompertz-modellt (\ref{eq:gompertz}) beépítve a modellbe és az alkalmazásba (a felhasználói webes felületen csak egy checkbox, azaz akar-e a felhasználó osztódást) újabb szimulációkat futtattunk. Az \ref{fig:Divide} ábra szemlélteti azt az esetet amikor a sejtek osztódni is képesek és nem csak stratégiát váltani. 
 
 \begin{figure}[ht!]
 	\centering

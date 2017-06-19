@@ -6,25 +6,19 @@
 
 \begin{figure}[ht!]
 	\centering
-	\begin{tabular}{cc}
-		\includegraphics[width=0.47\linewidth]{images/EGTIB}
-		&
-		\includegraphics[width=0.47\linewidth]{images/VisualizationDiagram}
-	\end{tabular}
-	\caption{Bal: pillanatkép az alkalmazásról. Jobb: a populáció változása generációnként adott paraméterekre}	
-	\label{fig:VisualizationDiagram}
+	\includegraphics[width=0.98\linewidth]{images/welcomePage}
+	\caption{Főoldal}
+	\label{fig:welcomePage}
 \end{figure}
 
 \section{Funkcionalitások}
 
-Az alkalmazásunkat, funkcionalitás szerint, három fő komponensre oszthatjuk:
+Az alkalmazásunkat egy főoldalra, valamint funkcionalitás szerint, három fő komponensre oszthatjuk:
 
-\paragraph{Vizualizáció}- képes szimulálni kevés sejtből (max. 500) álló populációkat és ezeket generációnként meg is tudja jeleníteni egy Voronoi diagram segítségével. A diagram alatt egy progress bar kapott helyet, mely nem csak, hogy azt mutatja melyik generációnál tartunk éppen, hanem ezzel ugrálni is lehet a generációk között, ezzel interaktívabbá téve a szimulációt, olyan mint ha egy filmet tekergetnénk. Természetesen nem csak tekergetni de megállítani is lehet. Továbbá mindehhez tartozik egy grafikon is, mely a populációnak változását ábrázolja generációnként (\ref{fig:VisualizationDiagram}).
+\paragraph{Üdvözlő oldal}- ezen az oldalon kaptak helyet az általános jellegű információk és egy boostrap carousel, amellyel az alkalmazás mindegyik fő komponense rövid és humoros szövegekkel van bemutatva, valamint egy kép amely tovább visz az adott oldalra (\ref{fig:welcomePage} ábra)
 
-\paragraph{Szimuláció}- alkalmas nagyobb (max. 2000) populációval dolgozni, viszont ezek megjelenítése már túl sok időt venne igénybe, így csak a fentebb említett grafikon segítségével ábrázolja azt, hogy mi is történik a sejtek között. Előnye a vizualizációs részhez képest elsősorban az, hogy sokkal nagyobb populációval tud dolgozni, de a paraméterlista is változatosabb (a szimuláció során használt függvények viselkedésébe is bele tud szólni a felhasználó) és hatalmas kényelmi faktornak számít az, hogy több, különböző paraméterezésű szimulációt is képes egy gombnyomással lekérni.
-
-Mindkét esetben a felhasználónak lehetősége van bizonyos paramétereket megválasztani még a szimulálási fázis előtt:
-\begin{itemize}[noitemsep]
+\paragraph{Vizualizáció}- a vizualizációs oldalra tévedve (\ref{fig:VisualizationDiagram}), a felhasználó elég sok újdonsággal találja magát szemben. Az legszembeötlőbb egy színes pöttyökkel teli rajz lesz, ami a Voronoi diagram. Itt a kooperáló és defektáló sejtek narancssárga illetve sötétbarna színben vannak reprezentálva. A képernyő második legnagyobb részét a diagramtól balra elhelyezkedő paraméterlista tölti ki. Itt a következő paramétereket lehet állítgatni, amelyek a szimulációt befolyásolják:
+\begin{itemize}
 	\item kezdeti populáció mérete
 	\item defektálók aránya 
 	\item generáció szám (szimuláció hossza)
@@ -32,16 +26,32 @@ Mindkét esetben a felhasználónak lehetősége van bizonyos paramétereket meg
 	\item diffúziós távolság mérete
 	\item akarja-e a felhasználó, hogy a sejtek osztódásra legyenek képesek
 \end{itemize}
-Ezen paramétereket felhasználva kigenerálható egy Voronoi diagram mely a sejteket ábrázolja. A simulate gombot megnyomva ez az adatcsomag eljut a szerverhez amely elvégzi az erőforrás igényes számításokat melynek eredményét visszaküldi a kliensnek, ami majd azt megjeleníti.
 
-Továbbá a szimulációs oldalon az alábbi paraméterek is változtathatóak:
-\begin{itemize}[noitemsep]
+\begin{figure}[ht!]
+	\centering
+	\captionsetup{justification=centering}
+	\begin{tabular}{cc}
+		\includegraphics[width=0.47\linewidth]{images/EGTIB}
+		&
+		\includegraphics[width=0.47\linewidth]{images/VisualizationDiagram}
+	\end{tabular}
+	\caption{Bal: vizualizációs oldal, Voronoi diagram, paraméterek. Jobb: a populáció változása generációnként adott paraméterekre}	
+	\label{fig:VisualizationDiagram}
+\end{figure}
+
+A paraméterlista alatt található az új Voronoi diagramot generáló gomb is. Erre szükség van, mivel minden paraméter változásnál a Voronoi diagramot újra kirajzolni túlságosan költséges lenne és nagyon belassítani az oldalt, ezzel rontva a felhasználói élményt. A szimuláció elindításáért felelős gomb is itt kapott helyet, amely a szimuláció során megállít és folytat gombra cserélődik, attól függően, hogy a szimulációt megállítjuk-e. Amennyiben a felhasználó lusta lenne letekerni az oldal aljára, elhelyeztünk számára egy statisztikához ugró gombot is. Ha a felhasználó egy kicsikét leleményes, akkor rájön arra is, hogy amennyiben megállítja a szimuláció lejátszását, a Voronoi diagram alatt elhelyezett progress bar segítségével tekergetheti a szimulációt, pont úgy mint egy filmet.
+Megszorítása ezen oldalnak, hogy 500 sejtnél többet nem lehet vele kirajzoltatni, illetve szimulálni, mert annak kirajzolása túlságosan költséges, a felhasználó csak annyit érzékelne, hogy az oldal megfagyott.
+
+\paragraph{Szimuláció}- erre az oldalra (\ref{fig:SimulationFunctionDiagrams} ábra) kerültek az átlag felhasználónak nem sokat mondó paraméterek, valamint a sejtek száma is csak annyira korlátozott, amennyit a szerver képes szimulálni (max. 2000 sejt). Első szembeötlő eltérés a vizualizációs oldalhoz képest az, hogy itt már nincs Voronoi diagram, többek között ezért sincs annyira megkötve a sejtek maximális száma. Itt már nem kerül kirajzolásra a szimuláció, de természetesen a statisztikás grafikon itt is megjelenik. A felhasználó belenyúlhat az alábbi paraméterekbe is ezen az oldalon:
+\begin{itemize}
 	\item a V függvény meredeksége
 	\item a V függvény áthajlási pontjának helye
 	\item a gradiens alakja
 	\item a gradiens meredeksége az áthajlási pontban
 \end{itemize}
-melyek segítségével a felhasználónak sokkal nagyobb beleszólása van abba, hogy a populáció hogyan is viselkedjen. Mivel ezek a felhasználónak csak puszta számok, elég nyers adat, így segítségére siet két grafikon (\ref{fig:SimulationFunctionDiagrams}), mely a paraméterlista mellett kapott helyet. Ezen grafikonokon a két függvény jelenítődik meg, melyek interaktívak, azaz az értékek változtatásával a grafikon is átalakul, így szemléltetve a felhasználó előtt, hogyan is néz ki az adott V (\ref{eq:payoffGradient}) illetve g (\ref{eq:diffGradient}) függvény.
+Mivel ezek csak nyers számok, ezért jó ötletnek gondoltuk azt, hogy a  V (\ref{eq:payoffGradient} képlet) és g (\ref{eq:diffGradient} képlet) függvényeket jelenítsük meg. Ezen grafikonok elhelyezése egyszerű volt, hisz a Voronoi diagram helyét vették át. Itt a paraméterek változtatása interaktív, ami annyit jelent, hogy amint a paraméter értékét átírjuk, úgy a grafikon is annak megfelelően változik.
+
+Eléggé repetitívvé válik a felhasználó munkája amennyiben hasonló paraméterekre szeretne szimulációkat végezni, így az a lehetősége is megvan, hogy bizonyos paramétereket nem csak számként, hanem az alábbi formában is megadjon: 0.1:0.1:1. Ez azt jelenti, hogy 0.1-től indulva 0.1-esével egészen 1-ig minden értéket felvesz az adott paraméter és azon szimulációkat kéri le a szervertől.
 
 \begin{figure}[ht!]
 	\centering
@@ -52,12 +62,12 @@ melyek segítségével a felhasználónak sokkal nagyobb beleszólása van abba,
 
 
 \paragraph{Eredmények}- kezdetben már azzal is megelégedtünk, ha egy szimulációt képesek voltunk megjeleníteni, viszont egy idő után azt vettük észre, hogy milyen jó lenne ha ezeket nem kellene mindig újra és újra generálni. Így született meg az eredményeket tartalmazó rész mely megjeleníti az oldalon futtatott szimulációkat egy error bar segítségével. Mivel a bemeneti paraméterek eléggé változatosak lehetnek, így valamilyen szinten ezen adatokat a megjelenítés során szűrni kell. Ezért a felhasználó ezt köteles is megtenni mielőtt az eredményeket megtekintené, az alábbiak szerint:
-\begin{itemize}[noitemsep]
+\begin{itemize}
 	\item defektáló sejtek aránya
 	\item kooperálási költség 
 	\item interakció távolsága
 \end{itemize}
-Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a feltételeket egyesítve lesz egy grafikonon (\ref{fig:SimulationResults}).
+Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a feltételeket egyesítve lesz egy grafikonon (\ref{fig:SimulationResults} ábra).
 
 \begin{figure}[ht!]
 	\centering
