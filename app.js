@@ -47,8 +47,8 @@ app.use('/index', require('./routes/index'));
 app.use('/', require('./routes/index'));
 const voronoi = require('./routes/voronoi');
 app.use('/voronoi', voronoi.router);
-app.use('/simulateWithDiagram', require('./routes/simulateWithDiagram'));
-app.use('/simulateWithoutDiagram', require('./routes/simulateWithoutDiagram'));
+app.use('/visualize', require('./routes/visualize'));
+app.use('/simulate', require('./routes/simulate'));
 // app.use('/charts', require('./routes/charts'));
 app.use(require('./routes/404'));
 
