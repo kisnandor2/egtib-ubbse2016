@@ -1,7 +1,15 @@
 \chapter{Daganatos sejtek modellezése}
-A rosszindulatú daganatok sokszoros mutáció következtében létrejött szabályozatlan, elburjánzó sejttömörülések, amelyek az egészséges szövetbe betörve versenyeznek az erőforrásokért. Egy daganaton belül többféle daganatos sejt is megtalálható, mindegyik különböző módon hatva a környezetében található sejtekre. Ez a heterogenitás segíti a burjánzást, az egyre agresszívabb sejttípusok megjelenését és az erősebb ellenállást a kezelésekre. A játékelmélet egy lehetséges eszköz lehet a különböző típusok közötti versengés valamint az alkalmazott stratégiák modellezésére.
+A tumorkeletkezés leggyakoribb oka az emberi génállományban található, a növekedést szabályozó gén aktiválódása. Ez vezet a szövetregeneráció során rendellenes utódsejtek képzéséhez, amelyek az egészséges szövetbe betörve versenyeznek az erőforrásokért. Többféle daganatos sejt is kialakulhat, mind különbözőképp hatva a környezetére, és így egy olyan változatosság alakulhat ki amely segíti az elszaporodást, egyre erősebben képes ellenállni a kezeléseknek. A játékelmélet egy lehetséges eszköz lehet az ezek közötti versengés modellezésére.
 
-A evolúciós játékelméleti modellek segítségével többféleképpen is megközelíthető a probléma. Játékosok lehetnek csak a daganatos sejtek és a játékot az erőforrásokért folytatott \textit{verseny} jelenti. Ez a verseny átalakulhat \textit{parazitizmussá} ha a bizonyos növekedési faktorokat termelő egészséges sejteket tekintjük az egyik félnek, és az ezt kihasználó daganatos sejteket a másiknak. Az immunsejtek játszhatják a \textit{ragadozó} szerepét de felléphet \textit{mutualizmus} is például az erek belső rétegének sejtjei és a daganatos sejtek között. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=90mm]{images/models}
+	\vspace*{2mm}
+	\caption{Daganatos sejtek közötti verseny típusok}
+	\label{fig:cancerModels}
+\end{figure}
+
+A evolúciós játékelméleti modellek segítségével többféleképpen is megközelíthető a probléma. Játékosok lehetnek csak a daganatos sejtek és a játékot az erőforrásokért folytatott \textit{verseny} jelenti. Ez a verseny átalakulhat \textit{parazitizmussá} ha a bizonyos növekedési faktorokat termelő egészséges sejteket tekintjük az egyik félnek, és az ezt kihasználó daganatos sejteket a másiknak. Az immunsejtek játszhatják a \textit{ragadozó} szerepét de felléphet \textit{mutualizmus} is például az erek belső rétegének sejtjei és a daganatos sejtek között (\ref{fig:cancerModels}). 
 
 \section{Közjó játék (Public goods game)}
 A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet játszanak az általuk termelt növekedési faktorok és jelzőmolekulák. Ezek segítenek többek között abban, hogy a rákos sejtek a saját növekedésüket ösztönözzék, hogy képesek legyenek kijátszani a szervezet védekezési rendszerét és hogy szétterjedjenek távoli szövetekbe (metasztázis). Mivel ezek az anyagok kikerülnek a sejtek közötti térbe, nem csak az őket termelő sejtekre vannak hatással, hanem az ezeket körülvevőkre is. Így a növekedési faktor felfogható mint egy "közös jó" (\textit{public good}). Az evolúciós játékelmélet megfelelő keretet biztosít, mivel nem feltételez racionális viselkedést és egy stratégia sikerességét megadja a populáción belüli gyakorisága \cite{archetti2016cooperation}.

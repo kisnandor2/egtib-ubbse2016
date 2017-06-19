@@ -1,43 +1,43 @@
 \chapter{Evolúciós játékok}
 
-\iffalse 
-Általános bemutatás.
-Összehasonlítás a "klasszikus" játékelmélettel - külön alcím/fejezet?
- racionális játékosok <-> nem racionális játékosok
- dinamikus - mit jelent?
-\fi
 \section{Klasszikus játékelméleti fogalmak}
-A játékelmélet a matematika egyik interdiszciplináris ága, amely a különböző döntési vagy verseny helyzetekben résztvevő felek viselkedését tanulmányozza. Ezekben a \textit{játékokban} - többszereplős konfliktusos szituációkban - a választott stratégiák szorosan összefüggenek, mivel minden résztvevő döntése befolyásolja a többiek választásának eredményét is \cite{wiki:gametheory}. A \textit{játékosok} alapvető célja a nyereségük maximalizálása. A játékosok és a jutalom mibenléte tudományterületenként változó. A játékelmélet alkalmazható úgy a matematikában, közgazdaságtanban, mint a  szociológiában, biológiában felmerülő döntési problémák megoldására, modellezésére.
 
-A játékokat különböző szempontok alapján több csoportra oszthatjuk. A játék lehet \textit{kooperatív}, ahol a játékosok külső hatásra koalíciókat alkotnak, vagy \textit{nem kooperatív}, ahol a résztvevők versenytársai egymásnak és ha létre is jön együttműködés, az önkéntes. 
+A játékelméletet a matematika egy fő ágának tekintjük, mely olyan helyzetekkel foglalkozik, amelyben legalább két döntéshozó verseny helyzetbe kerül és saját nyereség függvényét próbálja maximalizálni. A nehézség abban rejlik, hogy minden szereplő befolyásolja legalább egy másik szereplő döntését. Ezen \textit{játékok} első elgondolásra társasági játékokra utalnak, de ezen játékokkal modellezhetünk közgazdaságtanban vagy szociológiában, katonai és biológia alkalmazásuk is létezik.
 
-\textit{Szimmetrikus} játékok esetén a haszon csak a választott stratégiától függ, a játékos személyétől nem. Ha a játékosok nem cserélhetőek fel anélkül, hogy a stratégiák nyereségén változtatnánk, \textit{aszimmetrikus} játékról beszélünk. A legismertebb kétszemélyes játékok, mint a későbbiekben tárgyalt fogolydilemma vagy héja-galamb játék, szimmetrikusak.
+Bizonyos szempontok alapján, ezeket a játékokat, kategorizálni lehet. Itt kiemelhetjük a kooperatív játékot, amelyben a játékosok felismerve azt, hogy hasznot húzhatnak az együttműködésből, valamilyen szinten csoportosulnak. Illetve ennek párját, a nem kooperatív játékot, ahol a döntéshozó játékosok egymásnak versenytársai, bármiféle együttműködés önkéntes módon jöhet létre.
+
+Egy másik osztályozási szempont szerint léteznek szimmetrikus játékok, ahol a haszon csak a választott stratégiától függ, a játékos személyétől nem. Aszimmetrikus játékról akkor beszélünk, ha a játékosok nem cserélhetőek fel anélkül, hogy a stratégiák nyereségén változtatnánk.
 
 \subsection{Statikus és szekvenciális játékok}
-Az idő szerepe fontos osztályozási kritérium, eszerint beszélhetünk \textit{statikus} és \textit{dinamikus} játékokról. Statikus játékok legfontosabb tulajdonsága, hogy a játékosok már a játék elején, egymástól függetlenül döntenek. Dinamikus játékok esetén számít a lépések sorrendje, mivel a játékosok ismerik a többiek eddigi lépéseit. Az utóbbi csoportba sorolják az ismételt játékokat is, amikor egy statikus játékot véges vagy végtelenszer megismételnek. Itt a résztvevők minden kör után megfigyelhetik a többiek eddigi lépéseit és az alapján választhatják meg a következő körben alkalmazott stratégiát. A két típust különbözőképpen ábrázoljuk. A nem-kooperatív, nem folytonos játékokat általában egy mátrix segítségével írjuk le, amelyről leolvasható az összes lehetséges kombináció eredménye. Ezt nevezzük \textit{normál alaknak}. Dinamikus játék esetén, az ún. \textit{extenzív alakban}, az egymás utáni lépéseket egy véges irányított fa ábrázolja, amely gyökere a kezdőállapot, ahonnan a fa minden pontjához pontosan egy úton lehet eljutni.
+Minden játék esetén szükségünk van az idő fogalmára, így eszerint két típusúról beszélhetünk. A statikus játékok esetében a döntéshozók már a játék legelején, egymástól függetlenül döntenek. Ezzel szemben, a dinamikus játékok esetében számít a lépések sorrendje, mivel minden döntéshozó ismeri az a többiek előző lépéseit. Amennyiben egy statikus játékot ismételten játszanak, úgy azt a dinamikus kategóriába sorolhatjuk, hiszen egy kör elején az eddigi körök alapján hozza meg döntését egy játékos. Ezen két típusú játék ábrázolása is különbözik egymástól. A statikusokat általában egy mátrix segítségével írjuk le, amelyről leolvasható az összes lehetséges kimenet. Míg a dinamikusok esetében egy véges irányított fa ábrázolja az egymás utáni lépéseket, amely gyökere a kezdőállapot, ahonnan bármely ponthoz egyetlen egy út vezet.
 
 \subsection{Nash-egyensúly}
-A játékelmélet egyik központi fogalma a Nash-egyensúly. Egy stratégia-együttes Nash-e\-gyen\-súly\-ban van ha a csoportban egyik félnek sem érdemes eltérni az alkalmazott stratégiától, amennyiben egyik fél sem változtat a sajátján. Tekintsük \(G = ((N,S_i,u_i), i = 1,...,n)\) rendszert egy véges stratégia játék reprezentációjának, ahol \textit{N} a játékosok halmaza, \textit{n} pedig a játékosok száma. Minden \(i \in N\) játékos a \(S_i\) lépés-halmazból választhat. \(S = S_1 \times S_2 \times ... \times S_n\)  a játék összes kimenetelének halmaza, ahol \(s \in S\) egy stratégia-együttes. Minden \(i \in N\) játékos nyereségét a \(u_i:S \to \mathbb{R}\) hasznosságfüggvény írja le. Jelöljük \((s_i^*,s_i) = (s^*_1,...,s_i,...,s_n^*)\) -vel azt a stratégia-együttest, amelyet az \(s^*\)-ból kapunk ha az \textit{i} játékos stratégiáját kicseréljük \(s_i\)-re. Egy \(s^*\) stratégia-együttes Nash-e\-gyen\-súly\-ban van, ha az \(u_i(s_i^*,s_i)\leq u_i(s^*) \) egyenlőtlenség igaz \(\forall i = 1,...,n, \forall s_i \in S_i, s_i \ne s_i^*\) esetén \cite{nash1951non}.
+Amennyiben a játék során létrejön egy olyan állapot, ahol egyik döntéshozónak sem éri meg eltérni a saját alkalmazott stratégiájától, egyik fél sem akar változtatni, akkor az úgynevezett Nash-egyensúlyról beszélünk. Tekintsük \(G = ((N,S_i,u_i), i = 1,...,n)\) rendszert egy véges stratégia játék reprezentációjának, ahol \textit{N} a játékosok halmaza, \textit{n} pedig a játékosok száma. Minden \(i \in N\) játékos a \(S_i\) lépés-halmazból választhat. \(S = S_1 \times S_2 \times ... \times S_n\)  a játék összes kimenetelének halmaza, ahol \(s \in S\) egy stratégia-együttes. Minden \(i \in N\) játékos nyereségét a \(u_i:S \to \mathbb{R}\) hasznosságfüggvény írja le. Jelöljük \((s_i^*,s_i) = (s^*_1,...,s_i,...,s_n^*)\) -vel azt a stratégia-együttest, amelyet az \(s^*\)-ból kapunk ha az \textit{i} játékos stratégiáját kicseréljük \(s_i\)-re. Egy \(s^*\) stratégia-együttes Nash-e\-gyen\-súly\-ban van, ha az \(u_i(s_i^*,s_i)\leq u_i(s^*) \) egyenlőtlenség igaz \(\forall i = 1,...,n, \forall s_i \in S_i, s_i \ne s_i^*\) esetén \cite{nash1951non}.
+
 
 \section{Játékelmélet a biológiában}
-A játékelmélet alkalmazása a biológiában az \textit{evolúciós játékelmélet}. Maynard Smith, a terület első és legismertebb alakja, kijelenti, hogy az addigi nézetekkel ellentétben, a játékosoknak nem kell kötelező módon racionálisan dönteniük, elegendő ha van egy stratégiájuk. A stratégia genetikailag örökölt jelleg, ami az egyed viselkedését befolyásolja. Sikerét az mutatja, hogy mennyire tud fennmaradni és milyen gyakorisággal jelenik meg más stratégiák között. A résztvevők szelekciós sikerét a \textit{fitnesz} fejezi ki (a szaporodásra való relatív esély). A klasszikus játékelmélettel ellentétben itt a stratégiák változásának dinamikájára helyeződik a hangsúly. Egészen egyszerű játékok esetén is megtörténik, hogy a hosszútávú eredmény nem a Nash-egyensúly, hanem rendszeres vagy rendszertelen oszcillálás \cite{nowak2004evolutionary}. Evolúciós játékokban az egyensúlyt az \textit{evolúciósan stabil stratégia} jelenti. Egy stratégia evolúciósan stabil, ha az azt alkalmazó populáció egy adott környezetben nem győzhető le semmilyen más alternatív, kezdetben kevés létszámú stratégiával.
- 
-Egyik legegyszerűbb játékelméleti modell két stratégiával és négy lehetséges eredménnyel dolgozik. A játékosok együttműködhetnek vagy defektálhatnak. Ha mindkét játékos kooperál nagyobb a nyereségük mintha mindketten defektálnának, de ha az egyik kooperál akkor a másiknak jobban megéri kihasználni azt és nem együttműködni. A kooperáló játékossal két dolog történhet: vagy az éri meg jobban ha ő is változtat a stratégián és nem hagyja, hogy kizsákmányolják, mint a jól ismert fogolydilemmában (ábra \ref{fig:prisoners}.), vagy még mindig akkor dönt jobban ha továbbra is együttműködik, ahogyan a héja-galamb játékban (ábra \ref{fig:hawkdove}.) történik. A kihívást a nyereségfüggvény helyes beállítása jelenti, hiszen attól függ, hogy egyik vagy másik játékhoz hasonlítjuk a természetben előforduló jelenségeket \cite{nowak2004evolutionary}.
- 
-\noindent
-\begin{minipage}{\linewidth}
+Az evolúciós játékelmélet a játékelmélet biológiai alkalmazása során jött létre, a fejlődő populációk vizsgálata a biológiában. Maynard Smith volt az aki felismerte, hogy a játékosoknak nem feltétlenül kell racionálisan viselkedniük, már az is elegendő ha van egy stratégiájuk. A stratégiák genetikailag öröklődnek, ezek befolyásolják egy egyed jellegét. Attól függően, hogy egy stratégia milyen gyakori illetve milyen más stratégiák vannak még jelen a játékban, meghatározható egy adott stratégia sikeressége. A résztvevők szelekciós sikerét a \textit{fitnesz} fejezi ki (a szaporodásra való relatív esély). Egy stratégiát evolúciósan stabilnak nevezünk, ha az azt alkalmazó populáció nem győzhető le semmilyen más, kezdetben kevés létszámú stratégiával. Az evolúciós játékelméletben az egyensúlyt az evolúciósan stabil stratégia jelenti.
+
+Például egy egyszerű evolúciós játék a következő. Tegyük fel, hogy adott egy bogár populáció, amely ételért verseng (\cite{book:egt}). Az egyszerűség kedvéért csak két stratégia lesz, a bogarak vagy kicsi- vagy nagytestűek. Nem meglepő, hogy a nagyobb testű bogarak több ételhez jutnak hozzá ha kisebb társaikkal versenyeznek. Ha két bogár egymással versenyez, akkor a következő kimenetelek lehetségesek:
+\begin{itemize}[noitemsep]
+	\item ha két egyforma méretű bogár verseng, akkor egyformán osztják el az ételt
+	\item ha egy kicsi és egy nagy verseng, akkor természetes, hogy a nagyobbiknak sokkal több jut
+	\item mindkét esetben a nagytestűek az étel egy részét elveszítek, ezt a versengés emészti fel 
+\end{itemize}
+A játékot legkönnyebben egy payoff mátrixszal lehet leírni ahogyan azt a \ref{fig:beetle} táblázat teszi. Jól látható, hogy a táblázatban szereplő értékek megfelelnek a fenti szabályoknak. Az is látható, hogy ha két nagy bogár verseng, akkor mindkettejüknek sokba kerül a verseny.
+Ekkor látható a legjobban, hogy míg a hagyományos játékelméletben a döntéshozók stratégiát választhatnak, addig itt egy egyed örökölte a stratégiáját. Egy nagytestű bogár nem dönthet úgy, hogy ő most kicsi testtel szeretne versengeni, erre nincs lehetősége. Itt a Nash-egyensúlynak már kevesebb értelme van, ezért az lecserélődik evolúciósan stabil stratégiára mint egyensúlyi állapot.
+
+\begin{table}[htb!]
 	\centering
-	\begin{multicols}{2}
-		\begin{Figure}
-			\includegraphics[width=\linewidth]{images/prisoners}
-			\captionof{figure}{Fogolydilemma: két elkülönített fogoly dönthet, hogy hallgat vagy vall a másik ellen. A mátrix a nyereségeket (börtönben töltött évek) szemlélteti\label{fig:prisoners}}
-		\end{Figure}
-		\begin{Figure}
-			\includegraphics[width=\linewidth]{images/hawkdove}
-			\captionof{figure}{Héja-galamb játék: két héja mindig megküzd a \textit{V} erőforrásért, de ennek költsége \textit{C}, két galamb osztozkodik, egy galamb pedig mindig átengedi az erőforrást a héjának. \label{fig:hawkdove}}
-		\end{Figure}
-	\end{multicols}
-\end{minipage}
+	\begin{tabular}{ccccc}
+		&       & \multicolumn{2}{c}{Bogár2} &  \\
+		\multicolumn{1}{c}{}    &       & Kicsi        & Nagy        &  \\ \cline{3-4}
+		\multirow{2}{*}{Bogár1} & Kicsi & \multicolumn{1}{|c|}{5,5}          & \multicolumn{1}{c|}{1,8}         &  \\ \cline{3-4}
+		& Nagy  & \multicolumn{1}{|c|}{8,1}          & \multicolumn{1}{c|}{3,3}         & \\ \cline{3-4} \\
+	\end{tabular}
+	\caption{Bogár játék testméret alapján}
+	\label{fig:beetle}
+\end{table}
 
 \subsection{Replikátor dinamika}
 A replikátor dinamika az egyik módja a gyakoriság-függő szelekció vizsgálatának. A megközelítés egy heterogén populációt feltételez, véges számú stratégiával, ahol a növekedés arányos a fitnesszel. A játék dinamikája a 
@@ -48,7 +48,7 @@ differenciálegyenlettel írható le, ahol \(x_i\) az \textit{i} stratégia gyak
 Ez a dinamika átalakul ha térbeli játékokkal foglalkozunk, ahol a játékosok legtöbbször egy rácson helyezkednek el egy síkban és csak a szomszédokkal lépnek kapcsolatba \cite{hummert2014evolutionary}. 
 
 \subsection{Adaptív dinamika}
-A replikátor dinamikával ellentétben, ahol nem esik szó mutációról, az adaptív dinamika egy mutáns egyed vagy egyedek fitneszét vizsgálja egy homogén populációban. Mint már említettük, egy populáció akkor stabil ha egyetlen mutáns csoport stratégiája sem múlja felül a jelenleg alkalmazottat, feltéve ha az új egyedek aránya elég kicsi. Tehát a végeredmény függ a mutáns egyedek  kezdeti arányától. A dinamika a 
+A replikátor dinamikával ellentétben, ahol nem esik szó mutációról, az adaptív dinamika egy mutáns egyed vagy egyedek fitneszét vizsgálja egy homogén populációban. Mint már említettük, egy populáció akkor stabil ha egyetlen mutáns csoport stratégiája sem múlja felül a jelenleg alkalmazottat, feltéve ha az új egyedek aránya elég kicsi. Tehát a végeredmény függ a mutáns egyedek kezdeti arányától. A dinamika a 
 \begin{equation}
 \frac{dx_i}{dt} = \frac{\partial}{\partial y_i}A(y,x), i = 1,...,n
 \end{equation}
