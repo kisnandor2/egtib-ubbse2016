@@ -14,6 +14,8 @@ class ConstantFunctions {
 		this.inflexiosPontHelye = 0.5;
 		this.shapeOfDif = 1/2;
 		this.z = 3;
+		this.limit = 0.5;
+		this.maxDamage = 1.5;
 	}
 
 	/**
@@ -62,8 +64,24 @@ class ConstantFunctions {
 	 * @param {int} 	neighborsCount
 	 * @returns {float} payoff
 	 */
+	l1(j, neighborsCount){
+		return 1/ (1 + Math.pow(e, (this.steepness *(this.inflexiosPontHelye - ((j/neighborsCount)/this.limit)))));
+	}
+
+	l2(j,neighborsCount, maxDamage){
+		return maxDamage/(1 + Math.pow(e, (this.steepness * (this.inflexiosPontHelye - ((j/neighborsCount - this.limit) / (1 - this.limit))))));
+	}
+
+
 	payoff(cooperatingNeighborsCount, cost, neighborsCount) {
 		return (this.V(cooperatingNeighborsCount, neighborsCount) - this.V(0, neighborsCount)) / (this.V(neighborsCount, neighborsCount) - this.V(0, neighborsCount)) - cost;
+	}
+
+	payoffBelowLimit(cooperatingNeighborsCount, cost,neighborsCount){
+		return (this.l1(cooperatingNeighborsCount, neighborsCount) - this.l1(0, neighborsCount))/(this.l1(this.limit* neighborsCount, neighborsCount) - this.l1(0, neighborsCount)) - cost;
+	}
+	payoffOverLimit(cooperatingNeighborsCount, cost, neighborsCount){
+		return (this.l2(cooperatingNeighborsCount, neighborsCount, this.maxDamage) - this.l2(0, neighborsCount,this.maxDamage))/(this.l2(neighborsCount, neighborsCount,1) - this.l2(this.limit*neighborsCount,neighborsCount,1)) - cost;
 	}
 
 }
