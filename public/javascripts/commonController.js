@@ -4,7 +4,7 @@
 angular.module("commonApp", [])
     .directive('voronoiColumnChart', function(){
         return {
-            template: '<div></div>',
+            restrict: 'EAC',
             scope: {
                 title: '@',
                 data: '='
@@ -12,6 +12,7 @@ angular.module("commonApp", [])
             link: function (scope, element) {
                 var chart = Highcharts.chart(element[0], {
                     chart: {
+                        width: null,
                         type: 'column'
                     },
                     title: {
