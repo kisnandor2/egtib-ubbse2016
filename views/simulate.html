@@ -7,21 +7,21 @@
 
 	<script type="text/javascript" src="/javascripts/paper-full.js"></script>
 	<script type="text/javascript" src="/javascripts/voronoi_core.js"></script>
+	<script type="text/javascript" src="/javascripts/BaseVoronoi.js"></script>
   <script type="text/javascript" src="/javascripts/util/colorProvider.js"></script>
   <script src="https://cdn.jsdelivr.net/canvg/1.4.0/rgbcolor.js"></script>
-  <script type="text/javascript" src="/javascripts/BaseVoronoi.js"></script>
-	<script type="text/javascript" src="/javascripts/AnimatableVoronoi.js"></script>
-  <script type="text/javascript" src="/javascripts/angularControllers.js"></script>
-  <script type="text/javascript" src="/javascripts/timer.js"></script>
+  <script type="text/javascript" src="/javascripts/simulateController.js"></script>
 
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
+  <script src="/javascripts/Chart.min.js"></script>
+  <script src="/javascripts/angular-chart.min.js"></script>
 {% endblock %}
 
 {% block body %}
 <div ng-app="myApp">
-<div class="section" id="voronoi" ng-controller="animatableVoronoiController">
+<div class="section" ng-controller="baseVoronoiController">
   <header>
     <div class="container">
           <h2>Parameters</h2>
@@ -36,7 +36,7 @@
       <div class="col-md-4"></div>
     </div>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="panel panel-default" ng-controller="parameterController">
           <div class="panel-heading text-center" color: rgb(255,255,255);">Set the parameters for the next run here</div>
           <div class="panel-body">
@@ -70,7 +70,7 @@
                   <label for="cooperatingCost" class="control-label">Cost of cooperative cells:</label>
                 </div>
                 <div class="col-sm-4">
-                  <input type="number" class="form-control" id="cooperatingCost" ng-model="cooperatingCost" ng-init="cooperatingCost=defaultCoopCost">
+                  <input type="text" class="form-control" id="cooperatingCost" ng-model="cooperatingCost" ng-init="cooperatingCost=defaultCoopCost">
                 </div>
               </div>
               <div class="form-group">
@@ -82,58 +82,91 @@
                 </div>
               </div>
               <div class="checkbox">
-                <label><input type="checkbox" id="itShouldDivide" ng-modell="itShouldDivide" value="">Cell division</label>
-              </div><br>
-              <div ng-controller="simulationController">
-                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Render new diagram" id="renderNewDiagram" ng-click="renderNewDiagram()">
-              <br><br>
-                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Start the simulation" id="startSimulation" ng-click="simulate()">
-                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Pause the simulation" id="pauseSimulation" ng-click="pause()" style="display:none">
-                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Resume the simulation" id="resumeSimulation" ng-click="resume()" style="display:none">
-              <br><br>
-                  <a type="button" class="btn btn-default col-md-10 col-md-offset-1" href="#statistics">Go to statistics</a>
-            </div>
-            </form>
-
-          </div>
-        </div>
-      </div>
-      <div class="col-md-9">
-        <div class="row">
-          <canvas id="canvas" resize></canvas>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="progress" id="progress">
-              <div class="progress-bar" id="progressBar" style="width:50%" ng-controller="progressBarController">
-                <strong>
-                  <span id="progressText">50%</span>
-                </strong>
+                <label><input type="checkbox" id="itShouldDivide" ng-modell="itShouldDivide">Cell division</label>
               </div>
-            </div>
+
+              <br><br>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="steepness" class="control-label">Steepness of the function:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control" id="steepness" min="0" ng-model="steepness" ng-init="steepness=defaultSteepness" ng-change="reloadPayoff()">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="inflectionPoint" class="control-label">Position of the inflection point:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control" id="inflectionPoint" min="0" ng-model="inflectionPoint" ng-init="inflectionPoint=defaultInflectionPoint" ng-change="reloadPayoff()">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="shapeOfDif" class="control-label">Shape of the diffusion gradient:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" min="0" class="form-control" id="shapeOfDif" ng-model="shapeOfDif" ng-init="shapeOfDif=defaultShapeOfDif" ng-change="reloadGradient()">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="steepnessOfGrad" class="control-label">Steepness of the gradient:</label>
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control" id="steepnessOfGrad" ng-model="steepnessOfGrad" ng-init="steepnessOfGrad=defaultSteepnessOfGrad" ng-change="reloadGradient()">
+                </div>
+              </div>
+              <br>
+              <div ng-controller="simulationController">
+              <a href='#statistics'>
+                <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Start" id="start" ng-click="simulate()">
+              </a>
+              </div>
+            </form>
           </div>
         </div>
       </div>
+      <div class="col-md-8" >
+        <div class="panel panel-default">
+        <div class="panel-heading">Functions used in calculations</div>
+        <div class="row">
+          <div class="col-md-6">
+            <img src="/images/bj_trans.png" class="img-responsive">
+            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+          </div>
+          <div class="col-md-6">
+            <img src="/images/gj_trans.png" class="img-responsive">
+            <canvas id="line" class="chart chart-line" chart-data="gradientData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+          </div>
+        </div>
+      </div>
+
+
+     </div>
+
     </div>
   </div>
+
 </div>
-<div class="section page-height" id="statistics" ng-controller="highChartsController">
+
+
+
+<div class="section page-height" id="statistics">
   <header>
     <div class="container">
-      <h2>Statistics</h2>
+          <h2>Statistics</h2>
     </div>
   </header>
   <div class="container">
     <div class="row">
-      <div class="panel panel-default">
+      <div class="panel panel-default" ng-hide="$root.hideStatistics" class="ng-hide">
         <div class="panel-heading text-center" color: rgb(255,255,255);">Statistics</div>
-        <div class="panel-body text-center">
-          <div id="highChartsContainer"></div>
-        </div>
+        <div class="panel-body text-center" id="panel"></div>
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <div class="loading_clock"></div>

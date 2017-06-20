@@ -31,15 +31,15 @@
 						<li {% if active=='index' %} class='active' {% endif %}>
 							<a id="home-nav" href='/index'>Home</a>
 						</li>
-						<li {% if active=='simulateWithDiagram' %} class='active' {% endif %} class="dropdown">
+						<li {% if active=='visualize' %} class='active' {% endif %} class="dropdown">
 							<a id="visualize-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">Visualize<span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a id="voronoi-nav" href='/simulateWithDiagram'>Voronoi</a></li>
-								<li class='disabled'><a href='/simulateWithDiagram'>New simulations coming</a></li>
+								<li><a id="voronoi-nav" href='/visualize'>Voronoi</a></li>
+								<li class='disabled'><a href='/visualize'>New simulations coming</a></li>
 							</ul>
 						</li>
-						<li {% if active=='simulateWithoutDiagram' %} class='active' {% endif %}>
-							<a id="no-dia-nav" href='/simulateWithoutDiagram'>Simulate</a>
+						<li {% if active=='simulate' %} class='active' {% endif %}>
+							<a id="no-dia-nav" href='/simulate'>Simulate</a>
 						</li>
 						<!-- <li {% if active=='charts' %} class='active' {% endif %}>
 							<a href='/charts'>Results</a>

@@ -2,14 +2,31 @@
 var voronoiAccessibleFromOutside;
 var voronoiAccessibleFromOutside2 = {};
 
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ['commonApp']);
 
-app.controller('animatableVoronoiController', function($scope, $rootScope) {
+app.constant('defaults', {
+	distance : 1,
+	generation: 10,
+	nonProductive: 10,
+	cellCount: 81,
+	coopCost: 0.1
+});
+
+app.constant('boundary', {
+    maxNumberOfCells: 500,
+    maxPercentOfDefectingCells: 100,
+	minGenerationCount: 0,
+    minCooperatingCost: 0,
+	maxCooperatingCost: 1,
+	maxDistanceOfInteraction: 5
+
+})
+app.controller('animatableVoronoiController', function($scope, $rootScope, defaults) {
 	initVoronoi();
 	initAlertBoxes();
 	initWebSocket();
 	initDefaultWatchIfNotSupported();
-
+	initChartData();
 	//TODO: look for a better way to wait for CSS animation(this is a workaround);
 	voronoiAccessibleFromOutside = $scope.voronoi;
 
@@ -24,24 +41,24 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		var voronoi = $scope.voronoi;
 
 		//Distance of interaction
-		$scope.defaultDistanceOfInteraction = 1;
+		$scope.defaultDistanceOfInteraction = defaults.distance;
 		voronoi.setDist($scope.defaultDistanceOfInteraction);
 
 		//GenerationCount
-		$scope.defaultGenerationCount = 10;
+		$scope.defaultGenerationCount = defaults.generation;
 		voronoi.setGen_Count($scope.defaultGenerationCount);
 
 		//Number of non_productive cells
-		$scope.defaultNonProductiveCellCount = 10;
+		$scope.defaultNonProductiveCellCount = defaults.nonProductive;
 		voronoi.setPercentOfDefectingCells($scope.defaultNonProductiveCellCount);
 
 		//CellCount
-		$scope.defaultCellCount = 81;
+		$scope.defaultCellCount = defaults.cellCount;
 		voronoi.setTotalNumberOfCells($scope.defaultCellCount);
 		voronoi.setSites(voronoi.generateBeeHivePoints(new Size(Math.floor(Math.sqrt($scope.defaultCellCount)), Math.ceil(Math.sqrt($scope.defaultCellCount))), true));
 
 		//CoopCost
-		$scope.defaultCoopCost = 0.1;
+		$scope.defaultCoopCost = defaults.coopCost;
 		voronoi.setCoop_Cost($scope.defaultCoopCost);
 
 		voronoi.renderDiagram();
@@ -83,7 +100,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		$scope.connection = new WebSocket(HOST);
 		$scope.connection.addEventListener("error", e => {
       if (e.target.readyState === 3) {
-      	$scope.connection = new WebSocket("ws://localhost:3001");	
+      	$scope.connection = new WebSocket("ws://localhost:3001");
       }
     });
 
@@ -123,7 +140,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 										return newVal = handler.call(this, prop, oldVal, val);
 								}
 								;
-								
+
 								if (delete this[prop]) { // can't watch constants
 										Object.defineProperty(this, prop, {
 													get: getter
@@ -151,13 +168,137 @@ app.controller('animatableVoronoiController', function($scope, $rootScope) {
 		}
 	}
 
+ 	function initChartData(){
+        let colorProvider = new ColorProvider();
+        $scope.chartData = [{
+            name: 'Productive',
+            color: colorProvider.getRGBColor('c').toHex(),
+            data: Array.apply(null, Array(10)).map(function(item, index){
+                return Math.floor(Math.random() * 9);
+            })
+        }, {
+            name: 'Non-nonProductive',
+            color: colorProvider.getRGBColor('d').toHex(),
+            data: Array.apply(null, Array(10)).map(function(item, index){
+                return Math.floor(Math.random() * 9);
+            })
+        }, {
+            name: 'Separator',
+            type: 'spline',
+            color: '#000000'
+        }]
+	}
+
+	function setChartData(siteList) {
+ 		var productive = []
+		var nonProductive = []
+        $scope.chartData[0].data = []
+        $scope.chartData[1].data = []
+ 		for (var i =0; i<siteList.length; ++i){
+ 			var p = $scope.voronoi.getProductiveCount(siteList[i])
+			var n = siteList[i].length
+			productive.push(p)
+			nonProductive.push(n-p)
+		}
+		$scope.chartData[0].data = productive
+		$scope.chartData[1].data = nonProductive
+		$scope.chartData[2].data = nonProductive
+		$scope.$apply() // necessary for the "digest cycle" to detect changes!
+
+    }
+
+    $scope.simulate = function(){
+        message = JSON.stringify({
+            bbox: $scope.voronoi.getBbox(),
+            sites: $scope.voronoi.getSites(),
+            gen_count: $scope.voronoi.getGen_Count(),
+            coop_cost: $scope.voronoi.getCoop_Cost(),
+            dist: $scope.voronoi.getDist(),
+            itShouldDivide: $("#itShouldDivide")[0].checked
+            //send more data here
+        });
+        $scope.connection.send(message);
+        $scope.connection.onmessage = function(e) {
+            //If the websocket processed the information simulate on the server side
+            $.get("voronoi/data", function(data, textStatus, response){
+                if (response.responseText != 'ok'){
+                    alert('error');
+                }
+            });
+            $("body").addClass("loading");
+            $scope.connection.onmessage = function(e) {
+                //Get results via the websocket
+                sitesList = JSON.parse(e.data);
+                for (let i = 0; i < sitesList.length; ++i){
+                    sitesList[i] = $scope.voronoi.sitesBadFormatToPointFormat(sitesList[i]);
+                }
+                $("body").removeClass("loading");
+                setChartData(sitesList)
+                $scope.voronoi.setSitesList(sitesList);
+                turnOffProgressBarClickAndHoverAndMouseMove();
+                $('#startSimulation')[0].style.display = 'none';
+                $('#pauseSimulation')[0].style.display = 'block';
+                $('#renderNewDiagram')[0].disabled = true;
+                $scope.voronoi.toBeRendered = 0;
+                $scope.voronoi.render();
+            };
+        }
+    }
+
+    $scope.pause = function(){
+        $('#renderNewDiagram')[0].disabled = false;
+        $('#pauseSimulation')[0].style.display = 'none';
+        $('#resumeSimulation')[0].style.display = 'block';
+        $scope.voronoi.toBeRendered = -9999;
+        turnOnProgressBarClickAndHoverAndMouseMove();
+    }
+
+    $scope.resume = function(){
+        turnOffProgressBarClickAndHoverAndMouseMove();
+        $('#renderNewDiagram')[0].disabled = true;
+        $('#pauseSimulation')[0].style.display = 'block';
+        $('#resumeSimulation')[0].style.display = 'none';
+        $scope.voronoi.toBeRendered = $scope.voronoi.savedToBeRendered; //progressBar.value
+        $scope.voronoi.render();
+    }
+
+    //$scope.$watch did not work here, so this is some magic
+    $scope.voronoi.watch('toBeRendered', function(property, oldVal, newVal){
+        if (newVal >= this.gen_count){
+            $('#resumeSimulation')[0].style.display = 'none';
+            $('#pauseSimulation')[0].style.display = 'none';
+            $('#startSimulation')[0].style.display = 'block';
+            $('#renderNewDiagram')[0].disabled = false;
+            turnOnProgressBarClickAndHoverAndMouseMove();
+
+        }
+        //It has to return the newVal
+        //TODO: take this "feature" out from initDefaultWatchIfNotSupported
+        return newVal;
+    })
+
+    function turnOffProgressBarClickAndHoverAndMouseMove(){
+        $("#progress").unbind('click');
+        $("#progress").unbind('mouseover');
+        $("#progress").unbind('mouseenter');
+        $("#progress").unbind('mouseleave');
+        $("#progress").unbind('mousemove');
+        $('#progressBar')[0].addEventListener('transitionend', $('#progressBar')[0].waitForCSSAnimation);
+    }
+    function turnOnProgressBarClickAndHoverAndMouseMove(){
+        $("#progress").click($rootScope.progressBarOnClick);
+        $("#progress").mousemove($rootScope.progressBarOnMousemove);
+        $("#progress").hover($rootScope.progressBarOnHoverIn, $rootScope.progressBarOnMouseHoverOut);
+        $('#progressBar')[0].removeEventListener('transitionend', $('#progressBar')[0].waitForCSSAnimation);
+    }
+
 });
 
-app.controller('parameterController', function($scope, $timeout) {
+app.controller('parameterController', function($scope, $timeout, boundary) {
 	$scope.successMessageDiv = $('#successMessage')[0];
 	$scope.$watch('totalNumberOfCells', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value <2 || value > 500;
+			return value <2 || value > boundary.maxNumberOfCells;
 		}, function(){
 			$scope.voronoi.setTotalNumberOfCells(newVal);
 		})
@@ -165,7 +306,7 @@ app.controller('parameterController', function($scope, $timeout) {
 	})
 	$scope.$watch('percentOfDefectingCells', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value < 0 || value > 100;
+			return value < 0 || value > boundary.maxPercentOfDefectingCells;
 		}, function(value){
 			$scope.voronoi.setPercentOfDefectingCells(newVal);
 		})
@@ -173,21 +314,21 @@ app.controller('parameterController', function($scope, $timeout) {
 	})
 	$scope.$watch('generationCount', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value <= 0;
+			return value <= boundary.minGenerationCount;
 		}, function(){
 			$scope.voronoi.setGen_Count(newVal);
 		})
 	})
 	$scope.$watch('cooperatingCost', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value < 0 || value > 1;
+			return value < boundary.minCooperatingCost || value > boundary.maxCooperatingCost;
 		}, function(){
 			$scope.voronoi.setCoop_Cost(newVal);
 		})
 	})
 	$scope.$watch('distanceOfInteraction', function(newVal, oldVal){
 		showAlerts(newVal, oldVal, function(value){
-			return value < 0 || value > 5;
+			return value < 0 || value > boundary.maxDistanceOfInteraction;
 		}, function(){
 			$scope.voronoi.setDist(newVal);
 		})
@@ -216,7 +357,7 @@ app.controller('parameterController', function($scope, $timeout) {
 		//TODO: maybe implement a list to check if needs to be closed
 		$timeout(function(){
 			try{
-				$('.close')[0].click();	
+				$('.close')[0].click();
 			}
 			catch(error){}
 		}, 1500)
@@ -239,155 +380,13 @@ app.controller('parameterController', function($scope, $timeout) {
 				gen_count: $scope.voronoi.getGen_Count(),
 				coop_cost: $scope.voronoi.getCoop_Cost(),
 				dist: $scope.voronoi.getDist(),
-				itShouldDivide: $("#itShouldDivide")[0].checked 
+				itShouldDivide: $("#itShouldDivide")[0].checked
 				//send more data here
 		});
 	}
 
 });
 
-app.controller('simulationController', function($scope, $rootScope){
-
-	$scope.simulate = function(){
-		message = JSON.stringify({
-				bbox: $scope.voronoi.getBbox(),
-				sites: $scope.voronoi.getSites(),
-				gen_count: $scope.voronoi.getGen_Count(),
-				coop_cost: $scope.voronoi.getCoop_Cost(),
-				dist: $scope.voronoi.getDist(),
-				itShouldDivide: $("#itShouldDivide")[0].checked 
-				//send more data here
-		});
-		$scope.connection.send(message);
-		$scope.connection.onmessage = function(e) {
-			//If the websocket processed the information simulate on the server side
-			$.get("voronoi/data", function(data, textStatus, response){
-				if (response.responseText != 'ok'){
-					alert('error');
-				}
-			});
-			$("body").addClass("loading");
-			$scope.connection.onmessage = function(e) {
-				//Get results via the websocket
-				sitesList = JSON.parse(e.data);
-				for (let i = 0; i < sitesList.length; ++i){
-					sitesList[i] = $scope.voronoi.sitesBadFormatToPointFormat(sitesList[i]);
-				}
-				$("body").removeClass("loading");
-				$scope.voronoi.renderChartData(sitesList);
-				turnOffProgressBarClickAndHoverAndMouseMove();
-				$('#startSimulation')[0].style.display = 'none';
-				$('#pauseSimulation')[0].style.display = 'block';
-				$('#renderNewDiagram')[0].disabled = true;
-				$scope.voronoi.toBeRendered = 0;
-				$scope.voronoi.render();
-			};
-		}
-	}
-
-	$scope.pause = function(){
-		$('#renderNewDiagram')[0].disabled = false;
-		$('#pauseSimulation')[0].style.display = 'none';
-		$('#resumeSimulation')[0].style.display = 'block';
-		$scope.voronoi.toBeRendered = -9999;
-		turnOnProgressBarClickAndHoverAndMouseMove();
-	}
-
-	$scope.resume = function(){
-		turnOffProgressBarClickAndHoverAndMouseMove();
-		$('#renderNewDiagram')[0].disabled = true;
-		$('#pauseSimulation')[0].style.display = 'block';
-		$('#resumeSimulation')[0].style.display = 'none';	
-		$scope.voronoi.toBeRendered = $scope.voronoi.savedToBeRendered; //progressBar.value
-		$scope.voronoi.render();
-	}
-
-	//$scope.$watch did not work here, so this is some magic
-	$scope.voronoi.watch('toBeRendered', function(property, oldVal, newVal){
-		if (newVal >= this.gen_count){
-			$('#resumeSimulation')[0].style.display = 'none';
-			$('#pauseSimulation')[0].style.display = 'none';
-			$('#startSimulation')[0].style.display = 'block';
-			$('#renderNewDiagram')[0].disabled = false;
-			turnOnProgressBarClickAndHoverAndMouseMove();
-
-		}
-		//It has to return the newVal
-		//TODO: take this "feature" out from initDefaultWatchIfNotSupported
-		return newVal;
-	})
-
-	function turnOffProgressBarClickAndHoverAndMouseMove(){
-		$("#progress").unbind('click');
-		$("#progress").unbind('mouseover');
-		$("#progress").unbind('mouseenter');
-		$("#progress").unbind('mouseleave');
-		$("#progress").unbind('mousemove');
-		$('#progressBar')[0].addEventListener('transitionend', $('#progressBar')[0].waitForCSSAnimation);
-	}
-	function turnOnProgressBarClickAndHoverAndMouseMove(){
-		$("#progress").click($rootScope.progressBarOnClick);
-		$("#progress").mousemove($rootScope.progressBarOnMousemove);
-		$("#progress").hover($rootScope.progressBarOnHoverIn, $rootScope.progressBarOnMouseHoverOut);
-		$('#progressBar')[0].removeEventListener('transitionend', $('#progressBar')[0].waitForCSSAnimation);
-	}
-
-});
-
-app.controller('highChartsController', function($rootScope){
-	initHighCharts();
-
-	function initHighCharts(){
-		let colorProvider = new ColorProvider();
-		var chart = Highcharts.chart('highChartsContainer', {
-			chart: {type: 'column'},
-			title: {text: 'Number of cells, over time'},
-			xAxis: {categories: []},
-			yAxis: {
-				allowDecimals: false,
-				min: 0,
-				title: {text: 'Number of cells'}
-			},
-			tooltip: {
-				formatter: function() {
-					return '<b>' + this.x + '</b><br/>' +
-						this.series.name + ': ' + this.y + '<br/>' +
-						'Total: ' + this.point.stackTotal;
-				}
-			},
-			plotOptions: {column: {stacking: 'normal'}},
-			series: [{
-				name: 'Productive',
-				color: colorProvider.getRGBColor('c').toHex(),
-				data: [],
-			}, {
-				name: 'Non-productive',
-				color: colorProvider.getRGBColor('d').toHex(),
-				data: [],
-			}, {
-				name: 'Separator',
-				type: 'spline',
-				color: '#000000',
-			}]
-		});
-
-		let n = Math.ceil(Math.random() * 100);
-		let categories = [];
-		let numberProductive = [];
-		let numberNonProductive = [];
-		for (i = 0; i < 10; i++) {
-			var p = Math.ceil(Math.random() * n); //ezt kell megkapjam
-			numberProductive.push(p);
-			numberNonProductive.push(n - p);
-			categories.push(i + 1);
-		}
-		chart.series[0].setData(numberProductive);
-		chart.series[1].setData(numberNonProductive);
-		chart.series[2].setData(numberNonProductive);
-		chart.xAxis[0].setCategories(categories);
-		$rootScope.voronoi.setChart(chart);
-	}
-})
 
 app.controller('progressBarController', function($rootScope){
 	$rootScope.voronoi.setProgressBar($('#progressBar')[0]);

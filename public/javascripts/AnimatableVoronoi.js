@@ -15,7 +15,6 @@ class AnimatableVoronoi extends BaseVoronoi{
 		this.oldSize = view.size;
 		this.mousePos = view.center;
 		this.progressBar = undefined;
-		this.chart = {};
 		this.toBeRendered = -9999;
 		this.savedToBeRendered = -9999;
 
@@ -29,39 +28,6 @@ class AnimatableVoronoi extends BaseVoronoi{
 			yt: this.margin,
 			yb: this.view.bounds.height - this.margin
 		};
-	}
-	/**
-	 * Displays the data which was added to this.chart.series and xAxis
-	 */
-	displayChartData(){
-		this.chart.series[0].setData(this.chart.productive);
-		this.chart.series[1].setData(this.chart.nonProductive);
-		this.chart.series[2].setData([]);	//not sure why but sometimes the chart needs this to work correctly
-		this.chart.series[2].setData(this.chart.nonProductive);
-		this.chart.xAxis[0].setCategories(this.categories);
-	}
-
-	/**
-	 * Adds data to chart
-	 *
-	 * @param {array} sites - the sites where we calculate the chart data
-	 * @param {int}		i 		- this sets the categories(bottom part) of the chart
-	 */ 
-	addDataToChart(sites, i){
-		let p = this.getProductiveCount(sites);
-		this.chart.productive.push(p);
-		let n = sites.length;
-		this.chart.nonProductive.push(n-p);
-		this.chart.categories.push(i);
-	}
-
-	/**
-	 * Resets the data in the chart, everything is lost
-	 */
-	resetChart() {
-		this.chart.productive = [];
-		this.chart.nonProductive = [];
-		this.chart.categories = [];
 	}
 
 	/**
@@ -169,21 +135,6 @@ class AnimatableVoronoi extends BaseVoronoi{
 		return points;
 	}
 
-	/**
-	 * Adds the data to chart and displays it
-	 * 
-	 * @param {array_of_sites} sitesList
-	 */
-	renderChartData(sitesList) {
-		this.resetChart();
-		// sitesList.unshift(this.sites);
-		this.addDataToChart(this.sites, 0);
-		for (let i = 0; i < sitesList.length; ++i){
-			this.addDataToChart(sitesList[i], i+1);
-		}
-		this.displayChartData();
-		this.sitesList = sitesList;
-	}
 
 	/**
 	 * Renders a whole animation described by this.sitesList
@@ -300,19 +251,15 @@ class AnimatableVoronoi extends BaseVoronoi{
 	}
 
 	/**
-	 * Set the chart which is used to display the data
-	 * @oaram {chart} chart
-	 */
-	setChart(chart){
-		this.chart = chart;
-		this.resetChart();
-	}
-
-	/**
 	 * Set the progressBar whish is used to display rendering progress
 	 * @param {progressBar} p
 	 */
 	setProgressBar(p){
 		this.progressBar = p;
 	}
+
+	setSitesList(sitesList){
+		this.sitesList = sitesList;
+	}
+
 }
