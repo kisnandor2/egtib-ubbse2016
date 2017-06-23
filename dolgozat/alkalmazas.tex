@@ -16,7 +16,7 @@
 
 Az alkalmazásunkat egy főoldalra, valamint funkcionalitás szerint, három fő komponensre oszthatjuk:
 
-\paragraph{Üdvözlő oldal}- ezen az oldalon kaptak helyet az általános jellegű információk és egy boostrap carousel, amellyel az alkalmazás mindegyik fő komponense rövid és humoros szövegekkel van bemutatva, valamint egy kép amely tovább visz az adott oldalra (\ref{fig:welcomePage} ábra)
+\paragraph{Üdvözlő oldal}- ezen az oldalon kaptak helyet az általános jellegű információk és egy boostrap carousel, amellyel az alkalmazás mindegyik fő komponense rövid és humoros szövegekkel van bemutatva, valamint egy kép amely tovább visz az adott oldalra (Ábra \ref{fig:welcomePage})
 
 \paragraph{Vizualizáció}- a vizualizációs oldalra tévedve (\ref{fig:VisualizationDiagram}), a felhasználó elég sok újdonsággal találja magát szemben. Az legszembeötlőbb egy színes pöttyökkel teli rajz lesz, ami a Voronoi diagram. Itt a kooperáló és defektáló sejtek narancssárga illetve sötétbarna színben vannak reprezentálva. A képernyő második legnagyobb részét a diagramtól balra elhelyezkedő paraméterlista tölti ki. Itt a következő paramétereket lehet állítgatni, amelyek a szimulációt befolyásolják:
 \begin{itemize}
@@ -69,7 +69,7 @@ Eléggé repetitívvé válik a felhasználó munkája amennyiben hasonló param
 	\item kooperálási költség 
 	\item interakció távolsága
 \end{itemize}
-Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a feltételeket egyesítve lesz egy grafikonon (\ref{fig:SimulationResults} ábra).
+Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a feltételeket egyesítve lesz egy grafikonon (Ábra \ref{fig:SimulationResults}).
 
 \begin{figure}[ht!]
 	\centering
@@ -84,11 +84,11 @@ Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a fe
 
 Már a projekt kezdetekor biztosak voltunk benne, hogy egy könnyen és bárki által elérhető alkalmazásra lesz szükség, így nem volt kérdéses az, hogy webes felületet akarunk. Ezután már csak az volt a kérdéses, hogy számunkra milyen környezet lenne a legkényelmesebb, amely ha szükség van rá könnyen skálázható is. Végül a \textbf{NodeJS}-re (\cite{soft:node}) esett a választásunk, hiszen ez egy egyszerű felület skálázható hálózati alkalmazások írására, valamint egy nagyon egyszerű és elterjedt nyelvet használ, a JavasSriptet. Keretrendszernek a sokak által ismert és használt \textbf{ExpressJS}-t (\cite{soft:express}) választottuk.
 
-Tehát a szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP-vel folyik. A fejlesztés során bizonyos szimulációs adatok JSON-beli küldözgetése túl nagy feladatnak bizonyult, így ezek átvitelét \textbf{WebSocket} segítségével oldottuk meg. Azt is jó tudni, hogy a szerver oldalon folyik az erőforrás igényes számítások nagy része.
+Tehát a szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP-vel folyik. A fejlesztés során bizonyos szimulációs adatok JSON-beli küldözgetése túl nagy feladatnak bizonyult, így ezek átvitelét \textbf{WebSocket} segítségével oldottuk meg. Itt megemlítenénk azt is, hogy a szerver oldalon folyik az erőforrás igényes számítások nagy része.
 
 Említettük, hogy \textbf{Voronoi} diagramokkal ábrázoljuk a sejteket, így szükségünk volt egy Voronoi modulra is (\cite{soft:voronoiModule}). Ez a modul egy JavaScript implementációja Steven J. Fortune algoritmusának, mely hatékonyon dolgozik Voronoi diagramokkal, viszont csak az adatszerkezettel foglalkozik, nem képes ki is rajzolni azt.
 
-Webalkalmazásról lévén szó szükség van egy adatbázisra is ahol a szesszió adatokat el lehet tárolni, ez a \textbf{MongoDB} (\cite{soft:mongodb}). Továbbá a szimulációs eredmények lementése is ide történik, és természetesen az eredmények oldal kigenerálása során is innen vesszük ki az adatokat. Emeljük ki azt a tényt, hogy a MongoDB sokat könnyített a munkánkon az adatok lementését illetően. Adataink JavaScript objektumokként vannak reprezentálva és köszönhetően az adatbázisnak, nem volt szükségünk semmilyen tervezésre, egyszerűen le lehet ilyen struktúrában lévő adatokat menteni, majd ezek lekérése is könnyen megvalósítható.
+Webalkalmazásról lévén szó szükség van egy adatbázisra is ahol a szesszió adatokat el lehet tárolni, erre a \textbf{MongoDB} (\cite{soft:mongodb}) jelentette a megoldást. Továbbá a szimulációs eredmények lementése is ide történik, és természetesen az eredmények oldal kigenerálása során is innen vesszük ki az adatokat. Kiemelnénk azt a tényt, hogy a MongoDB sokat könnyített a munkánkon az adatok lementését illetően. Adataink JavaScript objektumokként vannak reprezentálva és köszönhetően az adatbázisnak, nem volt szükségünk semmilyen tervezésre, egyszerűen le lehet ilyen struktúrában lévő adatokat menteni, majd ezek lekérése is könnyen megvalósítható.
 
 \begin{figure}[ht!]
 	\centering
