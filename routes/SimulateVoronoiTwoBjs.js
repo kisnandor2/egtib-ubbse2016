@@ -31,6 +31,7 @@ function SimulateVoronoiTwoBjs() {
     this.itShouldDivide		= undefined;
     this.defectingCost      = 0;
     this.cooperatingLimit   = undefined;
+    this.percentageDef      = undefined;
 
     constantFunctions.dist = 1;
     this.sites = [];
@@ -161,6 +162,8 @@ SimulateVoronoiTwoBjs.prototype.simulate = function() {
         logger.error("No this.sites, probably testing");
         return [];
     }
+    const testCoopCount = this.getCooperatingCount(this.sites);
+    this.percentageDef = 1 - testCoopCount/this.sites.length;
     var ret = [];
     // ret.push(JSON.parse(JSON.stringify(this.sites)));
     for (let j = 0; j < this.generationCount; ++j) {
