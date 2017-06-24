@@ -221,7 +221,7 @@ app.controller('animatableVoronoiController', function($scope, $rootScope, defau
                 coop_cost: $scope.voronoi.getCoop_Cost(),
                 dist: $scope.voronoi.getDist(),
                 itShouldDivide: $("#itShouldDivide")[0].checked,
-                cooperatingLimit: $("#cooperatingLimit")[0].value
+                cooperatingLimit: parseFloat($("#cooperatingLimit")[0].value)
                 //send more data here
             });
 		} else {

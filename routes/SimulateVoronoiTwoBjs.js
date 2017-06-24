@@ -86,7 +86,12 @@ SimulateVoronoiTwoBjs.prototype.init = function({ sites, bbox, gen_count, coop_c
 
     if (constantParameters){ //set if there is what to set
         console.log(constantParameters);
-        this.setConstantFunctions(constantParameters)
+        if (constantParameters.steepness != undefined){
+            this.setConstantFunctions(constantParameters)
+        } else {
+            this.setConstantFunctionsExt(constantParameters)
+        }
+
     }
 
     constantFunctions.distance = dist;
@@ -126,6 +131,14 @@ SimulateVoronoiTwoBjs.prototype.init = function({ sites, bbox, gen_count, coop_c
 SimulateVoronoiTwoBjs.prototype.setConstantFunctions = function({steepness, inflexiosPontHelye, shapeOfDif, z}){
     constantFunctions.steepness = steepness;
     constantFunctions.inflexiosPontHelye = inflexiosPontHelye;
+    constantFunctions.shapeOfDif = shapeOfDif;
+    constantFunctions.z = z;
+}
+SimulateVoronoiTwoBjs.prototype.setConstantFunctionsExt = function({steepness1, inflexiosPontHelye1, steepness2, inflexiosPontHelye2, shapeOfDif, z}){
+    constantFunctions.steepness1 = steepness1;
+    constantFunctions.inflexiosPontHelye1 = inflexiosPontHelye1;
+    constantFunctions.steepness2 = steepness2;
+    constantFunctions.inflexiosPontHelye2 = inflexiosPontHelye2;
     constantFunctions.shapeOfDif = shapeOfDif;
     constantFunctions.z = z;
 }
@@ -228,7 +241,7 @@ SimulateVoronoiTwoBjs.prototype.setPayoffs = function() {
     for (var i = 0; i < this.sites.length; ++i) {
         let actualPoint = this.sites[i];
         let neighbors = this.getCooperatingNeighbors(actualPoint.voronoiId);
-        if (neighbors.coops < limit * neighbors.neighborsCount) {
+        if (neighbors.coops < this.limit * neighbors.neighborsCount) {
             actualPoint.payoff = constantFunctions.payoffBelowLimit(neighbors.coops/neighbors.neighborsCount, actualPoint.cost,1);
         } else {
             actualPoint.payoff = constantFunctions.payoffOverLimit(neighbors.coops/neighbors.neighborsCount, actualPoint.cost, 1);

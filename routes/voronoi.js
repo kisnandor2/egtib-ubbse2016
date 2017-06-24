@@ -27,9 +27,9 @@ function test(i, data){
 
 router.get('/data', function(req, res) {
 	// test(0, JSON.stringify(req.session));
-	two.init(req.session);	//ES6 parameter destructuring
+	v.init(req.session);	//ES6 parameter destructuring
 	try {
-		server.sendData(JSON.stringify(two.simulate()));
+		server.sendData(JSON.stringify(v.simulate()));
 		res.status(200).send('ok');
 	}
 	catch (error) {
@@ -41,9 +41,9 @@ router.get('/data', function(req, res) {
 
 router.get('/warburg', function(req, res) {
     // test(0, JSON.stringify(req.session));
-    v.init(req.session);	//ES6 parameter destructuring
+    two.init(req.session);	//ES6 parameter destructuring
     try {
-        server.sendData(JSON.stringify(v.simulate()));
+        server.sendData(JSON.stringify(two.simulate()));
         res.status(200).send('ok');
     }
     catch (error) {

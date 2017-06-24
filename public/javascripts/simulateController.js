@@ -39,11 +39,18 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 		$scope.defaultCoopCost = 0.1;
 		voronoi.setCoop_Cost($scope.defaultCoopCost);
 
+        //Max valaue of benefit
+        $scope.defaultCoopLimit = 0.5;
+
 		//Makes voronoi visible for highChartsController to set the voronoi chart
 		$rootScope.voronoi = voronoi;
 
-		$scope.defaultSteepness = 4;
-		$scope.defaultInflectionPoint = 0.5;
+        $scope.defaultSteepness = 4;
+        $scope.defaultInflectionPoint = 0.5;
+		$scope.defaultSteepness1 = 4;
+		$scope.defaultInflectionPoint1 = 0.5;
+        $scope.defaultSteepness2 = 4;
+        $scope.defaultInflectionPoint2 = 0.5;
 		$scope.defaultShapeOfDif = 0.5;
 		$scope.defaultSteepnessOfGrad = 3;
 	}
@@ -373,26 +380,54 @@ app.controller('simulationController', function($scope, $rootScope){
 	$scope.recursiveSimulate = function(i, voronois){
 		if (i >= voronois.length)
 			return;
-		message = JSON.stringify({
-			bbox: voronois[i].getBbox(),
-			sites: voronois[i].getSites(),
-			gen_count: voronois[i].getGen_Count(),
-			coop_cost: voronois[i].getCoop_Cost(),
-			dist: voronois[i].getDist(),
-			itShouldDivide: $("#itShouldDivide")[0].checked ,
-			steepness: $scope.steepness,
-			inflexiosPontHelye: $scope.inflectionPoint,
-			shapeOfDif: $scope.shapeOfDif,
-			z: $scope.steepnessOfGrad
+		if ($("#cooperatingLimit")[0] != undefined) {
+            message = JSON.stringify({
+                bbox: voronois[i].getBbox(),
+                sites: voronois[i].getSites(),
+                gen_count: voronois[i].getGen_Count(),
+                coop_cost: voronois[i].getCoop_Cost(),
+                dist: voronois[i].getDist(),
+                itShouldDivide: $("#itShouldDivide")[0].checked ,
+				cooperatingLimit: $("#cooperatingLimit")[0].value,
+                steepness1: $("#steepness1")[0].value,
+                inflexiosPontHelye1: $("#inflectionPoint1")[0].value,
+                steepness2: $("#steepness2")[0].value,
+                inflexiosPontHelye2: $("#inflectionPoint2")[0].value,
+                shapeOfDif: $scope.shapeOfDif,
+                z: $scope.steepnessOfGrad
 
-		});
+            });
+        } else {
+            message = JSON.stringify({
+                bbox: voronois[i].getBbox(),
+                sites: voronois[i].getSites(),
+                gen_count: voronois[i].getGen_Count(),
+                coop_cost: voronois[i].getCoop_Cost(),
+                dist: voronois[i].getDist(),
+                itShouldDivide: $("#itShouldDivide")[0].checked ,
+                steepness: $scope.steepness,
+                inflexiosPontHelye: $scope.inflectionPoint,
+                shapeOfDif: $scope.shapeOfDif,
+                z: $scope.steepnessOfGrad
+
+            });
+        }
+
 		$scope.connection.send(message);
 		$scope.connection.onmessage = function(e) {
-			$.get("voronoi/data", function(data, textStatus, response){
-				if (response.responseText != 'ok'){
-					alert('error');
-				}
-			});
+            if ($("#cooperatingLimit")[0] != undefined) {
+                $.get("../voronoi/warburg", function(data, textStatus, response){
+                    if (response.responseText != 'ok'){
+                        alert('error');
+                    }
+                });
+            } else {
+                $.get("../voronoi/data", function(data, textStatus, response){
+                    if (response.responseText != 'ok'){
+                        alert('error');
+                    }
+                });
+            }
 			$scope.connection.onmessage = function(e) {
 				sitesList = JSON.parse(e.data);
 				for (let j = 0; j < sitesList.length; ++j){

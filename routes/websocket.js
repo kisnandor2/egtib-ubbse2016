@@ -60,6 +60,9 @@ Socket.prototype.listen = function() {
 				else{
 					session.itShouldDivide = data.itShouldDivide;
 				}
+                if (data.cooperatingLimit != undefined){
+                    session.cooperatingLimit = data.cooperatingLimit;
+                }
 				if (data.steepness != undefined){
 					session.constantParameters = {
 						steepness: data.steepness,
@@ -68,6 +71,16 @@ Socket.prototype.listen = function() {
 						z: data.z,
 					}
 				}
+                if (data.steepness1 != undefined){
+                    session.constantParameters = {
+                        steepness1: data.steepness1,
+                        inflexiosPontHelye1: data.inflexiosPontHelye1,
+                        steepness2: data.steepness2,
+                        inflexiosPontHelye2: data.inflexiosPontHelye2,
+                        shapeOfDif: data.shapeOfDif,
+                        z: data.z,
+                    }
+                }
 				else{
 					logger.debug('Visualization');
 				}
