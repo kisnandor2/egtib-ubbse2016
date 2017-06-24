@@ -14,12 +14,18 @@ else{
 }
 MongoURI += "/egtib";
 
-router.get('/', function(req, res) {
-	res.render('charts', {
+router.get('/simple', function(req, res) {
+	res.render('chartsSimple', {
 		active: 'charts'
 	});
 });
 
+
+router.get('/two', function(req, res) {
+    res.render('chartsTwo', {
+        active: 'charts'
+    });
+});
 router.get('/dataWarburg', (req, res)=>{
 	let percentOfDefectingCells = 0;
 	let cooperatingCost = 0;

@@ -1,0 +1,17 @@
+{% extends "charts.html" %}
+
+{% block warburg %}
+
+<div class="col-sm-2">
+    <label for="cooperatingLimit" class="control-label">Max value of beneficial cooperation:</label>
+</div>
+<div class="col-sm-1">
+    <input type="number" class="form-control" id="cooperatingLimit" ng-model="cooperatingLimit" ng-init="cooperatingLimit=0.5" step="0.1">
+</div>
+
+
+<div class="col-sm-3">
+    <input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Filter" id="filter" ng-click="getDataTwo()">
+</div>
+
+{% endblock %}

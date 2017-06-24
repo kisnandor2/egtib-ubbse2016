@@ -35,9 +35,8 @@
 							<div class="col-sm-1">
 								<input type="number" min="1" max="5" class="form-control" id="distanceOfInteraction" ng-model="distanceOfInteraction" ng-init="distanceOfInteraction=1">
 							</div>
-						<div class="col-sm-3">
-							<input type="button" class="btn btn-default submit col-md-10 col-md-offset-1" value="Filter" id="filter" ng-click="getData()">
-						</div>
+							{% block warburg %} {% endblock %}
+
 					</form>
 				</div>
 			</div>

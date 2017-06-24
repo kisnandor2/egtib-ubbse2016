@@ -43,11 +43,15 @@
 							<a id="simulate-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">Simulate<span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li><a id="no-dia-nav1" href='/simulate/simple'>Simple Simulate</a></li>
-								<li><a id=<a id="no-dia-nav2" href='/simulate/two'>Warburg Simulate</a></li>
+								<li><a id="no-dia-nav2" href='/simulate/two'>Warburg Simulate</a></li>
 							</ul>
 						</li>
-						<li {% if active=='charts' %} class='active' {% endif %}>
-							<a href='/charts'>Results</a>
+						<li {% if active=='charts' %} class='active' {% endif %} class="dropdown">
+							<a id="charts-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">Charts<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a id="chatrs-nav1" href='/charts/simple'>Simple Charts</a></li>
+								<li><a id="charts-nav2" href='/charts/two'>Warburg Charts</a></li>
+							</ul>
 						</li>
 					</ul>
 				</div>
