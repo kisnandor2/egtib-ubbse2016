@@ -82,6 +82,12 @@ Ezen adatok megadása után, az összes olyan szimuláció mely kielégíti a fe
 
 \section{Felhasznált technológiák}
 
+\subsection{Kliens oldali}
+
+\subsection{Szerver oldali}
+
+\subsection{Folyamatos integráció}
+
 Már a projekt kezdetekor biztosak voltunk benne, hogy egy könnyen és bárki által elérhető alkalmazásra lesz szükség, így nem volt kérdéses az, hogy webes felületet akarunk. Ezután már csak az volt a kérdéses, hogy számunkra milyen környezet lenne a legkényelmesebb, amely ha szükség van rá könnyen skálázható is. Végül a \textbf{NodeJS}-re (\cite{soft:node}) esett a választásunk, hiszen ez egy egyszerű felület skálázható hálózati alkalmazások írására, valamint egy nagyon egyszerű és elterjedt nyelvet használ, a JavasSriptet. Keretrendszernek a sokak által ismert és használt \textbf{ExpressJS}-t (\cite{soft:express}) választottuk.
 
 Tehát a szoftver egy szerverből és egy kliensből áll, melyek közötti kommunikáció a már jól megszokott HTTP-vel folyik. A fejlesztés során bizonyos szimulációs adatok JSON-beli küldözgetése túl nagy feladatnak bizonyult, így ezek átvitelét \textbf{WebSocket} segítségével oldottuk meg. Itt megemlítenénk azt is, hogy a szerver oldalon folyik az erőforrás igényes számítások nagy része.
@@ -96,7 +102,6 @@ Webalkalmazásról lévén szó szükség van egy adatbázisra is ahol a szesszi
 	\caption{Szekvencia diagram. A szimulálási folyamat lépései}
 	\label{fig:SimulationProcess}
 \end{figure}
-
 
 Kliens oldalon a technológiák felhozatala eléggé változatos. Először is egy weboldal jól kell kinézzen és ezen feladatot a \textbf{Bootstrap} (\cite{soft:bootstrap}) keretrendszer tökéletesen ki is elégíti. Dinamikus oldalt lehet vele létrehozni, bármilyen eszközt együttesen lehet kezelni vele, nem csak desktopon de mobil eszközökön is jól néz ki az oldal. Kezdetben kliens oldalon nem nagyon volt bármiféle struktúra a JavaScriptben és elég hamar rá is jöttünk, hogy ez egy hatalmas probléma, a kód elég hamar átláthatatlan lett. Ezért átálltunk \textbf{AngularJS}-re (\cite{soft:angular}), mellyel már sokkal olvashatóbb kódot sikerült létrehoznunk, egyszerűbbé tette a kód bővítését is és az oldal dinamikussága is nőtt (pl. megjelentek az alertek). A Voronoi diagram megjelenítéséért a \textbf{Paper.js} (\cite{soft:paper}) a felelős, valamint itt is jelen van a Voronoi adatszerkezetet feldolgozó modul (\cite{soft:voronoiModule}). A grafikonok kirajzolására több keretrendszert is használunk. Ez azért van, mert ismertünk már egyet ami az adott feladatot kielégítette, viszont a későbbiekben új típusú diagramok jöttek be, melyekhez, mint kiderült, új keretrendszerre volt szükségünk. Így alakult, hogy a Voronoi diagram alatti grafikont a \textbf{Highcharts} (\cite{soft:highcharts}) segítségével, a V és g függvényeket (\ref{fig:SimulationFunctionDiagrams}) az AngularJS grafikonjaival, míg az error bart (\ref{fig:SimulationResults}) a \textbf{Plotly.js} (\cite{soft:plotly}) segítségével rajzoltuk ki.
 

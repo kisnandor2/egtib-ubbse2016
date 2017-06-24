@@ -38,18 +38,3 @@ Ekkor látható a legjobban, hogy míg a hagyományos játékelméletben a dönt
 	\caption{Bogár játék testméret alapján}
 	\label{fig:beetle}
 \end{table}
-
-\subsection{Replikátor dinamika}
-A replikátor dinamika az egyik módja a gyakoriság-függő szelekció vizsgálatának. A megközelítés egy heterogén populációt feltételez, véges számú stratégiával, ahol a növekedés arányos a fitnesszel. A játék dinamikája a 
-\begin{equation}
-\frac{dx_i}{dt} = x_i(f_i(x) - F(x))
-\end{equation}
-differenciálegyenlettel írható le, ahol \(x_i\) az \textit{i} stratégia gyakorisága, \(f_i(x)\) a stratégia várható nyeresége az \(x = (x_1,...,x_n)\) eloszlású populációban, \(F(x)\) pedig a populáció átlagos nyeresége.
-Ez a dinamika átalakul ha térbeli játékokkal foglalkozunk, ahol a játékosok legtöbbször egy rácson helyezkednek el egy síkban és csak a szomszédokkal lépnek kapcsolatba \cite{hummert2014evolutionary}. 
-
-\subsection{Adaptív dinamika}
-A replikátor dinamikával ellentétben, ahol nem esik szó mutációról, az adaptív dinamika egy mutáns egyed vagy egyedek fitneszét vizsgálja egy homogén populációban. Mint már említettük, egy populáció akkor stabil ha egyetlen mutáns csoport stratégiája sem múlja felül a jelenleg alkalmazottat, feltéve ha az új egyedek aránya elég kicsi. Tehát a végeredmény függ a mutáns egyedek kezdeti arányától. A dinamika a 
-\begin{equation}
-\frac{dx_i}{dt} = \frac{\partial}{\partial y_i}A(y,x), i = 1,...,n
-\end{equation}
-differenciálegyenlettel számítható ki \(y = x\)-ben, ahol \textit{x} az eredeti stratégia, \(y = x + h\) a mutáns stratégiája (\textit{x}-hez közel álló), \textit{A(y,x)} egy \textit{y} stratégiát \textit{x}-szel szemben játszó egyed nyeresége. A relatív nyereség az \(A(y,x) - A(x,x)\) \cite{hummert2014evolutionary}.
