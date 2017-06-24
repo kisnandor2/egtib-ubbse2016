@@ -82,6 +82,7 @@ Socket.prototype.listen = function() {
                     }
                 }
 				else{
+					session.constantParameters = undefined;
 					logger.debug('Visualization');
 				}
 				//Set that variable

@@ -49,7 +49,7 @@ const voronoi = require('./routes/voronoi');
 app.use('/voronoi', voronoi.router);
 app.use('/visualize', require('./routes/visualize'));
 app.use('/simulate', require('./routes/simulate'));
-// app.use('/charts', require('./routes/charts'));
+app.use('/charts', require('./routes/charts'));
 app.use(require('./routes/404'));
 
 var server = app.listen(portno);

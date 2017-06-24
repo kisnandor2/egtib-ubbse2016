@@ -4,7 +4,16 @@ const Timer = require('../public/javascripts/timer');
 const fs = require('fs');
 const constantFunctions = new (require('./ConstantFunctions'))();
 const Cell = require('./Cell')
+const MongoClient = require('mongodb').MongoClient;
 
+var MongoURI = null;
+if (process.env.MONGODB_URI){
+	MongoURI = process.env.MONGODB_URI;
+}
+else{
+	MongoURI = "mongodb://localhost:27017";
+}
+MongoURI += "/egtib";
 const alfa = 0.1; //dividing chance constant
 const e = Math.exp(1);
 
@@ -23,6 +32,7 @@ function SimulateVoronoi() {
 	this.sites = [];
 	this.bbox = {};
 	this.neighborMatrix = [];
+	this.percentageDef = undefined;
 
 	logger.debug("new SimulateVoronoi created");
 	// this.timer = new Timer(this);
@@ -81,7 +91,6 @@ SimulateVoronoi.prototype.init = function({ sites, bbox, gen_count, coop_cost, d
 	this.itShouldDivide = itShouldDivide;
 
 	if (constantParameters){ //set if there is what to set
-		console.log(constantParameters);
 		this.setConstantFunctions(constantParameters)
 	}
 
@@ -133,6 +142,8 @@ SimulateVoronoi.prototype.simulate = function() {
 			logger.error("No this.sites, probably testing");
 			return [];
 		}
+		const testCoopCount = this.getCooperatingCount(this.sites);
+		this.percentageDef = 1 - testCoopCount/this.sites.length;
 		var ret = [];
 		// ret.push(JSON.parse(JSON.stringify(this.sites)));
 		for (let j = 0; j < this.generationCount; ++j) {
@@ -336,7 +347,24 @@ SimulateVoronoi.prototype.getCooperatingCount = function(sites){
  * Saves the current simulation results to the simulation.json file
  * @param {arrayOfarrays} - the `ret` from the simulation
  */
-SimulateVoronoi.prototype.saveSimulationData = function(filename, sitesList, callback,i, data2){
+SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
+	if (sitesList[0].length < 100){
+		logger.trace('No need to save simulation. Total cells is out of range');
+		return;
+	}
+	// if (percentageDef <= 0.01 || percentageDef >= 0.1){
+	// 	logger.trace('No need to save simulation. percentageDef is out of range');
+	// 	return;
+	// }
+	if (this.generationCount < 5){
+		logger.trace('No need to save simulation. gen_count is too small');
+		return;	
+	}
+	// if (this.cooperatingCost <= 0.01 || this.cooperatingCost > 0.2){
+	// 	logger.trace('No need to save simulation. cooperatingCost is out of range');
+	// 	return;
+	// }
+
 	let coopAndDef = [];
 	for (let i = 0; i < sitesList.length; ++i){
 		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
@@ -348,28 +376,26 @@ SimulateVoronoi.prototype.saveSimulationData = function(filename, sitesList, cal
 	}
 	let params = {
 		generationCount: this.generationCount,
-		cooperating: this.cooperatingCost,
-		dist: this.dist, 
+		cooperatingCost: this.cooperatingCost,
+		percentageDef: this.percentageDef,
+		dist: this.dist,
+		itShouldDivide: this.itShouldDivide,
 		results: coopAndDef
 	}
-	fs.readFile(filename, 'utf8', function readFileCallback(err, data){
-		let obj = [];
-		if (err){
-			logger.error(err);
-			return;
-		}
-		try {
-			obj = JSON.parse(data); //now it an object
-		}
-		catch(err){
-			logger.error(data);
-			logger.error(err);
-			obj = [];
-		}
-		obj.push(params);
-		json = JSON.stringify(obj); //convert it back to json
-		console.log('write' + i);
-		fs.writeFile(filename, json, 'utf8', () => {callback(i, data2)}); // write it back 
+	// Connect to the db
+	MongoClient.connect(MongoURI, function(err, db) {
+	  if(err) {
+	  	logger.error(err); 
+	  	return;
+	  }
+	  db.collection("egtib").insert(params, {w:1}, function(err, result) {
+	  	if (err){
+	  		logger.error(err);
+	  		return;
+	  	}
+	  	logger.trace("1 simulation inserted into MongoDB");
+	  	db.close();
+	  });
 	});
 }
 
