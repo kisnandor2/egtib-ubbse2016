@@ -28,6 +28,13 @@ class ConstantFunctions {
 		this.calculateDiffGradient();
 	}
 
+    /**
+     * setter for `limit`
+     */
+    setLimit(cooperalingLimit){
+    	this.limit = cooperalingLimit;
+	}
+
 	/**
 	 * Sigmoid function - see ConstantFunctions.V function
 	 * @returns {float}

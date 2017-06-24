@@ -9,7 +9,8 @@ app.constant('defaults', {
 	generation: 10,
 	nonProductive: 10,
 	cellCount: 81,
-	coopCost: 0.1
+	coopCost: 0.1,
+	coopLimit: 0.5
 });
 
 app.constant('boundary', {
@@ -60,6 +61,10 @@ app.controller('animatableVoronoiController', function($scope, $rootScope, defau
 		//CoopCost
 		$scope.defaultCoopCost = defaults.coopCost;
 		voronoi.setCoop_Cost($scope.defaultCoopCost);
+
+		//Max valaue of benefit
+		$scope.defaultCoopLimit = defaults.coopLimit;
+
 
 		voronoi.renderDiagram();
 
@@ -208,23 +213,44 @@ app.controller('animatableVoronoiController', function($scope, $rootScope, defau
     }
 
     $scope.simulate = function(){
-        message = JSON.stringify({
-            bbox: $scope.voronoi.getBbox(),
-            sites: $scope.voronoi.getSites(),
-            gen_count: $scope.voronoi.getGen_Count(),
-            coop_cost: $scope.voronoi.getCoop_Cost(),
-            dist: $scope.voronoi.getDist(),
-            itShouldDivide: $("#itShouldDivide")[0].checked
-            //send more data here
-        });
+ 		if ($("#cooperatingLimit")[0] != undefined){
+            message = JSON.stringify({
+                bbox: $scope.voronoi.getBbox(),
+                sites: $scope.voronoi.getSites(),
+                gen_count: $scope.voronoi.getGen_Count(),
+                coop_cost: $scope.voronoi.getCoop_Cost(),
+                dist: $scope.voronoi.getDist(),
+                itShouldDivide: $("#itShouldDivide")[0].checked,
+                cooperatingLimit: $("#cooperatingLimit")[0].value
+                //send more data here
+            });
+		} else {
+            message = JSON.stringify({
+                bbox: $scope.voronoi.getBbox(),
+                sites: $scope.voronoi.getSites(),
+                gen_count: $scope.voronoi.getGen_Count(),
+                coop_cost: $scope.voronoi.getCoop_Cost(),
+                dist: $scope.voronoi.getDist(),
+                itShouldDivide: $("#itShouldDivide")[0].checked
+                //send more data here
+            });
+		}
         $scope.connection.send(message);
         $scope.connection.onmessage = function(e) {
             //If the websocket processed the information simulate on the server side
-            $.get("voronoi/data", function(data, textStatus, response){
-                if (response.responseText != 'ok'){
-                    alert('error');
-                }
-            });
+			if ($("#cooperatingLimit")[0] != undefined) {
+                $.get("../voronoi/warburg", function(data, textStatus, response){
+                    if (response.responseText != 'ok'){
+                        alert('error');
+                    }
+                });
+			} else {
+                $.get("../voronoi/data", function(data, textStatus, response){
+                    if (response.responseText != 'ok'){
+                        alert('error');
+                    }
+                });
+			}
             $("body").addClass("loading");
             $scope.connection.onmessage = function(e) {
                 //Get results via the websocket
@@ -333,6 +359,7 @@ app.controller('parameterController', function($scope, $timeout, boundary) {
 			$scope.voronoi.setDist(newVal);
 		})
 	})
+
 
 	function showAlerts(newVal, oldVal, condition, execute){
 		try{

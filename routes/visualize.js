@@ -3,11 +3,17 @@
  */
 const router = require('express').Router();
 
-router.get('/', function(req, res) {
+router.get('/simple', function(req, res) {
 	webSocketUri = req.get('host').split(':')[0];
-	res.render('visualize', {
-		active: 'visualize'
+	res.render('visualizeSimple', {
+		active: 'visualizeSimple'
 	});
 });
 
+router.get('/two', function(req, res) {
+    webSocketUri = req.get('host').split(':')[0];
+    res.render('visualizeTwo', {
+        active: 'visualizeTwo'
+    });
+});
 module.exports = router;

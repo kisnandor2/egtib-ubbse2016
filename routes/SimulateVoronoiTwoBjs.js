@@ -10,7 +10,6 @@ const Cell = require('./Cell')
 
 const alfa = 0.1; //dividing chance constant
 const e = Math.exp(1);
-const limit = 0.8;
 /**
  * SimulateVoronoi Class - allows us to simulate using voronoi diagram
  * @constructor
@@ -19,8 +18,9 @@ function SimulateVoronoiTwoBjs() {
     this.diagram 						= undefined;
     this.dist               = undefined;
     this.cooperatingCost    = undefined;
-    this.itShouldDivide			= undefined;
+    this.itShouldDivide		= undefined;
     this.defectingCost      = 0;
+    this.cooperatingLimit   = undefined;
 
     constantFunctions.dist = 1;
     this.sites = [];
@@ -67,9 +67,9 @@ SimulateVoronoiTwoBjs.prototype.getDividingChance = function(time){
  * @param {float} coop_cost - Cost of a cooperating cell(between 0 and 1)
  * @param {int} dist 				- Distance of interaction used in the simulation
  */
-SimulateVoronoiTwoBjs.prototype.init = function({ sites, bbox, gen_count, coop_cost, dist, itShouldDivide, constantParameters }) {
+SimulateVoronoiTwoBjs.prototype.init = function({ sites, bbox, gen_count, coop_cost, dist, itShouldDivide, cooperatingLimit, constantParameters }) {
     logger.info('Init voronoi from the client data');
-    logger.debug('Client data: ', {sites_count: sites.length, bbox, gen_count, coop_cost, dist});
+    logger.debug('Client data: ', {sites_count: sites.length, bbox, gen_count, coop_cost, dist, cooperatingLimit});
 
     if (!sites){
         logger.error("No site in Sites, probably testing");
@@ -82,6 +82,7 @@ SimulateVoronoiTwoBjs.prototype.init = function({ sites, bbox, gen_count, coop_c
     this.cooperatingCost = coop_cost;
     this.dist = dist;
     this.itShouldDivide = itShouldDivide;
+    this.cooperatingLimit = cooperatingLimit;
 
     if (constantParameters){ //set if there is what to set
         console.log(constantParameters);
@@ -89,6 +90,7 @@ SimulateVoronoiTwoBjs.prototype.init = function({ sites, bbox, gen_count, coop_c
     }
 
     constantFunctions.distance = dist;
+    constantFunctions.setLimit(cooperatingLimit);
 
     try {
         for (let i = 0; i < sites.length; ++i) {
