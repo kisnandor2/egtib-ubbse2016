@@ -20,6 +20,53 @@ router.get('/', function(req, res) {
 	});
 });
 
+router.get('/dataWarburg', (req, res)=>{
+	let percentOfDefectingCells = 0;
+	let cooperatingCost = 0;
+	let distanceOfInteraction = 0;
+	let cooperatingLimit = 0;
+	let error = 0.5;
+	try {
+		percentOfDefectingCells = parseFloat(req.query.percentOfDefectingCells)/100;
+		cooperatingCost = parseFloat(req.query.cooperatingCost);
+		distanceOfInteraction = parseInt(req.query.distanceOfInteraction);
+		cooperatingLimit = parseFloat(req.query.cooperatingLimit);
+	}
+	catch (err) {
+		logger.error(err);
+		return
+	}
+	MongoClient.connect(MongoURI, function(err, db) {
+		if(err) {
+			logger.error(err); 
+			return;
+		}
+		let query = {
+			'cooperatingCost': cooperatingCost,
+			'percentageDef': {'$gt': -error + percentOfDefectingCells, '$lt': error + percentOfDefectingCells},
+			'dist': distanceOfInteraction,
+			'warburg': true,
+			'cooperatingLimit': cooperatingLimit
+		}
+		db.collection("egtib").find(query).toArray((err, items)=>{
+			if (err){
+				logger.error(err);
+				res.send('error');
+				return;
+			}
+			if (items.length <= 0){
+				logger.trace('No items found in the DB');
+				res.status(201).send("No items found in the database");
+				return;
+			}
+			db.close();
+			let result = dbDataToReadableClientData(items)
+			res.send(result);
+			logger.debug('Data from DB OK. Results sent!');
+		});
+	});
+})
+
 router.get('/data', function(req, res){
 	let percentOfDefectingCells = 0;
 	let cooperatingCost = 0;
@@ -43,6 +90,7 @@ router.get('/data', function(req, res){
 			'cooperatingCost': cooperatingCost,
 			'percentageDef': {'$gt': -error + percentOfDefectingCells, '$lt': error + percentOfDefectingCells},
 			'dist': distanceOfInteraction,
+			'warburg': false
 		}
 		db.collection("egtib").find(query).toArray((err, items)=>{
 			if (err){

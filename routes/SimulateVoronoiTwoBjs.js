@@ -6,7 +6,17 @@ const logger = require('./logger');
 const Timer = require('../public/javascripts/timer');
 const fs = require('fs');
 const constantFunctions = new (require('./ConstantFunctions'))();
+const MongoClient = require('mongodb').MongoClient;
 const Cell = require('./Cell')
+
+var MongoURI = null;
+if (process.env.MONGODB_URI){
+    MongoURI = process.env.MONGODB_URI;
+}
+else{
+    MongoURI = "mongodb://localhost:27017";
+}
+MongoURI += "/egtib";
 
 const alfa = 0.1; //dividing chance constant
 const e = Math.exp(1);
@@ -354,11 +364,29 @@ SimulateVoronoiTwoBjs.prototype.getCooperatingCount = function(sites){
     return cooperatingSites.length;
 }
 
+
 /**
  * Saves the current simulation results to the simulation.json file
  * @param {arrayOfarrays} - the `ret` from the simulation
  */
-SimulateVoronoiTwoBjs.prototype.saveSimulationData = function(filename, sitesList, callback,i, data2){
+SimulateVoronoiTwoBjs.prototype.saveSimulationData = function(sitesList){
+    if (sitesList[0].length < 100){
+        logger.trace('No need to save simulation. Total cells is out of range');
+        return;
+    }
+    // if (percentageDef <= 0.01 || percentageDef >= 0.1){
+    //  logger.trace('No need to save simulation. percentageDef is out of range');
+    //  return;
+    // }
+    if (this.generationCount < 5){
+        logger.trace('No need to save simulation. gen_count is too small');
+        return; 
+    }
+    // if (this.cooperatingCost <= 0.01 || this.cooperatingCost > 0.2){
+    //  logger.trace('No need to save simulation. cooperatingCost is out of range');
+    //  return;
+    // }
+
     let coopAndDef = [];
     for (let i = 0; i < sitesList.length; ++i){
         let cooperatingCount = this.getCooperatingCount(sitesList[i]);
@@ -370,28 +398,28 @@ SimulateVoronoiTwoBjs.prototype.saveSimulationData = function(filename, sitesLis
     }
     let params = {
         generationCount: this.generationCount,
-        cooperating: this.cooperatingCost,
+        cooperatingCost: this.cooperatingCost,
+        percentageDef: this.percentageDef,
         dist: this.dist,
-        results: coopAndDef
+        itShouldDivide: this.itShouldDivide,
+        cooperatingLimit: this.cooperatingLimit,
+        results: coopAndDef,
+        warburg: true
     }
-    fs.readFile(filename, 'utf8', function readFileCallback(err, data){
-        let obj = [];
+    // Connect to the db
+    MongoClient.connect(MongoURI, function(err, db) {
+      if(err) {
+        logger.error(err); 
+        return;
+      }
+      db.collection("egtib").insert(params, {w:1}, function(err, result) {
         if (err){
             logger.error(err);
             return;
         }
-        try {
-            obj = JSON.parse(data); //now it an object
-        }
-        catch(err){
-            logger.error(data);
-            logger.error(err);
-            obj = [];
-        }
-        obj.push(params);
-        json = JSON.stringify(obj); //convert it back to json
-        console.log('write' + i);
-        fs.writeFile(filename, json, 'utf8', () => {callback(i, data2)}); // write it back
+        logger.trace("1 simulation inserted into MongoDB");
+        db.close();
+      });
     });
 }
 

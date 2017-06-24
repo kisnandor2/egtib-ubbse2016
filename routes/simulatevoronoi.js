@@ -380,7 +380,8 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 		percentageDef: this.percentageDef,
 		dist: this.dist,
 		itShouldDivide: this.itShouldDivide,
-		results: coopAndDef
+		results: coopAndDef,
+		warburg: false
 	}
 	// Connect to the db
 	MongoClient.connect(MongoURI, function(err, db) {

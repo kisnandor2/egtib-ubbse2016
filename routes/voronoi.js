@@ -35,7 +35,9 @@ router.get('/warburg', function(req, res) {
     // test(0, JSON.stringify(req.session));
     two.init(req.session);	//ES6 parameter destructuring
     try {
-        server.sendData(JSON.stringify(two.simulate()));
+    		let data = two.simulate();
+				two.saveSimulationData(data);
+        server.sendData(JSON.stringify(data));
         res.status(200).send('ok');
     }
     catch (error) {
