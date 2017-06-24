@@ -116,3 +116,19 @@
 </div>
 
 {% endblock %}
+
+{% block charts %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">Functions used in calculations</div>
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

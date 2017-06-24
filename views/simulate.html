@@ -40,22 +40,8 @@
         {% block parameters %} {% endblock %}
       </div>
       <div class="col-md-8" >
-        <div class="panel panel-default">
-        <div class="panel-heading">Functions used in calculations</div>
-        <div class="row">
-          <div class="col-md-6">
-            <img src="/images/bj_trans.png" class="img-responsive">
-            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
-          </div>
-          <div class="col-md-6">
-            <img src="/images/gj_trans.png" class="img-responsive">
-            <canvas id="line" class="chart chart-line" chart-data="gradientData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
-          </div>
-        </div>
+        {% block charts %} {% endblock %}
       </div>
-
-
-     </div>
 
     </div>
   </div>
