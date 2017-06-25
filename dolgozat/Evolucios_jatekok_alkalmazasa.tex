@@ -8,6 +8,7 @@
 \usepackage[all]{nowidow}
 \usepackage{hyperref}
 \usepackage{interval}
+\usepackage{lanJS}
 
 \sloppy
 \frenchspacing
@@ -18,11 +19,6 @@
 {\par\medskip\noindent\minipage{\linewidth}}
 {\endminipage\par\medskip}
 
-% milyen nyelveken akarunk forráskódot megjeleníteni
-%\lstloadlanguages{Java}
-
-% ezt be lehet tenni MINDEGYIK megjelenítendő kód elé.
-%\lstset{language=Java}
 
 %% MELYIK ÉVBEN ADJUK LE
 \submityear{%
@@ -88,8 +84,9 @@ Asist. prof. dr. Gaskó Noémi
 
 
 {
-	???ANGOLUUUULLLL!!!
-	Dolgozatunkban az evolúciós játékok alkalmazását mutatjuk be a sejtbiológiában. Már a sejtek szintjén megfigyelhetőek kooperatív illetve kompetitív viszonyok, amelyek játékelmélettel modellezhetőek. Ezeket, az alkalmazásunk elméleti háttereként is szolgáló matematikai modelleket használják a rákkutatásban is, ahol a sejtek mint játékosok vannak jelen. Fő célunk játékelméleti modellek kiterjesztése a sejtek interakcióinak vizsgálatára. A projekt gyakorlati részét egy webes felület képezi, amin megjeleníthető a különböző sejtpopulációk viselkedése, időbeni alakulása. A szimuláció paramétereit, a generációk számát a felhasználó módosíthatja, ezáltal valós időben betekintést nyerve a daganatok dinamikájába.
+	In this paper we are going to present the use of evolutionary game theory in cell biology. A \textit{game} played by the cells can be observed at cellular level, they are co-operating or competing in order to grow, which can be modeled by game theory. These models serve the theoretical background in cancer research and for our application as well.
+	
+	Our application is a web interface that can be used to visualize these cells through Voronoi diagrams and to simulate the change of these tumors as time passes, with a wide choice of parameters, that can be modified by the user, thus gaining real-time insight into the tumor dynamics.
 }
 
 This work is the result of my own activity. I have neither given nor received unauthorized assistance on this work.
@@ -113,6 +110,11 @@ This work is the result of my own activity. I have neither given nor received un
 \include{alkalmazas}
 \include{szim_eredmenyek}
 \include{osszegzes}
+
+{
+	\appendix
+	\include{JSON_struktura}
+}
 
 { \renewcommand{\baselinestretch}{0.8}\normalsize %
   \setlength{\itemsep}{-2.4mm}

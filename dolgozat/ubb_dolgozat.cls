@@ -142,7 +142,7 @@
     \vspace*{-20mm}%
 	  \thispagestyle{empty}%
     {\fontsize{18}{20}\selectfont\scshape\noindent\@uniRO\par}%
-    \vspace{25mm}
+    \vspace{16mm}
     \begin{center}%
   	  \fontsize{18}{20}\usefont{OT1}{phv}{bc}{n}\selectfont
       \bfseries
@@ -180,7 +180,7 @@
     \vspace*{-20mm}%
 	  \thispagestyle{empty}%
     {\fontsize{18}{20}\selectfont\scshape\noindent\@uniHU\par}%
-    \vspace{25mm}
+    \vspace{10mm}
     \begin{center}%
       \fontsize{18}{20}\usefont{OT1}{phv}{bc}{n}\selectfont
       \bfseries

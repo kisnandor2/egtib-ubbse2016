@@ -5,7 +5,7 @@ A tumorkeletkezés leggyakoribb oka az emberi génállományban található, a n
 	\centering
 	\includegraphics[width=90mm]{images/models}
 	\vspace*{2mm}
-	\caption{Daganatos sejtek közötti verseny típusok add ref}
+	\caption{Daganatos sejtek közötti verseny típusok (\cite{hummert2014evolutionary})}
 	\label{fig:cancerModels}
 \end{figure}
 
@@ -15,6 +15,9 @@ A evolúciós játékelméleti modellek segítségével többféleképpen is meg
 A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet játszanak az általuk termelt növekedési faktorok és jelzőmolekulák. Ezek segítenek többek között abban, hogy a rákos sejtek a saját növekedésüket ösztönözzék, hogy képesek legyenek kijátszani a szervezet védekezési rendszerét és hogy szétterjedjenek távoli szövetekbe (metasztázis). Mivel ezek az anyagok kikerülnek a sejtek közötti térbe, nem csak az őket termelő sejtekre vannak hatással, hanem az ezeket körülvevőkre is. Így a növekedési faktor felfogható mint egy "közös jó" (\textit{public good}). Az evolúciós játékelmélet megfelelő keretet biztosít, mivel nem feltételez racionális viselkedést és egy stratégia sikerességét megadja a populáción belüli gyakorisága \cite{archetti2016cooperation}.
 
 \section{A játék felépítése}
+
+A mai napig két modellt sikerült áttanulmányoznunk és az alkalmazásba beépítenünk. Ezek közül a \cite{archetti2016cooperation} cikkbeli modellt ezen dolgozatban fogjuk részletezni és a továbbiakban az alkalmazás csak azon részét mutatjuk be amely ezzel foglalkozik, míg a másik modell, amely a Warburg hatással is foglalkozik (\cite{archetti2014evolutionary}), a {\color{red} Réka ref} dolgozatban van ismertetve. 
+
 \subsection{Voronoi diagram}
 Az általunk vizsgált modell eltér a megszokottól abban, hogy a sejtek ábrázolására Voronoi hálózatokat használ. Térbeli játékok esetén általában szabályos pontrácsokkal vagy skála-független hálózatokkal dolgoznak. Míg az előbbi figyelmen kívül hagyja a kapcsolatok sokféleségét, az utóbbi nem megfelelő, ha az egyedek egy síkban helyezkednek el \cite{archetti2016cooperation}.
 
