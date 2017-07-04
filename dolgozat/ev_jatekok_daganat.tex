@@ -9,14 +9,14 @@ A tumorkeletkezés leggyakoribb oka az emberi génállományban található, a n
 	\label{fig:cancerModels}
 \end{figure}
 
-A evolúciós játékelméleti modellek segítségével többféleképpen is megközelíthető a probléma. Játékosok lehetnek csak a daganatos sejtek és a játékot az erőforrásokért folytatott \textit{verseny} jelenti. Ez a verseny átalakulhat \textit{parazitizmussá} ha a bizonyos növekedési faktorokat termelő egészséges sejteket tekintjük az egyik félnek, és az ezt kihasználó daganatos sejteket a másiknak. Az immunsejtek játszhatják a \textit{ragadozó} szerepét de felléphet \textit{mutualizmus} is például az erek belső rétegének sejtjei és a daganatos sejtek között (\ref{fig:cancerModels}). 
+A evolúciós játékelméleti modellek segítségével többféleképpen is megközelíthető a probléma. Játékosok lehetnek csak a daganatos sejtek és a játékot az erőforrásokért folytatott \textit{verseny} jelenti. Ez a verseny átalakulhat \textit{parazitizmussá} ha a bizonyos növekedési faktorokat termelő egészséges sejteket tekintjük az egyik félnek, és az ezt kihasználó daganatos sejteket a másiknak. Az immunsejtek játszhatják a \textit{ragadozó} szerepét de felléphet \textit{mutualizmus} is például az erek belső rétegének sejtjei és a daganatos sejtek között (Ábra \ref{fig:cancerModels}). 
 
 \section{Közjó játék (Public goods game)}
 A daganatos sejtek több jellegzetességének kialakulásában fontos szerepet játszanak az általuk termelt növekedési faktorok és jelzőmolekulák. Ezek segítenek többek között abban, hogy a rákos sejtek a saját növekedésüket ösztönözzék, hogy képesek legyenek kijátszani a szervezet védekezési rendszerét és hogy szétterjedjenek távoli szövetekbe (metasztázis). Mivel ezek az anyagok kikerülnek a sejtek közötti térbe, nem csak az őket termelő sejtekre vannak hatással, hanem az ezeket körülvevőkre is. Így a növekedési faktor felfogható mint egy "közös jó" (\textit{public good}). Az evolúciós játékelmélet megfelelő keretet biztosít, mivel nem feltételez racionális viselkedést és egy stratégia sikerességét megadja a populáción belüli gyakorisága \cite{archetti2016cooperation}.
 
 \section{A játék felépítése}
 
-A mai napig két modellt sikerült áttanulmányoznunk és az alkalmazásba beépítenünk. Ezek közül a \cite{archetti2016cooperation} cikkbeli modellt ezen dolgozatban fogjuk részletezni és a továbbiakban az alkalmazás csak azon részét mutatjuk be amely ezzel foglalkozik, míg a másik modell, amely a Warburg hatással is foglalkozik (\cite{archetti2014evolutionary}), a {\color{red} Réka ref} dolgozatban van ismertetve. 
+A mai napig két modellt sikerült áttanulmányoznunk és az alkalmazásba beépítenünk. Ezek közül a \cite{archetti2016cooperation} cikkbeli modellt ezen dolgozatban fogjuk részletezni és a továbbiakban az alkalmazás csak azon részét mutatjuk be amely ezzel foglalkozik, míg a másik modell, amely a Warburg hatással is foglalkozik (\cite{archetti2014evolutionary}), a \cite{reka2017ubb} dolgozatban van ismertetve. 
 
 \subsection{Voronoi diagram}
 Az általunk vizsgált modell eltér a megszokottól abban, hogy a sejtek ábrázolására Voronoi hálózatokat használ. Térbeli játékok esetén általában szabályos pontrácsokkal vagy skála-független hálózatokkal dolgoznak. Míg az előbbi figyelmen kívül hagyja a kapcsolatok sokféleségét, az utóbbi nem megfelelő, ha az egyedek egy síkban helyezkednek el \cite{archetti2016cooperation}.
@@ -25,7 +25,7 @@ Legyen egy \textit{X} metrikus térben \textit{d} a távolságfüggvény, \texti
 \begin{equation}
 R_k = \{x \in X | d(x,P_k) \leq d(x,P_j), \forall j \neq k\}
 \end{equation}
-ahol \(d(x,A) = inf\{d(x,a)|a \in A\}\) \textit{x} pont távolságát jelöli \textit{A} résztértől. Egy Voronoi diagram Voronoi cellák rendezett listája
+ahol \(d(x,A) = inf\{d(x,a)|a \in A\}\) \textit{x} pont távolságát jelöli \textit{A} résztértől. Egy Voronoi diagram Voronoi cellák rendezett listája.
   
 
 \subsection{A játék szereplői és a stratégiák}
@@ -55,7 +55,7 @@ függvények segítségével kiszámolhatjuk az \textit{i} távolságra találha
 \section{Osztódás}
 Kezdeti szimulációink során nem vettük figyelembe azt, hogy a sejtek életük során szaporodni, azaz osztódni is szoktak, ezért mint saját újítás beépítettünk a modellbe egy osztódási lehetőséget is. 
 
-A legtöbbet használt modell, mely elég közel áll a természethez, az a Gompertz modell \cite{wiki:gompertz}, amely leírja a tumor méretének időbeli változását a következő képlettel:
+A legtöbbet használt modell, mely elég közel áll a természethez, az a Gompertz modell \cite{gompertz1825nature}, amely leírja a tumor méretének időbeli változását a következő képlettel:
 \begin{equation}
 	\label{eq:gompertz}
 	n_t = K \bigg(\frac{n_0}{K} \bigg) ^ {e^{(- \alpha t)}},

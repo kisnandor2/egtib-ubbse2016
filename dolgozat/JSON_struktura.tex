@@ -1,7 +1,7 @@
 \chapter{Kódrészletek}
 \label{ch:appendix}
 
-\begin{lstlisting}[caption=A Kliens üzenete amikor egy szimulációt kér]
+\begin{lstlisting}[caption={A Kliens üzenete amikor egy szimulációt kér}, label={dataStructure}]
 {
 	"bbox": {"xl":0,"xr":961.15625,"yt":0,"yb":438.390625},
 	"coop_cost": 0.1, "cooperatingChance": 0.5, "dist": 1, "gen_count": 10,
@@ -9,5 +9,60 @@
 	"totalNumberOfCells": 56,
 	"sites":
 		[["Point",67.2559,22.32594,"c"],["Point",112.67553,69.06322,"c"],["Point",51.79772,128.27952,"c"],["Point",135.98585,180.24007,"c"],["Point",51.45929,242.81823,"c"],["Point",129.64194,291.89049,"c"],["Point",44.81381,344.24937,"c"],["Point",122.61283,399.81667,"c"],["Point",198.10349,16.23802,"c"],["Point",255.61145,73.62708,"c"],["Point",204.96929,133.17939,"c"],["Point",253.61525,183.95092,"c"],["Point",194.84567,238.65363,"c"],["Point",256.45505,294.80309,"c"],["Point",184.35498,345.52829,"c"],["Point",255.43719,399.1373,"c"],["Point",327.54444,25.25875,"c"],["Point",388.73307,79.77922,"c"],["Point",317.35744,123.39859,"c"],["Point",379.12177,182.30495,"c"],["Point",338.69507,241.04011,"c"],["Point",400.42963,292.28247,"c"],["Point",329.94528,348.25614,"c"],["Point",378.76458,405.62081,"c"],["Point",471.71828,13.89374,"c"],["Point",544.22256,72.89871,"c"],["Point",475.63893,124.09777,"c"],["Point",515.53975,184.81584,"c"],["Point",454.58833,235.59189,"c"],["Point",541.86266,291.80754,"c"],["Point",469.84279,353.28571,"c"],["Point",534.52195,405.54943,"c"],["Point",594.03068,27.3438,"d"],["Point",685.80261,73.73823,"c"],["Point",598.15839,136.86254,"c"],["Point",684.63834,185.3474,"c"],["Point",587.88228,234.56999,"c"],["Point",683.46788,299.35062,"c"],["Point",595.37666,351.84252,"c"],["Point",671.45691,408.07107,"c"],["Point",733.64472,20.79314,"c"],["Point",810.27456,70.26315,"c"],["Point",721.48006,131.09823,"c"],["Point",820.35033,183.81774,"c"],["Point",737.49134,234.32743,"c"],["Point",816.02009,295.16268,"c"],["Point",749.18523,348.52977,"c"],["Point",802.98097,405.40339,"c"],["Point",875.85252,25.04485,"c"],["Point",958.97189,69.36593,"d"],["Point",881.73427,135.82641,"c"],["Point",957.01579,184.89853,"d"],["Point",882.50261,238.40133,"c"],["Point",952.97678,293.3028,"d"],["Point",874.23227,351.24247,"c"],["Point",931.82743,402.04287,"c"]]
+}
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}[caption={Szimulációs adatok lementése az adatbázisba}, label={saveMongoBD}]
+/**
+* Saves the current simulation results to the database
+* @param {arrayOfarrays} - the `ret` from the simulation
+*/
+SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
+	if (sitesList[0].length < 100){
+		logger.trace('No need to save simulation. Total cells is out of range');
+		return;
+	}
+	if (this.generationCount < 5){
+		logger.trace('No need to save simulation. gen_count is too small');
+		return; 
+	}
+	//Save the coop/def cound for all generations in the simulation
+	let coopAndDef = [];
+	for (let i = 0; i < sitesList.length; ++i){
+		let cooperatingCount = this.getCooperatingCount(sitesList[i]);
+		let defectingCount = sitesList[i].length - cooperatingCount;
+		coopAndDef.push({
+			cooperating: cooperatingCount,
+			defecting: defectingCount
+		})
+	}
+	//Build up the Object that is going to be saved
+	let params = {
+		generationCount: this.generationCount,
+		cooperatingCost: this.cooperatingCost,
+		percentageDef: this.percentageDef,
+		dist: this.dist,
+		itShouldDivide: this.itShouldDivide,
+		results: coopAndDef,
+		warburg: false, //This simulation is of type One, NOT Warburg
+	}
+	// Connect to the db
+	MongoClient.connect(MongoURI, function(err, db) {
+		if(err) {
+			logger.error(err); 
+			return;
+		}
+		//Save into db
+		db.collection("egtib").insert(params, {w:1}, function(err, result) {
+			if (err){
+				logger.error(err);
+				return;
+			}
+			logger.trace("1 simulation inserted into MongoDB");
+			db.close();
+		});
+	});
 }
 \end{lstlisting}
