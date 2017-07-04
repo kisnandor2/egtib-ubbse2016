@@ -62,7 +62,7 @@
                 <label for="steepness1" class="control-label">Steepness of the function l1:</label>
             </div>
             <div class="col-sm-4">
-                <input type="number" class="form-control" id="steepness1" min="0" ng-model="steepness1" ng-init="steepness1=defaultSteepness1" ng-change="reloadPayoff()">
+                <input type="number" class="form-control" id="steepness1" min="0" ng-model="steepness1" ng-init="steepness1=defaultSteepness1" ng-change="reloadL1()">
             </div>
         </div>
         <div class="form-group">
@@ -70,7 +70,7 @@
                 <label for="inflectionPoint1" class="control-label">Position of the inflection point in l1:</label>
             </div>
             <div class="col-sm-4">
-                <input type="number" class="form-control" id="inflectionPoint1" min="0" ng-model="inflectionPoint1" ng-init="inflectionPoint1=defaultInflectionPoint1" ng-change="reloadPayoff()">
+                <input type="number" class="form-control" id="inflectionPoint1" min="0" ng-model="inflectionPoint1" ng-init="inflectionPoint1=defaultInflectionPoint1" ng-change="reloadL1()">
             </div>
         </div>
         <div class="form-group">
@@ -78,7 +78,7 @@
                 <label for="steepness2" class="control-label">Steepness of the function l2:</label>
             </div>
             <div class="col-sm-4">
-                <input type="number" class="form-control" id="steepness2" min="0" ng-model="steepness2" ng-init="steepness2=defaultSteepness2" >
+                <input type="number" class="form-control" id="steepness2" min="0" ng-model="steepness2" ng-init="steepness2=defaultSteepness2" ng-change="reloadL2()" >
             </div>
         </div>
         <div class="form-group">
@@ -86,7 +86,7 @@
                 <label for="inflectionPoint2" class="control-label">Position of the inflection point in l2:</label>
             </div>
             <div class="col-sm-4">
-                <input type="number" class="form-control" id="inflectionPoint2" min="0" ng-model="inflectionPoint2" ng-init="inflectionPoint2=defaultInflectionPoint2">
+                <input type="number" class="form-control" id="inflectionPoint2" min="0" ng-model="inflectionPoint2" ng-init="inflectionPoint2=defaultInflectionPoint2" ng-change="reloadL2()">
             </div>
         </div>
         <div class="form-group">
@@ -123,9 +123,23 @@
     <div class="panel-heading">Functions used in calculations</div>
     <div class="row">
         <div class="col-md-6">
-            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
-            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
-            <canvas id="line" class="chart chart-line" chart-data="payoffData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+            <img src="/images/lj_trans.png" class="img-responsive">
+        </div>
+        <div class="col-md-5">
+
+            <canvas style="padding-top: 5%;" id="line" class="chart chart-line" chart-data="l1Data" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+
+            <canvas style="padding-top: 5%;" id="line" class="chart chart-line" chart-data="l2Data" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="/images/gj_trans.png" class="img-responsive">
+        </div>
+        <div class="col-md-5">
+
+            <canvas style="padding-top: 10%;" id="line" class="chart chart-line" chart-data="gradientData" chart-labels="labels" chart-series="series" chart-options="options" chart-dataset-override="datasetOverride" chart-click="onClick"></canvas>
         </div>
 
     </div>

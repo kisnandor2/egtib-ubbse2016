@@ -115,6 +115,7 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
   	y = []
   	const e = Math.exp(1);
   	const n = 6;
+  	const maxDamage = 1;
   	x = x.map(function (data) { return data/100; })
   	$scope.labels = x;
   	$scope.payoffData = x.map(function (data) {
@@ -124,6 +125,14 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 	$scope.gradientData = x.map(function (data) {
 	    	return (g_def(data) - g_def(0))/(g_def(n) - g_def(0))
 	});
+
+    $scope.l1Data = x.map(function (data) {
+        return (l1_def(data) - l1_def(0))/(l1_def(n * $scope.defaultCoopLimit) - l1_def(0))
+    });
+    $scope.l2Data = x.map(function (data) {
+        return 1- ((l2_def(data,maxDamage) - l2_def($scope.defaultCoopLimit * n, maxDamage))/(l2_def(n,1) - l2_def($scope.defaultCoopLimit * n,1)))
+    });
+
 	$scope.reloadPayoff = function () {
 	  	$scope.payoffData = x.map(function (data) {
 	    	return (V(data) - V(0))/(V(n) - V(0))
@@ -135,7 +144,26 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 	    	return (g(data) - g(0))/(g(n) - g(0))
 	      });
 	};
-	function V_def(j){
+    $scope.reloadL1 = function () {
+        $scope.l1Data = x.map(function (data) {
+            return (l1(data) - l1(0))/(l1(n * $("#cooperatingLimit")[0].value) - l1(0))
+        });
+    };
+    $scope.reloadL2 = function () {
+        $scope.l2Data = x.map(function (data) {
+            return 1- ((l2(data,maxDamage) - l2($("#cooperatingLimit")[0].value * n, maxDamage))/(l2(n,1) - l2($("#cooperatingLimit")[0].value * n,1)))
+        });
+    };
+
+    function l1_def(j){
+        return 1 / (1 + Math.pow(e, ($scope.defaultSteepness1 * ($scope.defaultInflectionPoint1 - ((j/n)/$scope.defaultCoopLimit)))));
+    }
+
+    function l2_def(j,y){
+        return 1 / (1 + Math.pow(e, ($scope.defaultSteepness2* ($scope.defaultInflectionPoint2 - ((j/n - $scope.defaultCoopLimit)/(1-$scope.defaultCoopLimit))))));
+    }
+
+    function V_def(j){
 		return 1 / (1 + Math.pow(e, ($scope.defaultSteepness * (j - $scope.defaultInflectionPoint)) / n));
 	}
 	function g_def(j){
@@ -148,6 +176,13 @@ app.controller('baseVoronoiController', function($scope, $rootScope) {
 	function g(j){
 		return 1 / (1 + Math.pow(e, ($("#steepnessOfGrad")[0].value * (j - $("#distanceOfInteraction")[0].value * $("#shapeOfDif")[0].value)) / $("#distanceOfInteraction")[0].value));
 	}
+    function l1(j){
+        return 1 / (1 + Math.pow(e, ($("#steepness1")[0].value * ($("#inflectionPoint1")[0].value - ((j/n)/$("#cooperatingLimit")[0].value)))));
+    }
+
+    function l2(j,y){
+        return y / (1 + Math.pow(e, ($("#steepness2")[0].value * ($("#inflectionPoint2")[0].value - ((j/n - $("#cooperatingLimit")[0].value)/(1-$("#cooperatingLimit")[0].value))))));
+    }
 	$scope.options = {
 	  	elements: { point: { radius: 0 } },
 	    scales: {
