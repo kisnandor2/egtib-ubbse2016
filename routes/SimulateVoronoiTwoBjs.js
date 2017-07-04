@@ -11,12 +11,17 @@ const Cell = require('./Cell')
 
 var MongoURI = null;
 if (process.env.MONGODB_URI){
-    MongoURI = process.env.MONGODB_URI;
+	MongoURI = process.env.MONGODB_URI;
 }
 else{
-    MongoURI = "mongodb://localhost:27017";
+	MongoURI = "mongodb://localhost:27017/egtib";
 }
-MongoURI += "/egtib";
+let MongoURIList = MongoURI.split('/');
+const collectionName = MongoURIList[MongoURIList.length-1];
+logger.trace('')
+logger.trace(MongoURI);
+logger.trace(collectionName);
+logger.trace('')
 
 const alfa = 0.1; //dividing chance constant
 const e = Math.exp(1);
@@ -423,7 +428,7 @@ SimulateVoronoiTwoBjs.prototype.saveSimulationData = function(sitesList){
         logger.error(err); 
         return;
       }
-      db.collection("egtib").insert(params, {w:1}, function(err, result) {
+      db.collection(collectionName).insert(params, {w:1}, function(err, result) {
         if (err){
             logger.error(err);
             return;

@@ -10,9 +10,14 @@ if (process.env.MONGODB_URI){
 	MongoURI = process.env.MONGODB_URI;
 }
 else{
-	MongoURI = "mongodb://localhost:27017";
+	MongoURI = "mongodb://localhost:27017/egtib";
 }
-MongoURI += "/egtib";
+let MongoURIList = MongoURI.split('/');
+const collectionName = MongoURIList[MongoURIList.length-1];
+logger.trace('')
+logger.trace(MongoURI);
+logger.trace(collectionName);
+logger.trace('')
 
 router.get('/simple', function(req, res) {
 	res.render('chartsSimple', {
@@ -54,10 +59,10 @@ router.get('/dataWarburg', (req, res)=>{
 			'warburg': true,
 			'cooperatingLimit': cooperatingLimit,
 		}
-		db.collection("egtib").find(query).toArray((err, items)=>{
+		db.collection(collectionName).find(query).toArray((err, items)=>{
 			if (err){
 				logger.error(err);
-				res.send('Could not connect to EGTIB collection');
+				res.send('Could not connect to DB collection');
 				return;
 			}
 			if (items.length <= 0){
