@@ -62,12 +62,14 @@
 %\usepackage[backend=biber]{biblatex}
 %\bibliography{articles.bib}
 
-\title[EGTIB]{Evolúciós játékok alkalmazása daganatos sejtek modellezésében} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[EGTIB]{Daganatos sejtek növekedési faktorának vizsgálata Voronoi diagramon} % The short title appears at the bottom of every slide, the full title is only on the title page
 
-\author{Szilágyi Réka, Kis Nándor} % Your name
+\author{Kis Nándor} % Your name
 \institute[BBTE] 
 {
 Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, Informatika szak, alapképzés, III. év \\ 
+Témavezető: Dr. Gaskó Noémi, egyetemi adjunktus
+\\
 \medskip
 }
 \date{\today} 
@@ -90,7 +92,7 @@ Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, In
 \AtBeginSection
 {
 	\ifnum \thesection > 1 
-		\ifnum \thesection < 6
+		\ifnum \thesection < 5
 			\begin{frame}
 				\tableofcontents[
 					currentsection,
@@ -101,7 +103,7 @@ Babeş–Bolyai Tudományegyetem, Kolozsvár, Matematika és Informatika kar, In
 	\fi
 }
 
-\include{bevezeto}
+%\include{bevezeto}
 \include{ev_jatekok}
 \include{ev_jatekok_daganat}
 \include{alkalmazas}
