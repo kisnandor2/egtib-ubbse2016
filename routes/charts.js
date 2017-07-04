@@ -48,11 +48,11 @@ router.get('/dataWarburg', (req, res)=>{
 			return;
 		}
 		let query = {
-			'cooperatingCost': ""+cooperatingCost,
+			'cooperatingCost': cooperatingCost,
 			'percentageDef': {'$gt': -error + percentOfDefectingCells, '$lt': error + percentOfDefectingCells},
-			'dist': ""+distanceOfInteraction,
+			'dist': distanceOfInteraction,
 			'warburg': true,
-			'cooperatingLimit': ""+cooperatingLimit,
+			'cooperatingLimit': cooperatingLimit,
 		}
 		db.collection("egtib").find(query).toArray((err, items)=>{
 			if (err){

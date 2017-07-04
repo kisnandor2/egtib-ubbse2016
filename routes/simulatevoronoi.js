@@ -374,14 +374,21 @@ SimulateVoronoi.prototype.saveSimulationData = function(sitesList){
 			defecting: defectingCount
 		})
 	}
-	let params = {
-		generationCount: this.generationCount,
-		cooperatingCost: this.cooperatingCost,
-		percentageDef: this.percentageDef,
-		dist: this.dist,
-		itShouldDivide: this.itShouldDivide,
-		results: coopAndDef,
-		warburg: false
+	let params = {};
+	try{
+		params = {
+			generationCount: parseFloat(this.generationCount),
+			cooperatingCost: parseFloat(this.cooperatingCost),
+			percentageDef: parseFloat(this.percentageDef),
+			dist: parseFloat(this.dist),
+			itShouldDivide: this.itShouldDivide,
+			results: coopAndDef,
+			warburg: false
+		}
+	}
+	catch(err){
+		logger.error(err);
+		return;
 	}
 	// Connect to the db
 	MongoClient.connect(MongoURI, function(err, db) {
