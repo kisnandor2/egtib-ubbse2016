@@ -83,7 +83,7 @@ router.get('/data', function(req, res){
 	let percentOfDefectingCells = 0;
 	let cooperatingCost = 0;
 	let distanceOfInteraction = 0;
-	let error = 0.5;
+	let error = 0.05;
 	try {
 		percentOfDefectingCells = parseFloat(req.query.percentOfDefectingCells)/100;
 		cooperatingCost = parseFloat(req.query.cooperatingCost);
