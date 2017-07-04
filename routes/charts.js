@@ -59,6 +59,7 @@ router.get('/dataWarburg', (req, res)=>{
 			'warburg': true,
 			'cooperatingLimit': cooperatingLimit,
 		}
+		logger.info(query)
 		db.collection(collectionName).find(query).toArray((err, items)=>{
 			if (err){
 				logger.error(err);
@@ -103,10 +104,11 @@ router.get('/data', function(req, res){
 			'dist': distanceOfInteraction,
 			'warburg': false
 		}
-		db.collection("egtib").find(query).toArray((err, items)=>{
+		logger.info(query);
+		db.collection(collectionName).find(query).toArray((err, items)=>{
 			if (err){
 				logger.error(err);
-				res.send('error');
+				res.send('Could not connect to DB collection');
 				return;
 			}
 			if (items.length <= 0){
