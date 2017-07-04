@@ -14,6 +14,10 @@ else{
 	MongoURI = "mongodb://localhost:27017";
 }
 MongoURI += "/egtib";
+logger.trace('')
+logger.trace(MongoURI);
+logger.trace('')
+
 const alfa = 0.1; //dividing chance constant
 const e = Math.exp(1);
 

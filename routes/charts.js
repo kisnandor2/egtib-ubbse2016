@@ -57,7 +57,7 @@ router.get('/dataWarburg', (req, res)=>{
 		db.collection("egtib").find(query).toArray((err, items)=>{
 			if (err){
 				logger.error(err);
-				res.send('error');
+				res.send('Could not connect to EGTIB collection');
 				return;
 			}
 			if (items.length <= 0){

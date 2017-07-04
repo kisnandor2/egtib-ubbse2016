@@ -453,13 +453,13 @@ app.controller('simulationController', function($scope, $rootScope){
             if ($("#cooperatingLimit")[0] != undefined) {
                 $.get("../voronoi/warburg", function(data, textStatus, response){
                     if (response.responseText != 'ok'){
-                        alert('error');
+                        alert(response.responseText);
                     }
                 });
             } else {
                 $.get("../voronoi/data", function(data, textStatus, response){
                     if (response.responseText != 'ok'){
-                        alert('error');
+                        alert(response.responseText);
                     }
                 });
             }
