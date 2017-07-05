@@ -2,15 +2,14 @@
 \begin{frame}
 \frametitle{Daganatos sejtek modellezése}
 \begin{itemize}
-	\item daganat - sokszoros mutáció következtében létrejött elburjánzó sejttömörülés
-	\item egy daganaton belül többféle sejt $\rightarrow$ agresszívabb sejttípusok megjelenése
+	\item daganat - mutációk során létrejött elburjánzó sejttömörülés
+	\item daganaton belül többféle sejt $\rightarrow$ nagyobb verseny $\rightarrow$ agresszívabb sejttípusok
+	\item játékelméleti megközelítés szoftver segítségével
 \end{itemize}
-	\begin{block}{}
-	$\Rightarrow$ a játékelmélet egy lehetséges eszköz a sejttípusok közötti versengés modellezésére
-\end{block}
 
 \end{frame}
 
+\iffalse
 \begin{frame}
 	\frametitle{Daganatos sejtek modellezése}
 	Lehetséges modellek:
@@ -20,35 +19,42 @@
 		\item immunsejtek - \textbf{ragadozó}
 		\item egészséges sejtek, daganatos sejtek - \textbf{mutualizmnus}
 	\end{itemize}
-\begin{figure}
-	\centering
-	\begin{tikzpicture}
-	\node[anchor=south west,inner sep=0] (image) at (4,0) { \includegraphics[width=0.5\linewidth]{images/models}};
-	\pause
-	\begin{scope}[x={(image.south east)},y={(image.north west)}]
-	\draw[red,ultra thick,rounded corners] (0.15,0.6) rectangle (0.28,1);
-	\end{scope}
-	\end{tikzpicture}
-\end{figure}
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}
+		\node[anchor=south west,inner sep=0] (image) at (4,0) { \includegraphics[width=0.5\linewidth]{images/models}};
+		\pause
+		\begin{scope}[x={(image.south east)},y={(image.north west)}]
+		\draw[red,ultra thick,rounded corners] (0.15,0.6) rectangle (0.28,1);
+		\end{scope}
+		\end{tikzpicture}
+	\end{figure}
 \end{frame}
+\fi
 
 \subsection{Közjó játék (Public goods game)}
 \begin{frame}
-\begin{itemize}
-	\item növekedési faktorok és jelzőmolekulák szerepe
+	\frametitle{Közjó játék (Public goods game)}
 	\begin{itemize}
-		\item saját növekedés elősegítése
-		\item a szervezet védekezésének kijátszása
-		\item metasztázis kialakulása
+		\item növekedési faktorok - sejtnövekedés, sejtosztódás és sejtdifferenciálódás stimulálása
+		%\begin{itemize}
+		%	\item saját növekedés elősegítése
+		%	\item a szervezet védekezésének kijátszása
+		%	\item metasztázis kialakulása
+		%\end{itemize}
+		\item ezek az anyagok kikerülhetnek a sejtek közötti térbe
+		\item $\Rightarrow$ növekedési faktor mint "közös jó"
+		\item a sejtek ábrázolása Voronoi hálózatokkal
 	\end{itemize}
-	\item ezek az anyagok kikerülhetnek a sejtek közötti térbe
-\end{itemize}
-\begin{block}
+	%\begin{block}
+	%	\centering
+	%	$\Rightarrow$ növekedési faktor mint "közös jó"
+	%\end{block}
 	\centering
-	$\Rightarrow$ növekedési faktor mint "közös jó"
-\end{block}
-\frametitle{Közjó játék (Public goods game)}\end{frame}
+	\includegraphics[width=0.5\linewidth]{images/Voronoi}
+\end{frame}
 
+\iffalse
 \subsection{A játékmodell felépítése}
 \subsubsection{Voronoi diagram}
 \begin{frame}
@@ -60,10 +66,10 @@
 			\item \sout{skála-független hálózatok}
 		\end{itemize}
 	\end{block}
-	
 	\centering
 	\includegraphics[width=0.5\linewidth]{images/Voronoi}
 \end{frame}
+\fi
 
 \subsubsection{A játék szereplői és a stratégiák}
 \begin{frame}
